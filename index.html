@@ -3,298 +3,463 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>New papers</title>
 <style>
-body { font-family: Georgia, serif; max-width: 42rem; margin: 2rem auto;
-       padding: 0 1rem; line-height: 1.45; color: #222; background: #fff; }
-h2 { font-size: 1.1rem; border-bottom: 1px solid #ccc; margin-top: 2rem; }
-article { margin: 1rem 0; }
-.authors { color: #555; }
-.reason { margin: 0.25rem 0 0; }
-.vote { margin: 0.25rem 0 0; font-size: 0.85rem; }
-.closest { margin: 0.25rem 0 0; color: #555; font-size: 0.9rem; }
-footer { color: #777; font-size: 0.85rem; margin-top: 3rem; }
+/* Jake reads this in the evening, often on a phone, so every color is a
+   token that the dark scheme below can redefine. */
+:root {
+  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #9a948a;
+  --rule: #e6e2da; --accent: #7a4b1f; --visited: #8a7a68;
+  --track: #ebe6dc; --fill: #b07a45; --chip: #f2eee6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #77736c;
+    --rule: #2c2c31; --accent: #e0b07c; --visited: #a8998a;
+    --track: #2c2c31; --fill: #c8915a; --chip: #222226;
+  }
+}
+* { box-sizing: border-box; }
+/* System fonts so the page draws at once with no download; Charter and
+   Iowan ship with Apple devices and read well at small sizes. */
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 17px/1.5 Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  -webkit-text-size-adjust: 100%;
+}
+main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 16px 3rem; }
+.meta, .closest, .vote, .intro, h2, footer {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0.5rem 0 0.25rem; }
+.intro { color: var(--muted); font-size: 0.85rem; margin: 0 0 1rem; }
+/* The day heading stays at the top of the screen while Jake scrolls a long
+   day, so he always knows which day he is reading. */
+h2 {
+  position: sticky; top: 0; z-index: 1; background: var(--bg);
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin: 1.5rem 0 0; padding: 0.6rem 0 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted);
+}
+h2 .count { font-weight: 400; letter-spacing: 0; text-transform: none; }
+section { counter-reset: pick; }
+/* The program lists each day's picks closest first, so a number lets Jake
+   see how far down the ranking a paper sits. */
+article {
+  counter-increment: pick; position: relative;
+  padding: 1rem 0 0.9rem 2rem; border-bottom: 1px solid var(--rule);
+}
+article::before {
+  content: counter(pick); position: absolute; left: 0; top: 1.2rem;
+  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums; color: var(--faint);
+}
+.title {
+  display: block; color: var(--ink); text-decoration: none;
+  font-size: 1.1rem; font-weight: 600; line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+/* A visited title fades, which shows Jake which papers he has opened. */
+.title:visited { color: var(--visited); }
+.title:hover, .title:focus { text-decoration: underline; }
+.meta { color: var(--muted); font-size: 0.85rem; margin: 0.3rem 0 0; }
+.source { font-style: italic; }
+.reason { margin: 0.45rem 0 0; }
+/* The reasons are empty until a model writes them; an empty paragraph
+   would only add space. */
+.reason:empty { display: none; }
+/* The summary is sized for a thumb; the abstract inside is set a step
+   smaller than the reason so the two do not compete when both show. */
+.abstract { margin: 0.45rem 0 0; }
+.abstract summary {
+  display: inline-flex; align-items: center; min-height: 2rem;
+  cursor: pointer; color: var(--accent); font-size: 0.8rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  list-style: none;
+}
+/* A flex summary loses the browser's triangle, so it is drawn here; it
+   turns when the abstract is open. */
+.abstract summary::-webkit-details-marker { display: none; }
+.abstract summary::before {
+  content: "\25B8"; display: inline-block; width: 1em;
+  transition: transform 0.15s;
+}
+.abstract[open] summary::before { transform: rotate(90deg); }
+.abstract p {
+  margin: 0.2rem 0 0.4rem; padding-left: 0.75rem;
+  border-left: 2px solid var(--rule); font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+.closest {
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  margin: 0.55rem 0 0; color: var(--muted); font-size: 0.8rem;
+}
+/* The bar restates the angle: empty at 90 degrees, the angle between
+   papers that share no word, and full at 30 degrees or less. */
+.meter {
+  flex: none; margin-top: 0.45em; width: 2.5rem; height: 0.3rem; border-radius: 1px;
+  background: var(--track); overflow: hidden;
+}
+.meter span { display: block; height: 100%; background: var(--fill); }
+.vote { display: flex; gap: 0.5rem; margin: 0.6rem 0 0; font-size: 0.8rem; }
+/* Vote links look quiet but are tall enough to hit with a thumb. */
+.vote a {
+  display: inline-flex; align-items: center; min-height: 2rem;
+  padding: 0 0.7rem; border-radius: 1rem; background: var(--chip);
+  color: var(--muted); text-decoration: none;
+}
+.vote a:hover, .vote a:focus { color: var(--accent); }
+footer { color: var(--faint); font-size: 0.8rem; margin-top: 2.5rem; }
 </style>
 </head>
 <body>
+<main>
 <h1>New papers</h1>
-<p>Picks from 31 October through 6 November 2026.</p>
-<h2>Friday 6 November</h2>
+<p class="intro">Picks from 31 October through 6 November 2026. Under each paper, the bar
+and the angle say how close it is to the named paper or interest of Jake's:
+the smaller the angle, the closer.</p>
+<section>
+<h2>Friday 6 November<span class="count">20 papers</span></h2>
 <article data-paper-id="10.5281/zenodo.23916367">
-<a href="https://doi.org/10.5281/zenodo.23916367">Decision-Centric Artificial Intelligence for Causal Treatment Effect Estimation, Policy Learning, and Intervention Utility Evaluation</a>
-<div class="authors">Reddy Tokala Sai Srujan (Zenodo (CERN European Organization for Nuclear Research))</div>
+<a class="title" href="https://doi.org/10.5281/zenodo.23916367">Decision-Centric Artificial Intelligence for Causal Treatment Effect Estimation, Policy Learning, and Intervention Utility Evaluation</a>
+<p class="meta">Reddy Tokala Sai Srujan &middot; <span class="source">Zenodo (CERN European Organization for Nuclear Research)</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I&#x27;m interested in the use of AI for ... (47 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.5281%2Fzenodo.23916367">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.5281%2Fzenodo.23916367">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:72%"></span></span><span>Closest to: Your interests: I&#x27;m interested in the use of AI for ... (47 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.5281%2Fzenodo.23916367">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.5281%2Fzenodo.23916367">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2611.07879v1">
-<a href="https://arxiv.org/abs/2611.07879v1">Network Effect Decomposition for Causal Effect Estimation under Network Interference</a>
-<div class="authors">Zhirong Huang, Wenzhen Zhang, Guangquan Lu, Boyan Chen, Debo Cheng, Shichao Zhang (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2611.07879v1">Network Effect Decomposition for Causal Effect Estimation under Network Interference</a>
+<p class="meta">Zhirong Huang, Wenzhen Zhang, Guangquan Lu, and 3 others &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Models, methods and network topology: Experimental design for the study of interference (48 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.07879v1">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.07879v1">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Estimating causal effects from observational network data requires accounting for both individual treatment and neighborhood exposure. Existing outcome models commonly incorporate these intervention variables into a joint predictor and estimate causal effects through prediction contrasts, leaving the corresponding response components implicit. We propose the $\underline{N}$etwork $\underline{E}$ffect $\underline{D}$ecomposition $\underline{Net}$work (NEDNet), which parameterizes the conditional outcome response as a query-invariant pre-treatment baseline plus separate treatment- and exposure-response pathways. Path-specific neighborhood contextualization supplies local pre-treatment information to the two pathways. We characterize the fitted response through a unique reference-normalized decomposition, which is equivalent to a zero mixed treatment--exposure contrast. Experiments on semi-synthetic benchmarks derived from BlogCatalog and Flickr show that NEDNet achieves the lowest PEHE among the compared methods for individual, peer, and total effects across homogeneous and covariate-heterogeneous response settings.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:70%"></span></span><span>Closest to: Models, methods and network topology: Experimental design for the study of interference (48 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.07879v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.07879v1">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2604.08853v2">
-<a href="https://arxiv.org/abs/2604.08853v2">The Illusion of Learning from Observational Data: An Empirical Bayes Perspective</a>
-<div class="authors">Bohan Wu, Sebastian Salazar, Donald P. Green, David M. Blei (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2604.08853v2">The Illusion of Learning from Observational Data: An Empirical Bayes Perspective</a>
+<p class="meta">Bohan Wu, Sebastian Salazar, Donald P. Green, David M. Blei &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Causality \&amp; Design-Based Inference (49 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2604.08853v2">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2604.08853v2">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Randomized experiments have long been the gold standard for scientists seeking to learn about cause and effect. When randomized experiments are infeasible, scientists often resort to observational studies, which are widely available and often large but rely on untestable assumptions that, when violated, may result in biased estimates. Uncertainty about bias leads to a phenomenon known as the illusion of learning from observational research (Gerber, Green and Kaplan, 2004a): absent prior information about bias, observational results cannot meaningfully contribute to the estimation of a causal parameter. To shatter the illusion, we take an empirical Bayes perspective. We show that the distribution of observational biases can be learned from calibration studies-experiments that target a causal effect that is known a priori to be zero. Calibration identifies the distribution of observational bias and allows observational studies to inform the estimation of causal parameters via empirical Bayes shrinkage. We formalize the illusion phenomenon in an empirical Bayes setting and show that, with an increasing number of calibration and observation studies, both the bias distribution and the causal effect can be consistently recovered. We illustrate our method through a simulation study and a semi-synthetic application based on Ferraro and Miranda (2013)&#x27;s water-usage experiment.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:68%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (49 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2604.08853v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2604.08853v2">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1038/d41586-026-03267-w">
-<a href="https://doi.org/10.1038/d41586-026-03267-w">People’s social networks can be unintentionally reshaped during randomized interventions</a>
-<div class="authors">Joana Gonçalves-Sá, Ana Maria Jaramillo (Nature)</div>
+<a class="title" href="https://doi.org/10.1038/d41586-026-03267-w">People’s social networks can be unintentionally reshaped during randomized interventions</a>
+<p class="meta">Joana Gonçalves-Sá, Ana Maria Jaramillo &middot; <span class="source">Nature</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I want to read new work on interference, ... (49 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1038%2Fd41586-026-03267-w">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1038%2Fd41586-026-03267-w">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:68%"></span></span><span>Closest to: Your interests: I want to read new work on interference, ... (49 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1038%2Fd41586-026-03267-w">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1038%2Fd41586-026-03267-w">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1001/jama.2026.22318">
-<a href="https://doi.org/10.1001/jama.2026.22318">Causal Language for Studies Using Regression Discontinuity Approaches</a>
-<div class="authors">Issa J Dahabreh, Roger Lewis (JAMA)</div>
+<a class="title" href="https://doi.org/10.1001/jama.2026.22318">Causal Language for Studies Using Regression Discontinuity Approaches</a>
+<p class="meta">Issa J Dahabreh, Roger Lewis &middot; <span class="source">JAMA</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (49 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1001%2Fjama.2026.22318">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1001%2Fjama.2026.22318">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:68%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (49 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1001%2Fjama.2026.22318">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1001%2Fjama.2026.22318">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1016/j.inffus.2026.104915">
-<a href="https://doi.org/10.1016/j.inffus.2026.104915">FedCIP: Prototype-guided causal representation fusion for federated causal inference under feature imbalance</a>
-<div class="authors">Yuxuan Liu, Wenchao Xu, Haozhao Wang, Zhaofeng Shi, Fangyu Li, Yangyang Wang, Peichao Wang, Zhiming He (Information Fusion)</div>
+<a class="title" href="https://doi.org/10.1016/j.inffus.2026.104915">FedCIP: Prototype-guided causal representation fusion for federated causal inference under feature imbalance</a>
+<p class="meta">Yuxuan Liu, Wenchao Xu, Haozhao Wang, and 5 others &middot; <span class="source">Information Fusion</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (50 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1016%2Fj.inffus.2026.104915">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1016%2Fj.inffus.2026.104915">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:67%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (50 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1016%2Fj.inffus.2026.104915">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1016%2Fj.inffus.2026.104915">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2611.08378v1">
-<a href="https://arxiv.org/abs/2611.08378v1">An Improved Minimization Method: Eliminating Shift and Variance Inflation While Maintaining Marginal Balance</a>
-<div class="authors">Yuhang Tao, Li-Xin Zhang (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2611.08378v1">An Improved Minimization Method: Eliminating Shift and Variance Inflation While Maintaining Marginal Balance</a>
+<p class="meta">Yuhang Tao, Li-Xin Zhang &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I want to read about covariance adjustment in ... (50 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.08378v1">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.08378v1">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Pocock and Simon&#x27;s minimization method is a widely used approach for covariate-adaptive randomization in clinical trials. However, it can exhibit the shift problem under unequal allocation and variance inflation of the imbalances in additional covariates. In this paper, we propose a new minimization method that preserves the conventional biased-coin allocation probability while ensuring marginal imbalances bounded in probability. Meanwhile, the proposed procedure guarantees that neither the shift problem nor variance inflation occurs. Simulation and empirical studies demonstrate the excellent performance of the proposed procedure.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:66%"></span></span><span>Closest to: Your interests: I want to read about covariance adjustment in ... (50 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.08378v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.08378v1">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1002/sim.70806">
-<a href="https://doi.org/10.1002/sim.70806">Regression Adjusted Target Effects Using Auxiliary Strata Under Design‐Based Inference</a>
-<div class="authors">Zixuan Zhao, Yuehan Yang (Statistics in Medicine)</div>
+<a class="title" href="https://doi.org/10.1002/sim.70806">Regression Adjusted Target Effects Using Auxiliary Strata Under Design‐Based Inference</a>
+<p class="meta">Zixuan Zhao, Yuehan Yang &middot; <span class="source">Statistics in Medicine</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Making Effects Manifest in Randomized Experiments (51 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1002%2Fsim.70806">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1002%2Fsim.70806">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>We propose a design-based covariate adjustment that leverages information from auxiliary strata to improve the efficiency of average treatment effect estimation when target samples are sparse. The estimator borrows strength from related strata that may be correlated with the target, yielding gains for studies with limited observations or rare subpopulations. We present the estimator, develop a Neyman-style conservative variance estimator for hypothesis testing and confidence interval construction, and establish its large-sample properties. The procedure is straightforward to implement within standard randomization-based workflows and does not require a correctly specified outcome model or stochastic error assumptions. In simulations, the method delivers lower variance and narrower confidence intervals than conventional design-based or regression-adjusted estimators across a range of sparsity and correlation patterns. Applications to a schooling experiment and the ACTG 175 randomized trial illustrate practical gains in precision.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:66%"></span></span><span>Closest to: Making Effects Manifest in Randomized Experiments (51 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1002%2Fsim.70806">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1002%2Fsim.70806">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1016/j.knosys.2026.117262">
-<a href="https://doi.org/10.1016/j.knosys.2026.117262">Screening and refinement for causal feature selection under sample selection bias</a>
-<div class="authors">Jie Pan, Shuai Yang, Xinyu Miao, Xianjie Guo, Lichuan Gu (Knowledge-Based Systems)</div>
+<a class="title" href="https://doi.org/10.1016/j.knosys.2026.117262">Screening and refinement for causal feature selection under sample selection bias</a>
+<p class="meta">Jie Pan, Shuai Yang, Xinyu Miao, and 2 others &middot; <span class="source">Knowledge-Based Systems</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (51 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1016%2Fj.knosys.2026.117262">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1016%2Fj.knosys.2026.117262">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:65%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (51 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1016%2Fj.knosys.2026.117262">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1016%2Fj.knosys.2026.117262">fewer like this</a></p>
 </article>
 <article data-paper-id="10.13140/rg.2.2.17125.36326">
-<a href="https://doi.org/10.13140/rg.2.2.17125.36326">How Reliable Is Inference in Staggered Difference-in-Differences?</a>
-<div class="authors">Yannan Sun, Xing Hu (OpenAlex)</div>
+<a class="title" href="https://doi.org/10.13140/rg.2.2.17125.36326">How Reliable Is Inference in Staggered Difference-in-Differences?</a>
+<p class="meta">Yannan Sun, Xing Hu &middot; <span class="source">OpenAlex</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (51 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.13140%2Frg.2.2.17125.36326">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.13140%2Frg.2.2.17125.36326">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:65%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (51 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.13140%2Frg.2.2.17125.36326">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.13140%2Frg.2.2.17125.36326">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2610.32105v2">
-<a href="https://arxiv.org/abs/2610.32105v2">When Statisticians Can Also Be AI Engineers, What Could We Build?</a>
-<div class="authors">Ruoqing Zhu (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2610.32105v2">When Statisticians Can Also Be AI Engineers, What Could We Build?</a>
+<p class="meta">Ruoqing Zhu &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I&#x27;m interested in the use of AI for ... (52 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.32105v2">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.32105v2">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Statistical software makes methods widely available. Good statistical work, however, requires understanding the question, how the data were collected, and what conclusions the evidence can support. As AI agents make data analysis accessible to people without statistical training, this reasoning should be built into the systems themselves. Our review of selected AI agents for data analysis and study design points to a gap in documented support for scientific inquiry with users at runtime. In this paper, we advocate designing domain-specific interactive harnesses in which statistical principles guide proactive inquiry: agents recognize missing information that could change an analysis, ask questions users may not know to raise, and use the answers to guide or revise analytical decisions. Two practical entry points illustrate how statisticians can begin building: an implemented causal-consulting skill within an existing agent environment and Model Forge, a custom harness for interactive model and algorithm development. These design examples connect statistical principles to choices about context, memory, tools, and interfaces, and motivate evaluation of both computational correctness and the scientific consequences of interaction. We conclude with a broader interdisciplinary research agenda on adaptive human-agent interaction, including selective information acquisition, evolving user preferences, and evaluation under uncertainty.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:63%"></span></span><span>Closest to: Your interests: I&#x27;m interested in the use of AI for ... (52 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.32105v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.32105v2">fewer like this</a></p>
 </article>
 <article data-paper-id="10.13140/rg.2.2.26981.97761">
-<a href="https://doi.org/10.13140/rg.2.2.26981.97761">Certified Causal Flow Distillation in Autoregressive Do Calculus</a>
-<div class="authors">Debi Prasad Ghosh (OpenAlex)</div>
+<a class="title" href="https://doi.org/10.13140/rg.2.2.26981.97761">Certified Causal Flow Distillation in Autoregressive Do Calculus</a>
+<p class="meta">Debi Prasad Ghosh &middot; <span class="source">OpenAlex</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I&#x27;m interested in the use of AI for ... (53 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.13140%2Frg.2.2.26981.97761">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.13140%2Frg.2.2.26981.97761">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: Your interests: I&#x27;m interested in the use of AI for ... (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.13140%2Frg.2.2.26981.97761">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.13140%2Frg.2.2.26981.97761">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2611.07536v1">
-<a href="https://arxiv.org/abs/2611.07536v1">Identification and Bounding of Joint Expectation over Potential Outcomes</a>
-<div class="authors">Yuta Kawakami, Jin Tian (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2611.07536v1">Identification and Bounding of Joint Expectation over Potential Outcomes</a>
+<p class="meta">Yuta Kawakami, Jin Tian &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Causality \&amp; Design-Based Inference (53 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.07536v1">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.07536v1">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>The joint expectation of functions of potential outcomes $(Y_1,Y_0)$ is a fundamental quantity in causal inference, particularly when investigating the variation or heterogeneity of causal effects. This paper provides novel assumptions for their identification: comonotonicity and countercomonotonicity. These assumptions offer a unified framework for their identification across discrete, continuous, and mixed outcome variables. In the absence of these assumptions, we derive sharp bounds for two broad classes of functions, yielding new results for bounding moments of individual causal effects, which are central to measuring effect heterogeneity. We present corresponding estimation methods and illustrate them in simulation studies and real-world datasets.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.07536v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.07536v1">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2611.07459v1">
-<a href="https://arxiv.org/abs/2611.07459v1">Inference after selection on randomized p-values</a>
-<div class="authors">Ronan Perry, Daniela Witten (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2611.07459v1">Inference after selection on randomized p-values</a>
+<p class="meta">Ronan Perry, Daniela Witten &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I want to read new work on randomization-based ... (53 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.07459v1">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.07459v1">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>We consider inference on parameters and hypotheses selected using p-values. We provide a simple procedure to decompose a p-value into two components, one for inference and one for selection, that are independent under the null hypothesis. To control the Type 1 error rate conditional on selection of the null hypothesis from randomized p-values, we develop tests motivated by the selective inference approaches of data thinning, fission, and carving. Unlike the typical application of these approaches, however, our tests only make use of the p-values rather than the full data. Furthermore, we construct confidence intervals that attain the nominal conditional coverage and corresponding estimators. In the context of the file drawer problem, the winner&#x27;s curse, and sequential testing, we show that our proposals offer both theoretical and empirical advantages over existing randomized and non-randomized approaches. Lastly, we apply our methods for selective inference on genetic associations using publicly-available p-values from the UK Biobank.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: Your interests: I want to read new work on randomization-based ... (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.07459v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.07459v1">fewer like this</a></p>
 </article>
 <article data-paper-id="10.7146/politica.v58i4.172004">
-<a href="https://doi.org/10.7146/politica.v58i4.172004">Selection and use of control variables</a>
-<div class="authors">Jonathan Doucette (Politica)</div>
+<a class="title" href="https://doi.org/10.7146/politica.v58i4.172004">Selection and use of control variables</a>
+<p class="meta">Jonathan Doucette &middot; <span class="source">Politica</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I look for papers on sensitivity analysis: how ... (53 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.7146%2Fpolitica.v58i4.172004">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.7146%2Fpolitica.v58i4.172004">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>When we seek to uncover the causal effect of X on Y using observational data, we often include control variables in the hope that it will allow us to uncover our parameter of interest. However, there is a lack of guidance on how to pick and implement controls. The inclusion of what is known as ”bad controls” and the failure to include ”good controls” might result in bias. This article presents accessible guidelines for choosing and using control variables to identify causal effects.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: Your interests: I look for papers on sensitivity analysis: how ... (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.7146%2Fpolitica.v58i4.172004">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.7146%2Fpolitica.v58i4.172004">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1007/s10614-026-11456-y">
-<a href="https://doi.org/10.1007/s10614-026-11456-y">Directional, Useful, and Robust Significance (DURS): A Robustness-Envelope Approach to Sign-Valid Inference</a>
-<div class="authors">Shuhrat Yarashov (Computational Economics)</div>
+<a class="title" href="https://doi.org/10.1007/s10614-026-11456-y">Directional, Useful, and Robust Significance (DURS): A Robustness-Envelope Approach to Sign-Valid Inference</a>
+<p class="meta">Shuhrat Yarashov &middot; <span class="source">Computational Economics</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Research Note: A more powerful test statistic for reasoning about interference between units (53 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1007%2Fs10614-026-11456-y">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1007%2Fs10614-026-11456-y">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: Research Note: A more powerful test statistic for reasoning about interference between units (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1007%2Fs10614-026-11456-y">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1007%2Fs10614-026-11456-y">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1007/s11222-026-11029-x">
-<a href="https://doi.org/10.1007/s11222-026-11029-x">Langevin-gradient rerandomization</a>
-<div class="authors">Antonio Carlos Herling Ribeiro (Statistics and Computing)</div>
+<a class="title" href="https://doi.org/10.1007/s11222-026-11029-x">Langevin-gradient rerandomization</a>
+<p class="meta">Antonio Carlos Herling Ribeiro &middot; <span class="source">Statistics and Computing</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I am interested in computation for permutation and ... (54 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1007%2Fs11222-026-11029-x">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1007%2Fs11222-026-11029-x">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Abstract Rerandomization is an experimental design technique that repeatedly randomizes treatment assignments until covariates are balanced between treatment groups. Rerandomization in the design stage of an experiment can lead to many asymptotic benefits in the analysis stage, such as increased precision, increased statistical power for hypothesis testing, reduced sensitivity to model specification, and mitigation of p-hacking. However, the standard implementation of rerandomization via rejection sampling faces a severe computational bottleneck in high-dimensional settings, where the probability of finding an acceptable randomization vanishes. Although alternatives based on Metropolis-Hastings and constrained optimization techniques have been proposed, these alternatives rely on discrete procedures that lack information from the gradient of the covariate balance metric, limiting their efficiency in high-dimensional spaces. We propose Langevin-Gradient Rerandomization (LGR), a new sampling method that mitigates this dimensionality challenge by navigating a continuous relaxation of the treatment assignment space with a Langevin diffusion. We discuss the trade-offs of this approach, specifically that LGR samples from a non-uniform distribution over the set of balanced randomizations. We demonstrate how to retain valid inference under this design using randomization tests and empirically show that LGR generates acceptable randomizations orders of magnitude faster than current rerandomization methods in high dimensions.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: Your interests: I am interested in computation for permutation and ... (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1007%2Fs11222-026-11029-x">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1007%2Fs11222-026-11029-x">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1002/pst.70141">
-<a href="https://doi.org/10.1002/pst.70141">Estimands for Randomized Discontinuation Designs in Oncology</a>
-<div class="authors">Ayon Mukherjee, Oleksandr Sverdlov, Yu Deng (Pharmaceutical Statistics)</div>
+<a class="title" href="https://doi.org/10.1002/pst.70141">Estimands for Randomized Discontinuation Designs in Oncology</a>
+<p class="meta">Ayon Mukherjee, Oleksandr Sverdlov, Yu Deng &middot; <span class="source">Pharmaceutical Statistics</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Causality \&amp; Design-Based Inference (54 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1002%2Fpst.70141">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1002%2Fpst.70141">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>The Randomized Discontinuation Design (RDD) is a two-stage adaptive enrichment design that is uniquely suited to answer causal questions about the benefit of continuing treatment in patients who have already demonstrated response to an induction therapy. The estimand framework from the International Council for Harmonisation (ICH) E9(R1) addendum provides the necessary language to precisely define this scientific question. A major challenge in formulating estimands for RDD oncology trials is that the target population for the primary scientific question is itself defined by a post-treatment biological outcome in Stage 1, which makes it difficult to separate the process of selecting eligible participants from the causal inference problem in Stage 2. In this paper, we address this challenge using the Phase III JAVELIN Gastric 100 trial as an example. We argue that the &quot;conventional&quot; estimand can be formulated as an estimand targeting the response-defined subgroup of participants with evidence of response to the induction therapy in Stage 1, and we clarify the precise sense in which this subgroup is, and is not, related to the concept of a principal stratum. We also formulate a &quot;full-path&quot; estimand-capturing the patients&#x27; entire two-stage treatment journey-and connect it to the dynamic treatment regime literature. We also provide Directed Acyclic Graphs (DAGs) for the two estimands to clarify their respective causal structures. This paper aims to strengthen the dialogue among clinical research stakeholders tasked with the design and analysis of RDD trials and support more efficient regulatory decision-making. Trial Registration: ClinicalTrials.gov identifier: NCT02625610.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1002%2Fpst.70141">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1002%2Fpst.70141">fewer like this</a></p>
 </article>
 <article data-paper-id="osf.io/va8k6_v3">
-<a href="https://doi.org/10.31235/osf.io/va8k6_v3">Beyond Good and Bad Controls: Judicial Prejudice and Differential Measurement Error in Sentencing Research</a>
-<div class="authors">Jose Pina-Sánchez, Andrzej Uhl (socarxiv)</div>
+<a class="title" href="https://doi.org/10.31235/osf.io/va8k6_v3">Beyond Good and Bad Controls: Judicial Prejudice and Differential Measurement Error in Sentencing Research</a>
+<p class="meta">Jose Pina-Sánchez, Andrzej Uhl &middot; <span class="source">socarxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I look for papers on sensitivity analysis: how ... (54 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fva8k6_v3">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fva8k6_v3">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Observational studies of institutional decision-making often rely on explanatory variables that are themselves partly constructed through the process under investigation. In sentencing research, many legal factors are defined by the judge and may therefore act simultaneously as confounders and mediators. Controlling for them may introduce post-treatment bias, whereas omitting them may introduce confounding bias. We propose overcoming this impasse by treating the influence of judicial prejudice on these legal factors as a form of differential measurement error. Using a typical regression model of racial disparities in the U.S. Federal Courts, we demonstrate how Monte Carlo simulations can be used to examine changes in estimates of racial disparity under different assumptions about the extent to which judicial prejudice is present in the construction of offence seriousness and pre-trial detention. We show that minor differential errors in some of these legal factors can substantially mask estimates of racial disparities in sentence length, and why the convention of reporting models with and without discretionary factors fails to reflect this form of model uncertainty.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Your interests: I look for papers on sensitivity analysis: how ... (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fva8k6_v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fva8k6_v3">fewer like this</a></p>
 </article>
 <article data-paper-id="10.13140/rg.2.2.10384.98562">
-<a href="https://doi.org/10.13140/rg.2.2.10384.98562">Causal Valuation in Programmatic Advertising: A Mean-Field Analysis</a>
-<div class="authors">Abdou Kaba (OpenAlex)</div>
+<a class="title" href="https://doi.org/10.13140/rg.2.2.10384.98562">Causal Valuation in Programmatic Advertising: A Mean-Field Analysis</a>
+<p class="meta">Abdou Kaba &middot; <span class="source">OpenAlex</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (54 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.13140%2Frg.2.2.10384.98562">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.13140%2Frg.2.2.10384.98562">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.13140%2Frg.2.2.10384.98562">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.13140%2Frg.2.2.10384.98562">fewer like this</a></p>
 </article>
-<h2>Monday 2 November</h2>
+</section>
+<section>
+<h2>Monday 2 November<span class="count">19 papers</span></h2>
 <article data-paper-id="10.1080/09332480.2026.2725525">
-<a href="https://doi.org/10.1080/09332480.2026.2725525">A Simple Sensitivity Analysis for Observational Studies</a>
-<div class="authors">Jeffrey Zhang, Dylan S. Small (CHANCE)</div>
+<a class="title" href="https://doi.org/10.1080/09332480.2026.2725525">A Simple Sensitivity Analysis for Observational Studies</a>
+<p class="meta">Jeffrey Zhang, Dylan S. Small &middot; <span class="source">CHANCE</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I look for papers on sensitivity analysis: how ... (42 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1080%2F09332480.2026.2725525">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1080%2F09332480.2026.2725525">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Drawing causal conclusions from non-experimental (observational) data is a central aim in science but is extremely challenging. Without control over treatment assignment (as in an experiment), treated and control groups may not be comparable on unmeasured factors affecting treatment and outcome. To address such concerns, sensitivity analyses can be performed; sensitivity analyses acknowledge the existence of unmeasured factors but ask how strong they must be to overturn causal conclusions. We (re)introduce a particularly simple form of sensitivity analysis which can be performed by any reader of an observational study with access to only an estimate and confidence interval for a causal effect. This simple sensitivity analysis may serve as an effective tool for readers wishing to gauge the robustness of conclusions from an observational study.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:81%"></span></span><span>Closest to: Your interests: I look for papers on sensitivity analysis: how ... (42 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1080%2F09332480.2026.2725525">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1080%2F09332480.2026.2725525">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2512.05290v2">
-<a href="https://arxiv.org/abs/2512.05290v2">Does Rerandomization Help Beyond Covariate Adjustment? A Review and Guide for Theory and Practice</a>
-<div class="authors">Ant\^onio Carlos Herling Ribeiro Junior, Zach Branson (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2512.05290v2">Does Rerandomization Help Beyond Covariate Adjustment? A Review and Guide for Theory and Practice</a>
+<p class="meta">Ant\^onio Carlos Herling Ribeiro Junior, Zach Branson &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Making Effects Manifest in Randomized Experiments (47 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2512.05290v2">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2512.05290v2">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Rerandomization is a modern experimental design technique that repeatedly randomizes treatment assignments until covariates are deemed balanced between treatment groups. This enhances the precision and coherence of causal effect estimators, mitigates false discoveries from p-hacking, and increases statistical power. Recent work suggests that balancing covariates via rerandomization does not alter the asymptotic precision of covariate-adjusted estimators, thereby making it unclear whether rerandomization is worthwhile if adjusted estimators are used. However, these results have two key caveats. First, these results are asymptotic, leaving finite sample performance unknown. Second, these results focus on precision, while other potential benefits, such as increased coherence among flexible estimators, remain understudied. Hence, in this paper we provide three main contributions: (i) a comprehensive review of the rerandomization literature, covering historical foundations, theoretical developments, and recent methodological advancements, (ii) an extensive simulation study examining finite-sample performance, and (iii) a practical guide for practitioners. Our study compares precision, coherence, power, and coverage of various estimators under rerandomization versus complete randomization. We find rerandomization to be a complementary design strategy that enhances the precision, robustness, and reliability of causal effect estimators, especially for smaller sample sizes.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:72%"></span></span><span>Closest to: Making Effects Manifest in Randomized Experiments (47 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2512.05290v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2512.05290v2">fewer like this</a></p>
 </article>
 <article data-paper-id="10.5691/jjb.47.183">
-<a href="https://doi.org/10.5691/jjb.47.183">Introduction to and Recent Developments in Bayesian Causal Inference: Propensity Scores, Treatment Effect Heterogeneity, and Sensitivity Analysis</a>
-<div class="authors">Tomohiro Ohigashi, Shunichiro Orihara (Japanese Journal of Biometrics)</div>
+<a class="title" href="https://doi.org/10.5691/jjb.47.183">Introduction to and Recent Developments in Bayesian Causal Inference: Propensity Scores, Treatment Effect Heterogeneity, and Sensitivity Analysis</a>
+<p class="meta">Tomohiro Ohigashi, Shunichiro Orihara &middot; <span class="source">Japanese Journal of Biometrics</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (48 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.5691%2Fjjb.47.183">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.5691%2Fjjb.47.183">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:70%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (48 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.5691%2Fjjb.47.183">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.5691%2Fjjb.47.183">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2609.14170v3">
-<a href="https://arxiv.org/abs/2609.14170v3">Finite-Sample FDR Control for Greedy Aggregation over Networks</a>
-<div class="authors">Mehrdad Pournaderi (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2609.14170v3">Finite-Sample FDR Control for Greedy Aggregation over Networks</a>
+<p class="meta">Mehrdad Pournaderi &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I am interested in multiple testing in multisite ... (52 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2609.14170v3">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2609.14170v3">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Distributed multiple testing asks $N$ sites, each holding p-values for its own hypotheses, to control the false discovery rate (FDR) of the discoveries made across the whole network while communicating only a small number of bits. Greedy interval aggregation (Pournaderi and Xiang, IEEE TSIPN, 2023) meets the communication budget but controls FDR only asymptotically, and its FDR can exceed the target at finite sample sizes; the same interval counts both select the rejection regions and calibrate the stopping rule, which biases the selected interval densities upward. We propose \emph{budgeted BONuS-GA}: each site mixes synthetic uniform p-values into its data, the center ranks candidate p-value intervals across sites using the pooled counts, and each site&#x27;s false discoveries are estimated from its own synthetic counts under a per-site share of the level. The procedure needs no knowledge of the null proportions, uses every p-value for both selection and inference, and controls $FDR\le\alpha$ at every sample size for any fixed assignment of hypotheses to sites, assuming only that the null p-values are independent uniforms, independent of the non-null p-values. It keeps the original $O(\sqrt m\log m)$ communication, $m$ being the total number of p-values, when $N=O(\sqrt m)$. We also give a sample-splitting alternative, cross-fit greedy aggregation, with finite-sample control under a random-site model, and we quantify the selection bias behind the original procedure&#x27;s failure. In a monitoring-network simulation the budgeted procedure retains most of the power of its heuristic counterpart at moderate-to-large site sizes.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:64%"></span></span><span>Closest to: Your interests: I am interested in multiple testing in multisite ... (52 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2609.14170v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2609.14170v3">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2311.16529v4">
-<a href="https://arxiv.org/abs/2311.16529v4">Efficient and Globally Robust Causal Excursion Effect Estimation</a>
-<div class="authors">Zhaoxi Cheng, Lauren Bell, Tianchen Qian (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2311.16529v4">Efficient and Globally Robust Causal Excursion Effect Estimation</a>
+<p class="meta">Zhaoxi Cheng, Lauren Bell, Tianchen Qian &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Causality \&amp; Design-Based Inference (52 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2311.16529v4">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2311.16529v4">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Causal excursion effect (CEE) characterizes the effect of an intervention under policies that deviate from the experimental policy. It is widely used to study the effect of time-varying interventions that have the potential to be frequently adaptive, such as those delivered through smartphones. We study the semiparametric efficient estimation of CEE and we derive a semiparametric efficiency bound for CEE under working assumptions, in the context of micro-randomized trials. We propose a class of two-stage estimators that achieve the efficiency bound and are robust to misspecified nuisance models. In deriving the asymptotic property of the estimators, we establish a collection of easy-to-use theorems for globally robust Z-estimators with either cross-fitted or non-cross-fitted nuisance parameters that are applicable beyond the proposed estimators for CEE. We demonstrate efficiency gain of the proposed estimator compared to existing ones through simulations and a real data application using the Drink Less micro-randomized trial.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:63%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (52 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2311.16529v4">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2311.16529v4">fewer like this</a></p>
 </article>
 <article data-paper-id="10.5705/ss.202025.0480">
-<a href="https://doi.org/10.5705/ss.202025.0480">Transfer Learning for Covariate-Adaptive Randomized Trials with High-Dimensional Generalized Linear Models</a>
-<div class="authors">Yujia Gu, Hanzhong Liu, Wei Ma (Statistica Sinica)</div>
+<a class="title" href="https://doi.org/10.5705/ss.202025.0480">Transfer Learning for Covariate-Adaptive Randomized Trials with High-Dimensional Generalized Linear Models</a>
+<p class="meta">Yujia Gu, Hanzhong Liu, Wei Ma &middot; <span class="source">Statistica Sinica</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I want to read about covariance adjustment in ... (54 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.5705%2Fss.202025.0480">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.5705%2Fss.202025.0480">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Covariate-adaptive randomization (CAR) is widely adopted in clinical trials to balance baseline covariates across treatment arms.When outcomes are binary or other types of discrete data, generalized linear models (GLMs) are typically used as working models to improve the efficiency of treatment effect estimation.However, in high-dimensional settings, limited sample sizes may lead to unstable estimation and invalid inference.Moreover, when the underlying data-generating mechanism is misspecified relative to the GLM working model, efficiency gains over the unadjusted estimator are no longer guaranteed.To address these challenges, we first propose a high-dimensional GLM adjustment approach using ℓ1 regularization, resulting in a GLM-adjusted treatment effect estimator under CAR.When the target trial has a limited sample size, we further develop a transfer learning estimator that incorporates information from a large external trial regarded as source data.As long as the source and target populations are sufficiently similar, the transfer learning estimator requires weaker sparsity conditions and a smaller target sample size than the GLM-adjusted estimator to achieve asymptotic normality.To guarantee efficiency improve-Statistica Sinica: Newly accepted Paper ment relative to the unadjusted estimator, we additionally introduce a projection method.With this step, both the GLM-adjusted and transfer learning estimators achieve efficiency gains.Simulation studies and a semi-synthetic data application demonstrate the effectiveness of our transfer learning strategy and the projection method.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: Your interests: I want to read about covariance adjustment in ... (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.5705%2Fss.202025.0480">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.5705%2Fss.202025.0480">fewer like this</a></p>
 </article>
 <article data-paper-id="osf.io/entwy_v1">
-<a href="https://doi.org/10.31235/osf.io/entwy_v1">ThSQCA: An R Package for Threshold-Sweep Qualitative Comparative Analysis</a>
-<div class="authors">Yuki Toyoda (socarxiv)</div>
+<a class="title" href="https://doi.org/10.31235/osf.io/entwy_v1">ThSQCA: An R Package for Threshold-Sweep Qualitative Comparative Analysis</a>
+<p class="meta">Yuki Toyoda &middot; <span class="source">socarxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Experimental Reasoning in Process Tracing: A Method for Calculating P-Values for Qualitative Causal Inference (54 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fentwy_v1">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fentwy_v1">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Qualitative comparative analysis (QCA) requires thresholds to construct sets from continuous scales, but a standard analysis is fixed to a single set of thresholds and does not directly reveal how the sufficiency structure changes when the target level of the outcome or the judgment criterion for a condition changes. This article introduces the R package ThSQCA, which uses the QCA package as its computational engine and provides a common workflow to run, aggregate, visualize, and report analyses that systematically vary the outcome threshold, the condition thresholds, or both. Using simulated data constructed for methodological illustration, we show that raising the target level of the outcome narrows the result from multiple sufficient paths to a single path (with lower consistency and higher coverage) and eventually yields no solution. We also show that varying the judgment criterion for a condition can make a solution disappear or produce a solution supported by very few cases. ThSQCA does not select an appropriate threshold automatically; it is a diagnostic workflow that clarifies the range over which a conclusion holds and the points at which it changes.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: Experimental Reasoning in Process Tracing: A Method for Calculating P-Values for Qualitative Causal Inference (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fentwy_v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fentwy_v1">fewer like this</a></p>
 </article>
 <article data-paper-id="10.9734/ajpas/2026/v28i11974">
-<a href="https://doi.org/10.9734/ajpas/2026/v28i11974">A Simulation and Real-Data Evaluation of Causal Discovery Algorithms under Realistic Social Science Conditions</a>
-<div class="authors">Sacha Varin (Asian Journal of Probability and Statistics)</div>
+<a class="title" href="https://doi.org/10.9734/ajpas/2026/v28i11974">A Simulation and Real-Data Evaluation of Causal Discovery Algorithms under Realistic Social Science Conditions</a>
+<p class="meta">Sacha Varin &middot; <span class="source">Asian Journal of Probability and Statistics</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (54 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.9734%2Fajpas%2F2026%2Fv28i11974">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.9734%2Fajpas%2F2026%2Fv28i11974">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Background: Causal discovery algorithms aim to infer causal structure from observational data under explicit assumptions, yet their performance under realistic social science conditions remains insufficiently understood. Existing evaluations typically rely on large samples, high-dimensional settings, and clean data—conditions that rarely hold in applied research. Objectives: This study evaluates four base algorithms (PC, GES, FCI, GFCI_approx) and three bootstrap-enhanced variants (FGES_boot, GFCI_approx_boot, FCI_boot) under conditions intended to reflect constraints commonly encountered in applied social science research, with the aim of understanding how different causal discovery methods behave under realistic small-sample, low-dimensional, and imperfect-data conditions. Methodology: Algorithms were evaluated through a factorial simulation design spanning small sample sizes (N = 25–200), low dimensionality (p = 4–6), moderate outlier contamination, and moderate departures from linearity (20% of causal relationships generated using quadratic functions), complemented by an illustrative application to a real educational dataset (35 countries × 7 indicators). GFCI_approx is a custom hybrid causal discovery method inspired by selected components of the GFCI framework (Ogarrio et al., 2016); because it replaces the FGES search phase with hill-climbing optimization, it should be interpreted as a distinct hybrid method rather than an implementation of the original GFCI algorithm. Findings: Five main findings emerged. First, all algorithms exhibited a pronounced precision–recall asymmetry, with consistently higher precision (0.92–1.00) than recall (0.43–0.91) across the examined conditions. Second, recovery performance improved substantially between N = 50 and N = 100, while estimation uncertainty decreased and performance became more stable at larger sample sizes. Third, increasing dimensionality (p = 4 to 6) reduced recovery accuracy unless compensated by larger sample sizes. Fourth, moderate outlier contamination reduced performance by approximately 5–22%, whereas the moderate departures from linearity examined in this study had only a negligible effect (approximately 1.6%), indicating that outlier contamination was the dominant source of performance degradation. Fifth, an illustrative application to a real educational dataset showed that, after removal of a composite variable, PC and FCI converged on two undirected edges; bootstrap stability analysis provided stronger support for the Effectiveness–Equity edge (stability = 0.800, 95% CI [0.657, 0.943]) than for the Parent engagement–Effectiveness edge (stability = 0.733, 95% CI [0.575, 0.892]). Because no ground-truth causal structure is available, this application should be interpreted as an illustration of the proposed workflow rather than as a validation of recovered causal relationships. Conclusion &amp; Implications: We provide practical recommendations regarding sample size, preprocessing, and robustness assessment, and argue that causal discovery in small-sample social science settings is best viewed as a conservative hypothesis-generation and filtering tool rather than a comprehensive structure recovery method. By aligning the simulation design with realistic applied constraints, this study helps bridge the gap between methodological research and empirical practice.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.9734%2Fajpas%2F2026%2Fv28i11974">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.9734%2Fajpas%2F2026%2Fv28i11974">fewer like this</a></p>
 </article>
 <article data-paper-id="10.5281/zenodo.23680040">
-<a href="https://doi.org/10.5281/zenodo.23680040">Signed unbiased estimation without common exposure support</a>
-<div class="authors">Zihuan Xu (Zenodo (CERN European Organization for Nuclear Research))</div>
+<a class="title" href="https://doi.org/10.5281/zenodo.23680040">Signed unbiased estimation without common exposure support</a>
+<p class="meta">Zihuan Xu &middot; <span class="source">Zenodo (CERN European Organization for Nuclear Research)</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (54 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.5281%2Fzenodo.23680040">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.5281%2Fzenodo.23680040">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>This technical note studies whether one assignment-weighted linear estimator of a full-population exposure mean can remain design-unbiased under every graph in a finite candidate set. Exposure records own treatment and the presence of a treated neighbor; the true candidate graph is fixed throughout the experiment and response tables may be heterogeneous. Within the existing design-based Riesz framework, the note presents the finite affine-support condition and its nonnegative common-support corollary, then computes the support structure of candidate perfect matchings. Under uniform complete randomization with exactly two treated units, signed linear unbiased estimation of the (1,1) population mean is feasible exactly when every unit has a person who is its partner in none of the candidate matchings. For a specified four-unit, two-candidate matching experiment with positive treated-pair probabilities p_e and response values in [-M,M], the note establishes uniqueness in the common deterministic linear unbiased class and exact worst design variance R(p)=(M^2/4) sum_e 1/p_e. Uniform treated-pair assignment minimizes this risk at 9M^2; the known-graph linear unbiased oracle value under the same uniform experiment is 3M^2. These costs refer to the stated experiment and estimator classes. Version v1 is the first public technical-note release.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.5281%2Fzenodo.23680040">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.5281%2Fzenodo.23680040">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2503.14314v3">
-<a href="https://arxiv.org/abs/2503.14314v3">Sharp bounds for within-household encouragement designs with interference</a>
-<div class="authors">Santiago Acerenza, Julian Martinez-Iriarte, Alejandro S\&#x27;anchez-Becerra, Pietro Emilio Spini (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2503.14314v3">Sharp bounds for within-household encouragement designs with interference</a>
+<p class="meta">Santiago Acerenza, Julian Martinez-Iriarte, Alejandro S\&#x27;anchez-Becerra, Pietro Emilio Spini &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I want to read new work on interference, ... (54 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2503.14314v3">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2503.14314v3">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Experiments with spillovers create incentives for strategic behavior: when one household member&#x27;s treatment can affect another, take-up decisions become interdependent. We propose an instrumental-variables framework grounded in game theory, in which take-up is a Nash equilibrium among a small number of agents, and all variables are discrete. Under minimal assumptions, without specifying how equilibria are selected, we derive sharp non-parametric bounds for direct, indirect, and offer-mediated effects. Game-theoretic restrictions such as supermodularity, symmetry, and dominance can be layered on via a tractable linear program, and we characterize when each does or does not tighten the identified set. We illustrate the usefulness of our approach to study household experiments by reanalyzing a banking intervention in Kenya.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: Your interests: I want to read new work on interference, ... (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2503.14314v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2503.14314v3">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1080/01621459.2026.2754151">
-<a href="https://doi.org/10.1080/01621459.2026.2754151">Sensitivity Analysis for the Test-Negative Design</a>
-<div class="authors">Soumyabrata Kundu, Peng Ding, Jingshu Wang, Xinran Li (Journal of the American Statistical Association)</div>
+<a class="title" href="https://doi.org/10.1080/01621459.2026.2754151">Sensitivity Analysis for the Test-Negative Design</a>
+<p class="meta">Soumyabrata Kundu, Peng Ding, Jingshu Wang, Xinran Li &middot; <span class="source">Journal of the American Statistical Association</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Your interests: I look for papers on sensitivity analysis: how ... (54 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1080%2F01621459.2026.2754151">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1080%2F01621459.2026.2754151">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>The test-negative design has become popular for evaluating the effectiveness of post-licensure vaccines using observational data. In addition to its logistical convenience for data collection, the design is also believed to control for the differential health-care-seeking behavior between vaccinated and unvaccinated individuals, an important while often unmeasured confounder of the vaccination–infection relationship. Hence, the design has been employed routinely to monitor seasonal flu vaccines and more recently to measure COVID-19 vaccine effectiveness. Despite its popularity, the design has been questioned, particularly about its ability to fully control for unmeasured confounding. In this paper, we explore deviations from a perfect test-negative design, and propose various sensitivity analysis methods for estimating the effect of vaccination measured by the causal odds ratio in the subpopulation of individuals with good health-care-seeking behavior. We start with point identification of the causal odds ratio, comparing different forms of identification assumptions and their corresponding estimands. We then propose two approaches for conducting sensitivity analysis, addressing the influence of unmeasured confounding in two different ways. Specifically, one approach investigates partial control for unmeasured confounding, while the other examines the impact of unmeasured confounding on both vaccination and infection. Furthermore, we combine them to provide narrower bounds on the causal odds ratio, and further sharpen the bounds by restricting the treatment effect heterogeneity. Finally, we apply the proposed methods to evaluate the effectiveness of COVID-19 vaccines using observational data from test-negative designs.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Your interests: I look for papers on sensitivity analysis: how ... (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1080%2F01621459.2026.2754151">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1080%2F01621459.2026.2754151">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2607.19625v2">
-<a href="https://arxiv.org/abs/2607.19625v2">Estimating Network Spillovers under Dense Measurement Error</a>
-<div class="authors">Yingxing Li, Aureo De Paula, Weining Wang (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2607.19625v2">Estimating Network Spillovers under Dense Measurement Error</a>
+<p class="meta">Yingxing Li, Aureo De Paula, Weining Wang &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Reasoning about Interference Between Units: A General Framework (55 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2607.19625v2">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2607.19625v2">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>This paper analyzes spillover effects in spatial (network) models when the neighborhood (adjacency) matrix is contaminated by measurement error from reporting, aggregation, or disclosure imperfections, leading to inconsistent estimation of network effects. We introduce a regularization framework for the latent network that allows for sparse and/or low-rank structure and accommodates potential correlation between measurement errors and outcomes. We propose two estimators: (i) a two-stage procedure that first denoises the adjacency matrix and then incorporates the purified network into a regression analysis, and (ii) a Generalized Method of Moments (GMM) estimator that jointly estimates regression parameters and refines the network structure. We then establish strictly improved consistency rates for the spillover effect estimator relative to naive estimation ignoring measurement error. Simulations demonstrate that, in the presence of noisy networks, our approach reduces the root mean squared error of spillover estimates relative to conventional methods by approximately $50-80\%$. We apply our framework to examine the international spillover of economic growth, and the tax competition across U.S. states, illustrating that denoising might restore Leontief stability and yields improved estimates of spillovers.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Reasoning about Interference Between Units: A General Framework (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2607.19625v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2607.19625v2">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1177/30494826261503246">
-<a href="https://doi.org/10.1177/30494826261503246">When Balanced Covariates Conceal Selection: Anatomic Confounding in New Surgical Program Evaluation</a>
-<div class="authors">Queenne Kimverlee C. Landingin, Jayson Jamco (Journal of the Heart Valve Society)</div>
+<a class="title" href="https://doi.org/10.1177/30494826261503246">When Balanced Covariates Conceal Selection: Anatomic Confounding in New Surgical Program Evaluation</a>
+<p class="meta">Queenne Kimverlee C. Landingin, Jayson Jamco &middot; <span class="source">Journal of the Heart Valve Society</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Covariate Balance in Simple, Stratified and Clustered Comparative Studies (55 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1177%2F30494826261503246">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1177%2F30494826261503246">fewer like this</a></p>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: Covariate Balance in Simple, Stratified and Clustered Comparative Studies (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1177%2F30494826261503246">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1177%2F30494826261503246">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1002/prm2.70052">
-<a href="https://doi.org/10.1002/prm2.70052">From prediction to intervention: Causal artificial intelligence as the missing link in precision therapeutics</a>
-<div class="authors">Gedion Mengistu (Precision Medical Sciences)</div>
+<a class="title" href="https://doi.org/10.1002/prm2.70052">From prediction to intervention: Causal artificial intelligence as the missing link in precision therapeutics</a>
+<p class="meta">Gedion Mengistu &middot; <span class="source">Precision Medical Sciences</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (55 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1002%2Fprm2.70052">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1002%2Fprm2.70052">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Abstract Artificial intelligence (AI) applied to multiomics data has expanded precision medicine&#x27;s capacity to predict disease risk, prognosis, and treatment response. However, predictive accuracy alone does not answer the central question of precision therapeutics: which intervention will improve a given patient&#x27;s outcome. Conventional multiomics models primarily capture statistical associations and remain vulnerable to confounding and distributional shift, limiting clinical actionability. Causal artificial intelligence (causal AI), defined here as the integration of causal inference with machine learning (ML) to estimate intervention effects rather than predict outcomes, offers a complementary framework. This review critically examines the conceptual foundations, terminology, methodological maturity, and translational status of causal AI in precision therapeutics, distinguishing causal inference, causal ML, causal discovery, and causal representation learning, and emphasizing multiomics integration and biological mechanisms. I review causal forests, targeted maximum likelihood estimation, Mendelian randomization, and target trial emulation, alongside layer‐specific opportunities across multiomics data. Emerging applications in oncology, cardiometabolic disease, and psychiatry illustrate the potential of causal AI to characterize treatment‐effect heterogeneity, though most remain at hypothesis‐generating or retrospective stages, and methodological, interpretability, regulatory, and equity challenges remain substantial. Mechanism‐anchored causal AI offers a promising but still immature path toward closing the gap between molecular prediction and clinical intervention.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1002%2Fprm2.70052">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1002%2Fprm2.70052">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1186/s12874-026-03059-w">
-<a href="https://doi.org/10.1186/s12874-026-03059-w">Implications of non-compliance in the experimental arm on treatment effect estimation in randomised controlled trials: a methodological assessment of four summary measures</a>
-<div class="authors">Tianyuan Gu, Junxian Zhu, Jialiang Li, Yu Yang Soon, Joseph T. S. Wee, Bee‐Choo Tai (BMC Medical Research Methodology)</div>
+<a class="title" href="https://doi.org/10.1186/s12874-026-03059-w">Implications of non-compliance in the experimental arm on treatment effect estimation in randomised controlled trials: a methodological assessment of four summary measures</a>
+<p class="meta">Tianyuan Gu, Junxian Zhu, Jialiang Li, and 3 others &middot; <span class="source">BMC Medical Research Methodology</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Randomization Tests for Distributions of Individual Treatment Effects via Combined Rank Statistics (55 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1186%2Fs12874-026-03059-w">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1186%2Fs12874-026-03059-w">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Non-compliance in randomised controlled trials (RCTs) may distort the estimate of treatment effect in intention-to-treat (ITT) and per-protocol (PP) analyses. For time-to-event outcomes, Inverse Probability of Censoring Weighting (IPCW) method and Rank Preserving Structural Failure Time model (RPSFTM) have been proposed to address treatment switch across two arms, with treatment effects summarised in terms of hazard ratio (HR) or restricted mean survival time (RMST). In this paper, we adapt the IPCW and RPSFTM methods to consider one-sided non-compliance affecting the experimental arm. For IPCW, non-compliers in the experimental arm were censored at the time of non-compliance. For RPSFTM, the causal model was modified to reconstruct the counterfactual survival time for non-compliers in the experimental arm. We quantify the treatment effects using HR, difference (dRMST) or ratio (rRMST) of RMST and milestone survival difference (MSD). We compare the aforementioned methods via rigorous simulation and a real-world data analysis based on a randomised trial of nasopharyngeal cancer. The simulation results demonstrated that RPSFTM-related models produced smaller bias, whereas IPCW generally performed well under high non-compliance for all summary measures. However, the RMST-based estimates had lower power than the HR estimate under idealised proportional hazard setting. When illustrated using real-world data, RPSFTM-related models yielded larger estimate of treatment effect for summary measures of dRMST and rRMST, whereas IPCW produced larger estimates when quantified in terms of HR and MSD. For handling treatment non-compliance in RCTs, it is important to choose the summary measure and model carefully on a case-by-case basis.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: Randomization Tests for Distributions of Individual Treatment Effects via Combined Rank Statistics (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1186%2Fs12874-026-03059-w">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1186%2Fs12874-026-03059-w">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2610.41294v1">
-<a href="https://arxiv.org/abs/2610.41294v1">The Double Diagonal Estimator: Reducing Bias in Two-Sided Marketplace Experiments</a>
-<div class="authors">Saanvi Chawla, Vasilis Syrgkanis (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2610.41294v1">The Double Diagonal Estimator: Reducing Bias in Two-Sided Marketplace Experiments</a>
+<p class="meta">Saanvi Chawla, Vasilis Syrgkanis &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (55 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.41294v1">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.41294v1">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Interference between participants in two-sided marketplace experiments can severely bias conventional A/B tests. While two-sided randomization (TSR), which randomizes both supply and demand, enables estimators that mitigate this bias, existing analyses offer limited guidance on which estimator to prefer for the balanced market conditions common in practice, as they largely focus on extreme supply- or demand-constrained regimes. We introduce the Double Diagonal (DD) estimator, a novel method for interference-robust treatment effect estimation. The DD estimator contrasts the outcomes of treated-treated and control-control pairs and uses the off-diagonal interactions (treated-control and control-treated) to correct for interference-induced bias. We provide the first theoretical comparison between the DD and the standard naive TSR (TSRN) estimator under a simplifying mean-field market model, proving two key results: (i) DD&#x27;s bias is strictly smaller than the standard estimator&#x27;s below a critical threshold of the outside-option parameter; in particular, DD&#x27;s bias is smaller whenever the outside option is at most twice as attractive as platform options; and (ii) the two estimators exhibit biases in opposite directions, with DD underestimating and the standard estimator overestimating the true effect, respectively. Extensive numerical experiments in realistic market settings--spanning heterogeneous treatment effects, supply-demand imbalances, and varied market structures--corroborate our theoretical findings. Across a wide range of configurations, the DD estimator demonstrates the lowest bias, establishing it as a robust and often superior choice for reliable experimentation in two-sided marketplaces.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.41294v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.41294v1">fewer like this</a></p>
 </article>
 <article data-paper-id="arXiv:2610.41186v1">
-<a href="https://arxiv.org/abs/2610.41186v1">Balancing Covariates for Continuous Treatments by Exploiting Continuity</a>
-<div class="authors">Souhardya Sengupta, Kosuke Imai (arxiv)</div>
+<a class="title" href="https://arxiv.org/abs/2610.41186v1">Balancing Covariates for Continuous Treatments by Exploiting Continuity</a>
+<p class="meta">Souhardya Sengupta, Kosuke Imai &middot; <span class="source">arxiv</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Covariate Balance in Simple, Stratified and Clustered Comparative Studies (55 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.41186v1">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.41186v1">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>We consider causal effect estimation in observational studies with continuous treatment. We introduce a general class of causal estimands that, as a special case, includes the average causal effect of assigning treatment according to an arbitrary counterfactual distribution. Balancing estimators are particularly attractive tools for covariate adjustment in this setting because they avoid directly modeling the treatment assignment mechanism, thereby reducing the potential for instability and misspecification bias in subsequent causal effect estimation. In this paper, we develop a general framework of covariate balancing for continuous treatment with the proposed class of causal estimands, leveraging the assumption of continuity of treatment dose. As in the binary treatment setting, analysts specify the basis functions to be balanced, the allowable degree of covariate imbalance, and a criterion for selecting among admissible weights. Under a minimum variance criterion for choosing weights, we establish consistency, characterize the effect of basis misspecification, and prove asymptotic normality. We develop consistent variance estimation, which yields asymptotically valid confidence intervals. Under homoskedasticity, our estimator is provably more efficient than inverse probability weighting based on the \emph{true} propensity score. Simulation studies support our theoretical results, and we illustrate the proposed method by estimating the effect of vocational training hours on expected future earnings using data from the U.S. Job Corps study.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: Covariate Balance in Simple, Stratified and Clustered Comparative Studies (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.41186v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.41186v1">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1038/s44401-026-00160-6">
-<a href="https://doi.org/10.1038/s44401-026-00160-6">FLAT-WHITE: from target trial emulation to federated high-throughput causal machine learning using decentralized real-world data</a>
-<div class="authors">Jiayi Tong, Lu Li, Dazheng Zhang, Kyra S. O’Brien, Yiwen Lu, Qiong Wu, Ting Zhou, Bingyu Zhang, Yuqing Lei, Tang Huilin, Naimin Jing, Haoyang Li, Zhenxing Xu, Yu Huang, Yu Hu, Yujia Zhou, Fongci Lin, Ying Jiang, Haitao Chu, Yong Chen, Fei Wang, Jiang Bian, Hua Xu, David A. Wolk, Yong Chen (npj Health Systems)</div>
+<a class="title" href="https://doi.org/10.1038/s44401-026-00160-6">FLAT-WHITE: from target trial emulation to federated high-throughput causal machine learning using decentralized real-world data</a>
+<p class="meta">Jiayi Tong, Lu Li, Dazheng Zhang, and 22 others &middot; <span class="source">npj Health Systems</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (55 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1038%2Fs44401-026-00160-6">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1038%2Fs44401-026-00160-6">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Randomized clinical trials remain the gold standard for evaluating treatment effects but are often infeasible for rapidly assessing drug repurposing opportunities, particularly in complex conditions such as Alzheimer&#x27;s disease. Target trial emulation (TTE) provides a principled framework for causal inference with electronic health records and, when coupled with modern machine learning, enables scalable analyses across distributed health systems. We present FLAT-WHITE (Federated Lossless Algorithm for Target Trial Emulation with Overlap Weighting for Healthcare Data Integration via Trusted and Efficient Communication), a novel federated causal machine learning pipeline for high-throughput treatment effect estimation without sharing patient-level data. FLAT-WHITE is a one-shot, lossless algorithm, requiring a single communication round while achieving results equivalent to centralized pooled analyses. With overlap weighting on the propensity score, it robustly addresses heterogeneity in treatment assignment and ensures valid causal inference in decentralized settings. We demonstrate FLAT-WHITE in a Alzheimer&#x27;s drug repurposing study, scanning 181 candidate drugs using data from four health learning systems encompassing approximately 150,000 patients with mild cognitive impairment. Findings were validated externally in 339,180 patients from the TriNetX global research network. FLAT-WHITE enables rapid, large-scale, and secure evaluation of treatment effects and establishes a foundation for collaborative clinical research across diverse healthcare systems.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1038%2Fs44401-026-00160-6">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1038%2Fs44401-026-00160-6">fewer like this</a></p>
 </article>
 <article data-paper-id="10.1002/sim.70800">
-<a href="https://doi.org/10.1002/sim.70800">Two‐Stage Estimation for Causal Inference Involving Semi‐Continuous Exposures</a>
-<div class="authors">Xiaoya Wang, Richard J. Cook, Yeying Zhu, Tugba Akkaya-Hocagil, R. Colin Carter, Sandra W. Jacobson, Joseph L. Jacobson, LOUISE M. RYAN (Statistics in Medicine)</div>
+<a class="title" href="https://doi.org/10.1002/sim.70800">Two‐Stage Estimation for Causal Inference Involving Semi‐Continuous Exposures</a>
+<p class="meta">Xiaoya Wang, Richard J. Cook, Yeying Zhu, and 5 others &middot; <span class="source">Statistics in Medicine</span></p>
 <p class="reason"></p>
-<p class="closest">Closest to: Causality \&amp; Design-Based Inference (55 degrees)</p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1002%2Fsim.70800">more like this</a> | <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1002%2Fsim.70800">fewer like this</a></p>
+<details class="abstract"><summary>Abstract</summary>
+<p>Methods for causal inference are well developed for binary and continuous exposures, but in many settings, the exposure has a substantial mass at zero-such exposures are called semi-continuous. We propose a general causal framework for such semi-continuous exposures, together with a two-stage estimation strategy. A two-part propensity structure is introduced for the semi-continuous exposure, with one component for exposure status (exposed vs unexposed) and another for the exposure level among those exposed, and incorporates both into a marginal structural model that disentangles the effects of exposure status and dose. The two-stage procedure sequentially targets the causal dose-response among exposed individuals and the causal effect of exposure status at a reference dose, allowing flexibility in the choice of propensity score methods in the second stage. We establish consistency and asymptotic normality for the resulting estimators, and characterize their limiting values under misspecification of the propensity score models. Simulation studies evaluate finite sample performance and robustness, and an application to a study of prenatal alcohol exposure and child cognition demonstrates how the proposed methods can be used to address a range of scientific questions about both exposure status and exposure intensity.</p></details>
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1002%2Fsim.70800">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1002%2Fsim.70800">fewer like this</a></p>
 </article>
+</section>
 <footer>A language model writes the one-sentence reasons. Nobody reviews
 them before they appear.</footer>
+</main>
 </body>
 </html>
