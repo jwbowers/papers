@@ -144,9 +144,251 @@ footer { color: var(--faint); font-size: 0.8rem; margin-top: 2.5rem; }
 <body>
 <main>
 <h1>New papers</h1>
-<p class="intro">Picks from 10 November through 16 November 2026. Under each paper, the bar
+<p class="intro">Picks from 11 November through 17 November 2026. Under each paper, the bar
 and the angle say how close it is to the named paper or interest of Jake's:
 the smaller the angle, the closer.</p>
+<section>
+<h2>Tuesday 17 November<span class="count">20 papers</span></h2>
+<article data-paper-id="arXiv:2611.21425v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.21425v1">Randomization protects the average, not the trial: chance covariate imbalance and a calibration of balance $P$ values at the design stage</a>
+<p class="meta">William J. Dwyer, David Zurakowski &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Randomization makes the unadjusted treatment-effect estimate unbiased over the allocations a scheme could produce, although it does not balance any single trial. Chance imbalances on strongly prognostic baseline variables directly threaten the validity and regulatory credibility of trial results, yet what design-stage balance $P$ values imply for bias and error rates is seldom stated. We review evidence on chance covariate imbalance and derive that link under a linear model with one normal prognostic covariate, with simulation checks. Given the realized allocation, the unadjusted estimate is biased by $\beta$ times the difference in covariate means; in standard-error units the bias is $\rho Z_{\mathrm{bal}}$, where $\rho$ is the covariate-outcome correlation and $Z_{\mathrm{bal}}$ the balance z-statistic, so it does not shrink as trials grow. Pre-specified ANCOVA removes this bias, change scores reverse it, and non-collapsibility attenuates odds and hazard ratios even under perfect balance. A worst-balance threshold of $P = 1/e$ marks where the Sellke-Bayarri-Berger bound reaches 1; under complete randomization the worst of $k$ independent balance $P$ values falls below it with probability $1-(1-1/e)^k$, 0.99 for $k=10$. Any balance $P$ value $\geq 0.317$ keeps the two-sided conditional type I error of the unadjusted test at or below 5% for every $\rho$; at $1/e$ the one-sided error in the favoured direction is at most 4.1%, against 13-33% at $P = 0.05$. Design-stage balance scores should be benchmarked against complete randomization, weighted by external prognostic strength, and reported alongside allocation predictability and a pre-specified covariate-adjusted analysis plan.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:77%"></span></span><span>Closest to: Covariate Balance in Simple, Stratified and Clustered Comparative Studies (44 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.21425v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.21425v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2603.03035v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2603.03035v2">Generalized Bayes for Causal Inference</a>
+<p class="meta">Emil Javurek, Dennis Frauen, Yuxin Wang, Stefan Feuerriegel &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Uncertainty quantification is central to many applications of causal machine learning, yet principled Bayesian inference for causal effects remains challenging. Standard Bayesian approaches typically require specifying a probabilistic model for the data-generating process, including high-dimensional nuisance components such as propensity scores and outcome regressions. Standard posteriors are thus vulnerable to strong modeling choices, including complex prior elicitation. In this paper, we propose a generalized Bayesian framework for causal inference. Our framework avoids explicit likelihood modeling; instead, we place priors directly on the causal estimands and update these using an identification-driven loss function, which yields generalized posteriors for causal effects. As a result, our framework turns existing loss-based causal estimators into estimators with full uncertainty quantification. Our framework is flexible and applicable to a broad range of causal estimands (e.g., ATE, CATE). Further, our framework can be applied on top of state-of-the-art causal machine learning pipelines (e.g., Neyman-orthogonal meta-learners). For Neyman-orthogonal losses, we show that the generalized posteriors converge to their oracle counterparts and remain robust to first-stage nuisance estimation error. With calibration, we thus obtain valid frequentist uncertainty even when nuisance estimators converge at slower-than-parametric rates. Empirically, we demonstrate that our proposed framework offers causal effect estimation with calibrated uncertainty across several causal inference settings. To the best of our knowledge, this is the first flexible framework for constructing generalized Bayesian posteriors for causal machine learning.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:68%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (49 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2603.03035v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2603.03035v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.19209v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.19209v1">Unit-Level Conformal Inference for Panel Counterfactuals</a>
+<p class="meta">Ziyi Liu, Yiqing Xu &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">We develop conformal inference for panel counterfactual estimators using the exchangeability of prediction errors across units rather than over time. Existing conformal methods for panels with few treated units rely on temporal properties of treated-unit residuals, which are vulnerable to strong temporal heterogeneity such as nonstationarity. We instead hold out each control unit, hide its relevant outcomes, and predict them using the same rule applied to the treated unit. Target-date estimators, including difference-in-differences and synthetic control, use controls&#x27; pre-treatment and target-date outcomes to construct the counterfactual, allowing both full conformal confidence sets and Jackknife+ intervals. Full-path estimators, including factor-model imputation and matrix completion, also use controls&#x27; outcomes at other post-treatment dates; for these, we use the Jackknife+. Both procedures yield finite-sample, period-wise confidence sets under this across-unit exchangeability, without requiring stationarity or random assignment. We characterize when the coverage holds and show why a common prediction rule alone does not ensure it. For multiple treated units, a block Jackknife+ covers their average effect, while a relabeling test is exact for sharp nulls over all treated cells. We show that the synthetic control placebo test is a full conformal test of no effect that extends to full-path estimators. We also relate our procedures to a parametric bootstrap and classify common estimators by the inference they allow. We illustrate our procedures in three empirical applications.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:68%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (49 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.19209v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.19209v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.05608v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.05608v2">Debiased Conditional Independence Tests for Causal Effects</a>
+<p class="meta">Susan Athey, Maria Nareklishvili, Jann Spiess &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">We propose robust tests for causal effects on potentially high-dimensional outcomes where there may be selection into treatment. These tests measure conditional independence of outcomes from treatment assignment by asking whether treatment can be predicted from outcomes more accurately than from covariates alone. We design three such tests of conditional independence. First, we propose a conditional randomization test based on an inverse propensity weighted mean squared error test statistic. If the propensity score is known, the test controls size in finite samples. Second, we propose a double-residualization approach, where we partial out covariate effects from both treatment and outcome-based treatment predictions, and test whether the correlation between the residuals is zero. Third, we propose a test based on an augmented inverse propensity weighted estimator built around doubly robust, Neyman-orthogonal population moments that are necessary and sufficient for conditional independence. Simulations show that all three tests improve power over a joint Wald test based on a seemingly unrelated regression across many non-linear settings, particularly under heavy tails, outliers, mixtures, heterogeneous effects, and effects with opposite signs.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:67%"></span></span><span>Closest to: Randomization Tests for Distributions of Individual Treatment Effects via Combined Rank Statistics (50 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.05608v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.05608v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.13140/rg.2.2.17323.60969">
+<div class="lead">
+<a class="title" href="https://doi.org/10.13140/rg.2.2.17323.60969">Pearl: Causal inference and the ‘do-operator’</a>
+<p class="meta">Ken Gillman &middot; <span class="source">OpenAlex</span></p>
+<p class="reason"></p>
+</div>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:65%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (51 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.13140%2Frg.2.2.17323.60969">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.13140%2Frg.2.2.17323.60969">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.21564v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.21564v1">Assessing Distributional Covariate Balance After Weighting: A Practical Guide</a>
+<p class="meta">Ariel Linden &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Health researchers commonly use weighting methods to improve covariate balance when estimating program and intervention effects from observational data. Standardized mean differences (SMDs) and variance ratios assess particular features of balance but may overlook residual differences elsewhere in the covariate distribution. This paper provides practical guidance for using Kolmogorov-Smirnov (KS), Anderson-Darling (AD), and Cramer-von Mises (CVM) statistics as complementary distributional balance diagnostics. In an empirical evaluation of a disease management program, weighting based on a main-effects propensity-score model produced SMD and KS statistics below commonly used or proposed balance thresholds of 0.10 for two continuous covariates, which would conventionally be interpreted as indicating acceptable balance. Nevertheless, permutation tests identified residual distributional differences. Adding quadratic terms for these covariates approximately halved their KS statistics, improved variance balance, and eliminated evidence of residual distributional differences, while leaving the estimated program effect substantively unchanged. Supporting simulations showed that KS, AD, and CVM differed in sensitivity to different forms of distributional discrepancy and that the calibration of resampling-based p-values depended on how the reference distribution was constructed. These findings support a practical approach that combines conventional balance measures, graphical assessment, complementary distributional diagnostics, weighting-model refinement, and outcome adjustment when important residual imbalance remains.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:65%"></span></span><span>Closest to: Covariate Balance in Simple, Stratified and Clustered Comparative Studies (51 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.21564v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.21564v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2610.01362v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2610.01362v2">The Cochran--Mantel--Haenszel test as a test of the average treatment effect in stratified randomized trials</a>
+<p class="meta">Ekkehard Glimm &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">This note revisits the Cochran--Mantel--Haenszel (CMH) test in light of the increasing use of causal inference methods in clinical trials. It shows that the CMH test statistic can be interpreted as a standardized version of the augmented inverse probability weighted (AIPW) estimate of the causal average treatment effect. Consequently, it is not restricted to an interpretation as a test of the common-odds ratio in a stratified logistic regression model. The note then discusses conditional and unconditional variances for this estimator as well as variance estimation and its implications for testing. The results clarify the relationship between the classical conditional CMH test and Wald-type AIPW tests, and show that, under equal treatment allocation, the CMH test is an asymptotically exact test of the weak null hypothesis of zero average treatment effect, without any restriction on the heterogeneity of stratum-specific effects. Under unequal allocation, it can be liberal or conservative. A simulation study supports these findings.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:65%"></span></span><span>Closest to: Randomization Tests for Distributions of Individual Treatment Effects via Combined Rank Statistics (51 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.01362v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.01362v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.03561v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.03561v2">Studentized inference in randomized experiments when a few units dominate the outcome variation</a>
+<p class="meta">Xinyuan Chen, Jonathan W. Kiesel, Jonathan R. Woody &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">In completely randomized experiments with heavy-tailed outcomes, a few units can carry a share of the residual variation that does not vanish as the number of units grows. In this setting, we study the studentized difference in means and Lin&#x27;s regression-adjusted estimator under a design-based framework. The studentized statistic has a nonnormal limit in general. Populations with the same marginal distributions of potential outcomes can have different limits, as the limit depends on how the two potential outcomes of each dominant unit are paired. When the outcome errors are drawn from a heavy-tailed law, the limit is random and, outside a degenerate case, varies with the population. Under balanced allocation, the conventional Wald interval has an explicit asymptotic coverage floor. At the nominal level of $0.95$, the floor is about $0.42$ for every population and about $0.84$ when the two potential residuals of each unit are equal. Both floors are close to the best possible, and without balanced allocation, the coverage can fall to the smaller of the proportions of treated and control units.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:64%"></span></span><span>Closest to: Your interests: I want to read new work on randomization-based ... (51 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.03561v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.03561v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.1093/jrsssb/qkag145">
+<div class="lead">
+<a class="title" href="https://doi.org/10.1093/jrsssb/qkag145">A decorrelation method for general regression adjustment in randomized experiments</a>
+<p class="meta">Fangzhou Su, Wenlong Mou, Peng Ding, Martin J Wainwright &middot; <span class="source">Journal of the Royal Statistical Society Series B</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">We study regression adjustment with general function class approximations for estimating the average treatment effect in the design-based setting. Standard regression adjustment involves bias due to sample re-use, and controlling this bias either leads to suboptimal dependence on the sample size or requires restrictive assumptions. Our main contribution is to introduce a novel decorrelation approach that circumvents these issues. We prove guarantees, both asymptotic and nonasymptotic, relative to the oracle functions that are targeted by a given regression adjustment procedure. The same independence structure also yields conditional normal approximation bounds and finite-sample coverage guarantees that do not require consistency of the regression step. We illustrate our method by applying it to various high-dimensional and nonparametric problems, exhibiting improved sample complexity and weakened assumptions relative to known approaches.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:63%"></span></span><span>Closest to: Your interests: I want to read about covariance adjustment in ... (52 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1093%2Fjrsssb%2Fqkag145">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1093%2Fjrsssb%2Fqkag145">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2605.04838v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2605.04838v2">PAIR-CI: Calibrated Conditional Independence Testing for Causal Discovery with Incomplete Data</a>
+<p class="meta">Thomas S. Robinson, Ranjit Lall &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">The standard constraint-based paradigm for causal discovery with incomplete data -- impute first, test second -- is frequently miscalibrated: any consistent conditional independence (CI) test rejects a true null with probability approaching 1 when imputation error induces spurious conditional dependence. We introduce PAIR-CI, a nonparametric CI test that restores calibration by integrating multiple imputation directly into the inferential procedure via a paired permutation design. PAIR-CI compares cross-validated models that include and exclude the candidate variable while receiving the same imputed conditioning set, so that imputation error cancels in their loss difference rather than contaminating the test statistic. A variance estimator that nests a provably consistent cross-validation estimator inside Rubin&#x27;s rules yields inference that is asymptotically valid in the many-imputation limit and conservative by a derived, sign-definite mechanism -- to our knowledge, the first formal result combining these two inferential frameworks. In simulations, existing imputation-based CI tests exhibit false positive rates of 28-45% when data are missing not at random (MNAR), whereas PAIR-CI&#x27;s pooled rate is at most 3.6%, exceeding the nominal 5% only in some cells with five or more conditioning variables. Integrated into the PC algorithm, PAIR-CI is stable across functional forms and missingness mechanisms, whereas every parametric pipeline we consider, including missing-value PC, has a regime in which it fails badly. On nonlinear network benchmarks it reduces structural Hamming distance by 18% (ALARM) and 11% (HAILFINDER) relative to missing-value PC and by 31-48% relative to test-wise deletion and imputation-based Fisher-$Z$ pipelines, while attaining the highest skeleton F1; when relationships are linear, a well-specified parametric pipeline remains preferable.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2605.04838v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2605.04838v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.21496v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.21496v1">Never too LATE: Exploiting restrictions for inference on the Local Average Treatment Effect</a>
+<p class="meta">Xavier D&#x27;Haultf{\oe}uille, Yagan Hazard, Philipp Ketz &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Under the exclusion restriction, independence, and monotonicity assumptions, Imbens and Angrist (1994) show that the Wald estimand is equal to the local average treatment effect (LATE). However, these assumptions entail additional restrictions, which we exploit for inference on the LATE. Specifically, we propose a conditional likelihood ratio test that we show controls asymptotic size uniformly over a large class of data-generating processes. The test has very low computational cost: it requires no simulation and involves solving at most four quadratic programming problems. Monte Carlo simulations show that our test can offer substantial power gains over the Wald and Anderson-Rubin tests, including when the instrument is weak.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: Your interests: I want to read new work on randomization-based ... (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.21496v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.21496v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.18814v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.18814v1">Causal Regularization for Robust Prediction</a>
+<p class="meta">Alessia Berarducci, Melania Lembo, Veronica Vinciotti, Ernst C. Wit &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Prediction is an important use of a statistical model. However, predictive systems typically struggle when the environment, in which they were trained, changes. Robust prediction that can deal with distributional shifts has become an active research area. Existing approaches tend to make strong assumptions in order to achieve prediction guarantees. In this paper, we only require finite second moments in the training data to obtain sharp prediction guarantees. We generalize causal regularization to a framework that uses two environments and measures the differences between them through a generalized risk difference induced by changes in second-order moments of the covariates and response. By defining a sieve of out-of-sample distributions, we derive a worst-risk decomposition over increasing classes of environments and obtain a closed-form estimator that interpolates between OLS and the regularization limit solution. Causal interpretation is recovered under the inner-product invariance condition and when the conditional mean of the target given its causal parents remains invariant across environments. Our results show that the proposed estimator can achieve prediction stability over a broad class of perturbed environments, even when trained on a limited set. The framework separates two goals: robustness as a stable prediction under weak assumptions and causality as a stronger property obtained with additional invariance structure.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.18814v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.18814v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2608.10294v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2608.10294v2">Testing Sign Agreement</a>
+<p class="meta">Deborah Kim &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">This article studies the problem of testing sign agreement among a finite number of parameters, with applications to dynamic treatment effects, instrument validity, and labor-market discrimination. We propose least favorable and two-step tests that accommodate correlated estimators. Both have parametric and nonparametric bootstrap implementations and uniform asymptotic validity. Although neither test dominates the other in general, local power analysis shows that the two-step test can gain power when several parameters provide strong directional information. Simulations show substantial power gains for the two-step test over the least favorable and competing procedures. Empirical applications examine unilateral divorce laws and the college-proximity instrument.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: Randomization Tests for Distributions of Individual Treatment Effects via Combined Rank Statistics (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2608.10294v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2608.10294v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2610.36176v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2610.36176v2">Probabilistic Causal Panel Analysis</a>
+<p class="meta">Carl Bonander, Qinyun Lin, Ulf Str\&quot;omberg, Marta Blangiardo &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Many causal panel estimators construct counterfactuals using weights or latent structure estimated directly from observed outcomes, making their estimates sensitive to observation noise. Bayesian hierarchical models can account for this noise and pool information across related observations. Existing Bayesian approaches to causal panel analysis, however, typically specify counterfactual imputation within the probabilistic model, so changing estimators may require a new formulation. We develop a framework that learns the latent untreated panel with a probabilistic model and applies established causal estimators to its posterior draws. The model accommodates non-Gaussian observations and structured pooling, while re-estimation across draws propagates uncertainty through counterfactual imputation. We establish conditions for posterior consistency and characterize how pooling affects imputation risk. Under correct posterior specification, we show that the excess Bayes risk of our approach is bounded by the causal estimator&#x27;s expected squared imputation error when given the true latent outcomes in observed untreated cells. We also develop a fast cross-validation approach for model selection and calibration of predictive uncertainty for treatment effects. We use simulations to examine when pooling helps or harms imputation and cross-validation to assess whether probabilistic modeling improves accuracy in multiple empirical applications.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.36176v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.36176v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.20490v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.20490v1">False Discovery Rate Control in Ordered Sequential Testing: Rejection-Count and Fallback Procedures</a>
+<p class="meta">Anjana Grandhi, Wenge Guo, Ji Meng Loh, Sanat Sarkar &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">We study false discovery rate (FDR) control for a fixed family of hypotheses tested sequentially in a prespecified order. Each decision uses only the current and preceding $p$-values, is not subsequently revised, and permits continued testing after non-rejections. We distinguish generalized fixed-sequence procedures based on preceding rejection counts from fallback-type procedures that additionally use recursively transferred testing levels. For rejection-count procedures, we study a position-dependent calibration under independence and a linear rule calibrated through null marginal distribution functions under positive left-tail dependence under the null. We clarify their connections to existing fixed-sequence and online FDR methods. The fallback construction combines the total number of preceding discoveries with level transfer along consecutive rejections, allowing thresholds to reflect the arrangement of earlier outcomes. We establish its FDR control under history-based positive regression dependence and, with a position-specific correction, under arbitrary dependence. For all four constructions, the guarantees extend to every deterministic testing time within the planned horizon. Gaussian simulations assess the effects of signal placement, dependence, and allocation weights. They demonstrate power gains over selected benchmarks while identifying the conservativeness of the arbitrary-dependence correction.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: Detecting Where Effects Occur by Testing Hypotheses in Order (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.20490v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.20490v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.19432v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.19432v1">Cluster-Robust Inference in Small Samples Using Bias Corrections</a>
+<p class="meta">M. Hashem Pesaran, Yimeng Xie &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">This paper derives an exact expression for the bias of the linearized estimator of the variance for cluster-robust inference, which generalizes an earlier result derived by Bell and McCaffrey (2002). Both cases of continuous and binary treatments are discussed. Under the former it is shown that the bias of the linearized variance estimator and its jackknife variant are of order $G^{-1}$ relative to the true variance, where $G$ denotes the total number of clusters. A bias-corrected variance estimator (BCCV) is then proposed and shown to have a relative bias of order $G^{-2}$. In the case of models with binary treatments the orders of the bias of standard estimators and the proposed bias-corrected one are shown to be $\max (G_{1}^{-1},G_{0}^{-1})$ and $\max (G_{1}^{-2},G_{0}^{-2})$, where $G_{1}$ and $G_{0}=G-G_{1}$ are the numbers of treated and untreated clusters. Scale and degrees of freedom adjustments to the $t$-statistic computed using bias-corrected standard errors are also proposed. Small sample properties of the proposed BCCV test are investigated using Monte Carlo experiments. It is shown that the proposed test generally outperforms tests based on conventional and jackknife cluster standard errors, and performs comparably to wild bootstrap inference and the recent jackknife distribution-adjusted testing procedure by \cite{hansen2026jackknife}. The utility of the proposed test is illustrated\ using three empirical applications from the literature.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: Covariate Balance in Simple, Stratified and Clustered Comparative Studies (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.19432v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.19432v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.3390/ijerph23111419">
+<div class="lead">
+<a class="title" href="https://doi.org/10.3390/ijerph23111419">Unequal Variances and Differential Follow-Up in Small Community Physical-Activity Evaluations: An Evidence- Informed Simulation Study</a>
+<p class="meta">Fabricio Ruperto Arteaga Mendieta, Alberto Urzúa, Jorge Méndez-Cornejo, and 4 others &middot; <span class="source">International Journal of Environmental Research and Public Health</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Small community physical-activity evaluations may combine unequal variances, unbalanced allocation, and selective follow-up, obscuring the distinction between uncertainty distortion and selection bias. We compared five analysis strategies using synthetic randomized pre-post data: follow-up and change-score Welch tests, conventional and HC3-corrected ANCOVA, and multiple imputation with HC3 inference. The primary scenarios fixed total sample size at 60 while varying allocation, baseline slope, residual heterogeneity, treatment effect, and follow-up mechanism. Across 184 scenarios, 884,000 datasets were generated. Under baseline-dependent missing at random (MAR), conventional ANCOVA null coverage ranged from 86.30% to 97.26%, compared with 94.44–96.00% for HC3. Unadjusted contrasts exhibited selection bias. One diagnostic missing-not-at-random (MNAR) condition biased both HC3 and the evaluated imputation procedure. Imputation findings apply to arm-specific normal regressions with 20 imputations followed by common-slope ANCOVA. Within these linear, independent-observation settings, robust inference addressed variance-estimation problems but did not repair selection on unobserved outcomes. Analysis planning should align the estimand, design, outcome model, and missingness assumptions.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: Covariate Balance in Simple, Stratified and Clustered Comparative Studies (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.3390%2Fijerph23111419">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.3390%2Fijerph23111419">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.1177/09520767261503790">
+<div class="lead">
+<a class="title" href="https://doi.org/10.1177/09520767261503790">Randomized controlled trials in experimental policymaking: The perceptions of public administrators</a>
+<p class="meta">Ringa Raudla, Külli Sarapuu, Johanna Vallistu, James W. B. Douglas &middot; <span class="source">Public Policy and Administration</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Despite the growing importance of experimental policymaking, scholars have paid limited attention to how public administrators – important gatekeepers in the policy process – view the role of the randomized controlled trial (RCT) design for policy experiments. Our study addresses this research gap and seeks to answer the following research question: How do public administrators perceive the benefits and challenges of using RCTs in experimental policymaking? We address this question by drawing on 66 interviews conducted with public administrators in Finland and Estonia in 2022-2023. The perceptions of public administrators regarding RCTs varied substantially in the two countries, especially with regard to whether RCTs constitute a precondition for an experiment to be useful and to what extent the principle of equal treatment constitutes a barrier to RCTs. Our analysis suggests that contextual factors like the legal setting, policy field, and cumulative experience with policy experiments help to explain these differences.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: Tensions in Knowledge Accumulation Using Coordinated Intervention Experiments to Improve Public Policy (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1177%2F09520767261503790">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1177%2F09520767261503790">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2605.26288v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2605.26288v2">Beyond Differences: Estimating and Tuning Ratio-Based Treatment Effects</a>
+<p class="meta">Michael Fuchs, Dominik Kreiss &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">When treatment effects are naturally expressed as ratios -- as in medicine, pricing, and marketing -- the ratio-based CATE $\tau(x) = \mathbb{E}[Y|W=1,X=x] / \mathbb{E}[Y|W=0,X=x]$ is the appropriate estimand. Yet the common estimators divide by an estimated baseline, impose a parametric form, or regress the outcome, where a better fit need not mean a better effect estimate. We introduce the Q-Learner, which writes $\tau(x)$ as a ratio of two odds, reducing ratio-CATE estimation for binary outcomes to two propensity classification tasks. In benchmarks on synthetic and randomized real-world data, the Q-Learner proves especially suited to industry practice. Standard hyperparameter tuning on its log-loss suffices to make it rank well, get the level of the effects right and their spread more reliably than the alternatives, whereas, for instance, the common S-Learner needs a costly, effect-specific tuning to rank well, often best, but then misses the spread of the effects. If the propensity is known, a single classifier fitted on only the converters is enough. This not only speeds up development, but is often a necessity in practice, where data are frequently collected only for converters.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Randomization Tests for Distributions of Individual Treatment Effects via Combined Rank Statistics (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2605.26288v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2605.26288v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.19710v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.19710v1">Joint Learning of Factual and Counterfactual Worlds for Causal Prior-data Fitted Networks</a>
+<p class="meta">Furkan Danisman, Luke Zhang, Zhijing Jin, Dehan Kong &middot; <span class="source">arxiv</span></p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Estimating treatment effects is central to science across many disciplines and requires counterfactual reasoning about alternative worlds. In the real world, however, each unit reveals its outcome only under the factual world. Thus, the factual and counterfactual outcomes can never be jointly learned by any model trained on real data. The problem is therefore tractable only in synthetic settings, where both worlds can be generated. Recent progress on prior-data fitted networks (PFNs) has shown that models pre-trained purely on synthetic data can transfer to real-world prediction. This paradigm has since carried over to causal effect estimation. Despite this fully synthetic setup, existing causal PFNs carry the real-world constraint into their training objective, confining learning to a single world&#x27;s outcome per unit. The dependence between the two worlds is thereby lost, and the density of the treatment effect relies by default on independence, which is implausible in practice. We therefore propose joint learning, a training setup in which a causal PFN learns the joint distribution of the factual and counterfactual outcomes of each unit. From the joint distribution, we obtain both the response and the individual treatment effect densities, and at inference, we apply optimal transport across units to obtain an approximation of the average treatment effect density. Ours is therefore the first causal PFN approach to provide all three densities together while accounting for the cross-world dependence. We apply joint learning and optimal transport to existing causal PFNs and evaluate it across semi-synthetic, synthetic, and real benchmarks spanning diverse causal scenarios. The jointly trained models significantly improve upon their baselines in point estimation and uncertainty quantification in most settings, indicating that joint learning is a preferable training setup for causal PFNs.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.19710v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.19710v1">fewer like this</a></p>
+</div>
+</article>
+</section>
 <section>
 <h2>Monday 16 November<span class="count">20 papers</span></h2>
 <article data-paper-id="arXiv:2309.06305v4">
@@ -1483,247 +1725,6 @@ the smaller the angle, the closer.</p>
 <div class="foot">
 <p class="closest"><span class="meter" aria-hidden="true"><span style="width:55%"></span></span><span>Closest to: Detecting Where Effects Occur by Testing Hypotheses in Order (57 degrees)</span></p>
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.5281%2Fzenodo.24119818">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.5281%2Fzenodo.24119818">fewer like this</a></p>
-</div>
-</article>
-</section>
-<section>
-<h2>Tuesday 10 November<span class="count">20 papers</span></h2>
-<article data-paper-id="arXiv:2606.16683v3">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2606.16683v3">A Fully Specified Bayes Factor Range for Hypothesis Testing and Sensitivity Analysis in Process Tracing</a>
-<p class="meta">Matias L\&#x27;opez, Jake Bowers, Daniel Gajardo Cooper &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">A Bayes factor can be used in process tracing to reason about the probative value of evidence for a working hypothesis against a rival (Fairfield and Charman 2022). However, relying on the researcher&#x27;s own sense of probative strength may inflate confidence in $H_1$ (Zaks 2021). We show how to fully specify a generative model of observations to compute Bayes factors in process tracing: First, researchers count the evidence. Second, they classify it as favoring either hypothesis. Third, they formalize a data-generating process that makes the evidence more expected given $H_1$ and another for a rival $H_R$. The ratio of these probabilities yields a fully specified Bayes factor. We compute two Bayes factors under different assumptions, yielding a Bayes factor range that allows researchers to decide whether the balance of evidence favors $H_1$ considering probability thresholds. Our method also facilitates sensitivity analyses of common assumptions, including those about bias and the probative weight of a smoking gun.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:100%"></span></span><span>Closest to: Fully Specified Bayes Factors for Hypothesis Testing and Sensitivity Analysis in Process Tracing (24 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2606.16683v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2606.16683v3">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.12690v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.12690v1">Average versus expected causal effects under interference: Modeling assumptions and estimation bottlenecks</a>
-<p class="meta">Vishesh Karwa, Edoardo M. Airoldi, Donald B. Rubin &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Causal inference under treatment interference requires assumptions to reduce the exponentially large number of potential outcomes. We develop hierarchical finite-population models for potential outcomes by separating these assumptions into three layers: interference neighborhoods, exposure mappings, and outcome models. Given an interference neighborhood and exposure mapping, we show that potential outcomes admit a nonparametric decomposition into direct, spillover, and treatment--spillover interaction components. This decomposition provides a common coordinate system for nonparametric, semiparametric, and parametric models of finite-population potential outcomes. For a given potential-outcome model, we define two classes of estimands. Average causal effects (ACEs), such as direct and total treatment effects, contrast potential outcomes under fixed treatment--exposure conditions. Expected causal effects (ECEs), such as expected direct and indirect effects, contrast expectations of potential outcomes under a specified allocation policy. For both classes, we bound the variance of the canonical Horvitz--Thompson estimator by three terms: a diagonal weight term, a term from overlapping interference neighborhoods, and a residual design-dependence term. Our upper and lower bounds show that under graph-unaware designs, nonparametric design-unbiased estimation of ACEs can require sample sizes growing exponentially in the interference degree, whereas polynomial growth can suffice for design-aligned ECEs. Under neighborhood interference, we construct graph-aware independent-set designs with variance bounds polynomial in the maximum degree for direct and total treatment effects on every graph, whereas graph cluster randomization can incur worst-case variance exponential in the degree.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:68%"></span></span><span>Closest to: Reasoning about Interference Between Units: A General Framework (49 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.12690v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.12690v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2507.13552v3">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2507.13552v3">Combining stated and revealed preferences: Matched and unmatched</a>
-<p class="meta">Romuald Meango, Marc Henry, Ismael Mourifie, Ju Hyun Oh &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Can stated preferences inform counterfactual analyses of actual choice? This research proposes a novel approach for researchers who have access to both stated choices in hypothetical scenarios and actual choices, matched or unmatched. The key idea is to use stated choices to control for individual unobserved heterogeneity. If this unobserved heterogeneity is the source of endogeneity, the researcher can correct for its influence in a choice function estimation using actual choices and recover causal effects. Bounds on causal effects are derived in the case where stated choices and actual choices are observed in unmatched data sets. These data combination bounds are of independent interest. We derive valid bootstrap inference for the bounds and show its good performance in a simulation experiment. We illustrate the method in an analysis of retirement decisions based on the Health and Retirement Study.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:67%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (50 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2507.13552v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2507.13552v3">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.10383v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.10383v1">Asymptotic Theory of Integrated Pairwise-Difference Functionals of Kernel Estimators, with Applications to Treatment Effect Heterogeneity</a>
-<p class="meta">Julius Owusu &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">This paper develops asymptotic theory for integrated pairwise-difference statistics constructed from kernel estimators, with applications to treatment effect heterogeneity. The statistics integrate absolute or positive-part differences between kernel estimates evaluated at pairs of points. Their two-point structure falls outside existing one-point $L_1$-type functional theory. We establish asymptotic normality using a H\&#x27;ajek-type projection of a Poissonized statistic and develop feasible centering and variance estimators. We consider two applications. First, we test whether treatment effects vary with one covariate block while holding another fixed. Second, we establish root-$N$ inference for the directional Gini mean difference of the conditional treatment effect function, which measures heterogeneity in outcome units. The framework also accommodates tests of monotone effect modification and estimated pseudo-outcomes. Simulations corroborate the asymptotic theory and show good finite-sample performance. An application to 401(k) eligibility and net financial assets illustrates the usefulness of the proposed tests.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:65%"></span></span><span>Closest to: Randomization Tests for Distributions of Individual Treatment Effects via Combined Rank Statistics (51 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.10383v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.10383v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="10.1016/j.leaqua.2026.102013">
-<div class="lead">
-<a class="title" href="https://doi.org/10.1016/j.leaqua.2026.102013">Causal inferences in social network analysis: practical insights for leadership research</a>
-<p class="meta">Mingxiang Li &middot; <span class="source">The Leadership Quarterly</span></p>
-<p class="reason"></p>
-</div>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:63%"></span></span><span>Closest to: Models, methods and network topology: Experimental design for the study of interference (52 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1016%2Fj.leaqua.2026.102013">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1016%2Fj.leaqua.2026.102013">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.11676v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.11676v1">ATHOS: Agreement-based Testing of Hypotheses in Overlapping Subgroups</a>
-<p class="meta">Xiao Wang &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">We study confirmation of treatment benefit in a prespecified family of overlapping subgroups of a randomized trial. Maximum-statistic procedures exploit the correlation between subgroups&#x27; statistics, but calibration decides what they protect. Re-randomization controls error exactly when treatment has no effect, but not when only an average effect is zero, whereas a multiplier bootstrap protects average effects only asymptotically. Our first result characterizes when re-randomization alone protects average effects. It reverses the arms&#x27; weights in the statistics&#x27; covariance, so with unequal allocation and heterogeneous effects it can overstate their correlations; in one such family of 50 subgroups, its limiting familywise error is 0.064 at nominal 0.025. We propose a step-down procedure called ATHOS, short for agreement-based testing of hypotheses in overlapping subgroups, which confirms a subgroup only when both calibrations reject it. Given assignments exchangeable within strata, ATHOS controls familywise error exactly when treatment has no effect and, under complete randomization, asymptotically for average effects, even in large families. Our second result shows that requiring agreement costs no first-order local power in balanced trials. In a null simulation with 200 patients and 1,497 subgroups, the bootstrap step-down alone made false claims in 40% of trials and ATHOS in 2.6%. In two comparisons in an HIV trial, ATHOS confirmed 188 and 73 subgroups and Holm&#x27;s procedure 179 and 62.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: Your interests: I am interested in multiple testing in multisite ... (53 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.11676v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.11676v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.11307v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.11307v1">Sharp bounds for posterior causal attribution given complete factual records</a>
-<p class="meta">Liyao Zhou, Xinwei Sun &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Retrospective causal attribution evaluates whether altering an earlier event would have prevented an observed outcome. Observational data determine marginal potential-response probabilities at fixed inputs while leaving cross-world joint distributions unspecified. Conditional on a complete factual record in a finite Markovian structural causal model, independence across mechanisms is preserved and each unobserved conditional response distribution is restricted to a capped probability simplex. Every collection of conditional distributions satisfying these local bounds is jointly attainable within a single compatible structural causal model. Optimizing the counterfactual expectation over the resulting product domain yields sharp attribution bounds for multistage interventions and mediated effects, and compatible response-vector polytopes extend these bounds to structural response restrictions. Exact algorithms for causal chains and general directed acyclic graphs, consistent plug-in endpoint estimators, and finite-sample and asymptotic confidence intervals are developed and illustrated using synthetic reactor experiments and health survey data.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (53 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.11307v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.11307v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2610.14895v2">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2610.14895v2">Comparing randomized trials: a formal approach</a>
-<p class="meta">Yu-Han Chiu, Issa J. Dahabreh &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Disagreements between randomized trials that address the same causal question pose challenges for the interpretation and synthesis of evidence. We sketch a causal framework for comparing the results of randomized trials that explicitly accommodates the possibility of trial engagement effects. Using counterfactual outcomes defined under joint interventions on treatment assignment and trial-related actions, we compare trial-native treatment effects with the effects transported from one trial to the population of another in a common target population. We show that standard conditions for transporting treatment effects across trial populations are not sufficient to guarantee agreement between transported and trial-native effects. Agreement additionally requires conditions governing how trial-related actions affect outcome across studies - for example, absence of trial engagement effects, equivalence of such effects across trials, or lack of interaction between trial engagement and treatment assignment. Our framework clarifies potential sources of disagreement across trials and extends existing approaches to study comparison to settings in which trial engagement effects may be present.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: Randomization Tests for Distributions of Individual Treatment Effects via Combined Rank Statistics (53 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.14895v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.14895v2">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.11381v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.11381v1">Does Predictive Performance Translate to Causal Performance? Evaluating tabular foundation models as nuisance learners for causal effect estimation</a>
-<p class="meta">Andrew R Weckstein, Issa J Dahabreh, Marinka Zitnik, and 2 others &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Tabular foundation models based on prior-data fitted networks (PFNs) achieve strong predictive performance, but their value for causal inference is unclear. We evaluated whether PFNs, which predict through in-context learning, could match or outperform conventional nuisance learners in supporting accurate causal estimation and reliable uncertainty quantification (inference). Learners modeled propensity scores and outcome regressions within doubly robust estimators of average causal effects, with and without cross-fitting, across synthetic and semi-synthetic settings with varying confounding complexity and effect heterogeneity. Under simple parametric data-generating processes, the PFNs were competitive with correctly specified parametric regressions and ensembles containing them. In more complex settings, they outperformed all conventional learners evaluated, including richly specified Super Learner ensembles, for both accuracy and uncertainty quantification. As sample size increased, only the two PFN models (TabPFN and Mitra) consistently approached nominal confidence interval coverage, whereas under-coverage persisted for conventional learners. In some settings, PFNs achieved near-nominal coverage and well-calibrated standard errors even without cross-fitting. At the smallest sample size (n=200) and in the higher-dimensional semi-synthetic settings, PFNs and other flexible learners exhibited poor coverage without cross-fitting. For PFNs, this appeared to be driven by propensity score overfitting consistent with in-sample memorization of treatment labels. These findings highlight the promise of prior-data fitted networks as in-context nuisance learners for causal estimation, while underscoring the need for further evaluation in challenging settings.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (53 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.11381v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.11381v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2602.08315v2">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2602.08315v2">Reusable Conditional Resampling via Flow Matching for Constraint-Based Causal Discovery</a>
-<p class="meta">Shunyu Zhao, Yanfeng Yang, Shuai Li, Kenji Fukumizu &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Constraint-based causal discovery requires many conditional independence (CI) tests. Generative CI tests are attractive in nonlinear and high-dimensional settings because they can model complex conditional distributions, but often suffer from high per-test costs and limited reusability across query-dependent conditional resampling tasks in graph search. We propose a generative nonlinear CI testing and graph search framework for PC-style causal discovery. We introduce Langevin-RePaint for conditional imputation. Building on Langevin-RePaint and joint flow matching modeling, we propose the Flow Matching based Conditional Independence Test (FMCIT), which reformulates generative CI testing from query-specific conditional modeling into a reusable conditional resampling framework. We establish theoretical guarantees for FMCIT&#x27;s type-I error control. FMCIT reuses a single trained generative model to generate randomized copies throughout graph search. We then introduce GPC-FMCIT, which embeds FMCIT into a guided PC pipeline with screening, guidance, refinement, and orientation. By using low-cost screening to shrink the search space, constructing edge-specific candidate conditioning sets from local graph structure, and invoking FMCIT only in a budget-controlled refinement stage, GPC-FMCIT reduces both the deployment cost of individual nonlinear CI queries and the overall query complexity. On synthetic nonlinear structural equation models, GPC-FMCIT improves CPDAG recovery over PC-stable baselines and requires far fewer FMCIT queries than direct FMCIT-based PC search, and on hESC gene-expression data it yields smaller graphs than PC/FisherZ in a descriptive comparison. Overall, our results suggest that, through the joint design of reusable conditional resampling and controlled graph search, generative nonlinear CI testing can become a practical component of PC-style causal discovery.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (54 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2602.08315v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2602.08315v2">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.10388v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.10388v1">Causal Discovery Grounding and the Naturalness Assumption</a>
-<p class="meta">Guilherme P. Soares, Andreas Koukorinis, Sander Beckers, and 3 others &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Standard causal discovery postulates that structure can be described by a directed acyclic graph (DAG), which can be partially reconstructed by using the faithfulness principle. According to this principle, conditional independencies in the observational distribution correspond exactly to those encoded in the unknown DAG. However, such algorithms are challenged by the fact that, without even stronger assumptions, approximate failures of faithfulness are empirically undistinguishable from exact ones. This leaves an inferential gap which can lead to major implications to causal effect identification. We introduce a different perspective, not reliant on exact independencies. By considering the specialized problem of discovering whether unmeasured confounding can be ruled out for a particular cause-effect pair, we introduce a principle we call naturalness, in which the strength of observational associations bounds the strength of causal dependencies. The bounding function is unknown, with degrees of freedom not present in faithfulness. We model uncertainty about this function using a Bayesian framing which allows for the use of experiments from separate studies, grounding an adaptive causal discovery principle on historical experimental data. We demonstrate its usefulness in partial identification of causal effects, and discuss how the promising results can motivate new principles for general causal discovery.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (54 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.10388v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.10388v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="10.1080/00031305.2026.2742878">
-<div class="lead">
-<a class="title" href="https://doi.org/10.1080/00031305.2026.2742878">Making social science reproducible: A Conceptualization of “reproducibility review” and learnings from its implementation</a>
-<p class="meta">Bernhard Clemm von Hohenberg &middot; <span class="source">The American Statistician</span></p>
-<p class="reason"></p>
-</div>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: Six Steps to a Better Relationship with Your Future Self, V 2.0 (54 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1080%2F00031305.2026.2742878">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1080%2F00031305.2026.2742878">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2411.05839v3">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2411.05839v3">Simulation Studies For Goodness-of-Fit and Two-Sample Methods For Univariate Data</a>
-<p class="meta">Wolfgang Rolke &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">We present the results of a large number of simulation studies regarding the power of various goodness-of-fit as well as nonparametric two-sample tests for univariate data. This includes both continuous and discrete data. In general no single method can be relied upon to provide good power, any one method may be quite good for some combination of null hypothesis and alternative and may fail badly for another. Based on the results of these studies we propose a fairly small number of methods chosen such that for any of the case studies included here at least one of the methods has good power. The studies were carried out using the R packages R2sample and Rgof, available from CRAN.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: Your interests: I look for papers on the statistical power ... (54 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2411.05839v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2411.05839v3">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.12747v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.12747v1">Clique Constraints for Exact Causal Structure Learning</a>
-<p class="meta">Xiaoyu He, Pavel Ryt\&#x27;i\v{r}, Petr Ry\v{s}av\&#x27;y, Jakub Mare\v{c}ek &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Exact score-based causal structure learning supports explicit structural constraints and optimisation certificates, but its branch-and-cut search can be computationally demanding. We augment exact causal structure learning methods with an upper bound on the maximum clique size of the learned undirected skeleton, enforced at integer candidates through lazy cycle and clique constraints. On static linear-Gaussian Erd\H{o}s-R\&#x27;enyi and scale-free DAGs, we evaluate callback order, alternative clique-cut policies, incumbent repair, fractional separation, and Big-M bounds. We report causal-recovery metrics jointly with optimality gaps, primal and dual bounds, node throughput, MIPSOL events, and callback cost. Two variants receive particular attention: B3 selects the most violated minimal (k+1)-clique inequality at each callback, whereas C3 repairs an infeasible integer candidate by deleting violating edges and refitting affected regression columns using QR-based least squares. The results do not indicate that clique constraints uniformly accelerate optimisation. However, their benefit depends on graph density, sample size, and cut-management policy, while large collections of correlated constraints can reduce node throughput. Tighter valid Big-M bounds reduced the fixed-budget optimality gap in most tested settings, without necessarily changing SHD or F1 at a fixed time limit. These findings characterize the computational trade-offs of clique-constrained exact causal learning, and identify selective separation and incumbent repair as promising directions.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (54 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.12747v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.12747v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2601.02322v3">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2601.02322v3">Environment-Adaptive Covariate Selection: Learning When to Use Spurious Correlations for Out-of-Distribution Prediction</a>
-<p class="meta">Shuozhi Zuo, Yixin Wang &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">A common approach to out-of-distribution prediction restricts models to causal or invariant covariates to avoid spurious associations that may change across environments. Despite its theoretical appeal, this strategy can underperform empirical risk minimization when only a subset of the causal parents of the outcome is observed. In such settings, non-causal covariates can serve as proxies for unobserved causal parents and improve prediction when the proxy relationship is stable, but they can hurt when shifts disrupt that relationship. Thus, the optimal covariate set can depend on the specific shift encountered. Because different shifts can leave distinct signatures in the covariate distribution, we propose an environment-adaptive covariate selection algorithm that chooses which covariates to use in each environment based on summaries of its unlabeled covariates. The summaries may be hand-crafted or learned from multi-environment data, and prior causal knowledge can be incorporated as constraints. We give sufficient conditions under which such summaries are informative in linear causal models, and explain when adapting only the covariate set is preferable to letting every coefficient vary with the environment. In simulations and two applications, adapting the covariate set improves prediction over static baselines, including causal and invariant covariate selection.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (54 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2601.02322v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2601.02322v3">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.01666v2">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.01666v2">Stand-In Effects and Pooling Amplification: Lessons from Biological World Models for Testing Action Effects</a>
-<p class="meta">Bowen Xu, Boyu Chen, Jiaying Li &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Whether an action-conditioned world model uses actions is usually checked by replacing or removing them and measuring lost accuracy. With biological experiments as the guiding case, we show that such diagnostics report action effects where there are none: under autocorrelated designs, future actions stand in for history the model does not see, and a better model learns the stand-in better. When the design law is known, a conditional randomization test written as an e-value is valid in finite samples whatever the model, provided the resampler conditions on the full state the design used; resampling from a simpler law reproduces the false effect. A second failure is specific to world models: when many sites share one action sequence (cells in a microscope field, pixels in a frame), the pooled score turns small model errors along the action contrast into overwhelming evidence against a true effect. In a pixel world, its median log e-value fell from $-17.3$ to $-6832$ as frames grew from 64 to 4096 pixels, while the oracle&#x27;s rose. Our preregistered analysis of optogenetic ERK experiments failed this way; a tempered statistic, selected on synthetic data and registered before the data were obtained, then rejected the null on a never-opened field ($E\approx1.1\times10^{10}$). Tempering factors estimated from residuals can err by an order of magnitude, whereas a mixture over a fixed grid of factors needs no estimate and loses at most the logarithm of the grid size in log e-value relative to its best member. In a registered test on a diffusion world model for three Atari games released by others, the pooled test rejected in 0 of 96 units in which actions mattered and Kish and contrast tempering in 0 and 1, while the mixture rejected in 96; under an exact null, eight statistics made 0 rejections in 1,536 tests. Every analysis is preregistered, fixed in a dated protocol, or labelled exploratory.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (54 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.01666v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.01666v2">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2604.01342v3">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2604.01342v3">Massively Parallel Exact Inference for Hawkes Processes</a>
-<p class="meta">Ahmer Raza, Hudson Smith &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Multivariate Hawkes processes are a widely used class of self-exciting point processes, but maximum likelihood estimation naively scales as $O(N^2)$ in the number of events. The canonical linear exponential Hawkes process admits a faster $O(N)$ recurrence, but prior work evaluates this recurrence sequentially, without exploiting parallelization on modern GPUs. We show that the Hawkes process intensity can be expressed as a product of sparse transition matrices admitting a linear-time associative multiply, enabling computation via a parallel prefix scan. This yields a massively parallelizable algorithm for estimation of linear exponential Hawkes processes. Our method reduces the computational complexity to approximately $O(N/P)$ with $P$ parallel processors, and naturally yields a batching scheme to maintain constant memory usage, avoiding GPU memory constraints. Importantly, it computes the exact likelihood without any additional assumptions or approximations, preserving the simplicity and interpretability of the model. We demonstrate orders-of-magnitude speedups on simulated and real datasets, scaling to thousands of nodes and tens of millions of events, substantially beyond scales reported in prior work. We provide an open-source PyTorch library implementing our optimizations.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Your interests: I am interested in computation for permutation and ... (55 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2604.01342v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2604.01342v3">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.11311v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.11311v1">Causal discernment and the direction of clinical research</a>
-<p class="meta">Carlo Berzuini, Luisa Bernardinelli &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">A clinical trial can establish an intervention&#x27;s effects while leaving their causal pathways unresolved. We call causal discernment the practice of identifying explanations that fit the evidence but imply different decisions or research directions, and seeking studies that distinguish them. METHOD: We combine causal graphs and prose around four questions: delivery of the intended target change, routes of benefit and harm, stability of causal relations across regimes, and whether unresolved pathways could change the decision. With quantitative assumptions, graphs support plausible reasoning by showing which findings could distinguish explanations even when effects are not identified. Prose specifies clinical meaning, effect size and timing, and supporting evidence. We use conceptual analysis, hypothetical calculations, CAST and lipid-lowering therapy. SUBSTANTIVE RESULTS: Concordant coronary associations for HMGCR and PCSK9 perturbations support LDL mediation over target-specific explanations predicting unequal effects per unit of LDL reduction, but leave a shared receptor pathway possible. Diabetes associations leave LDL lowering, receptor-mediated uptake and weight gain as possible explanations. An illustrative causal record specifies a genetic comparison and assumptions under which it could distinguish them. CONCLUSION: The causal record formalises the reasoning behind the choice of the next study by making competing explanations, evidence and assumptions explicit and stating what each design could resolve. Prepared before a design or recommendation is adopted, it enables scrutiny of that reasoning and interpretation of results in relation to the stated explanations. Its added value over ordinary rationale review remains to be assessed.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (55 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.11311v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.11311v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.10957v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.10957v1">A Unified Framework for Robust Blinded Sample Size Re-estimation Based on Nuisance Parameters</a>
-<p class="meta">Long-Hao Xu, Lei Li, Tim Friede &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Blinded sample size re-estimation aims to mitigate uncertainty in nuisance parameters at the design stage while preserving the integrity of the trial. It allows the required sample size to be updated without revealing treatment assignments and thereby reduces the risk of an inappropriate sample size. Although numerous procedures have been proposed for different outcome types, a unified framework is still lacking. We therefore develop a general framework for blinded sample size re-estimation based on nuisance parameters. Within this general framework, we develop robust methods to reduce the influence of extreme observations. The proposed framework combines asymptotically linear estimators for the parameter of interest with robust Z-estimators for nuisance parameters, thereby unifying a broad class of existing procedures through different choices of estimating functions. We also propose a general principle for constructing nuisance parameters that can be estimated from blinded data. The proposed framework is supported by asymptotic theory showing that the type I error rate converges to the nominal level under regularity conditions. Simulation studies demonstrate that the proposed method maintains reliable type I error control across a range of settings, including contaminated data and small pilot sample sizes. Compared with existing blinded and unblinded methods, the proposed framework is more flexible and less sensitive to outliers. A clinical trial application illustrates its practical utility.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (55 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.10957v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.10957v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2605.26723v2">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2605.26723v2">An Exact Marginal Likelihood for Inference under Careless Responding</a>
-<p class="meta">Jaehoan Kim &middot; <span class="source">arxiv</span></p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Careless or insufficient-effort responding threatens the validity of self-report measurement. Mixture models for careless responding specify its form, and screening rules and robust methods depend on a threshold or tuning constant with no direct meaning in terms of careless responses. We propose ExHuber, a Bayesian method for inference on the engaged population under Huber&#x27;s contamination model, in which an unknown proportion of responses comes from a contaminating distribution of unspecified form instead of the structural model. With a finite support of responses, such as the values of a scale score, a Dirichlet prior and a Beta prior on the contaminating distribution and its proportion yield a closed-form exact marginal likelihood of the structural parameters. Under a prior favoring a contaminating distribution on a few values, we show that the posterior of the structural parameters is consistent when careless responses occupy few values of the support, without knowing which values. Dynamic programming evaluates the marginal likelihood and its gradient at a cost quadratic in the sample size, which enables gradient-based sampling. Simulations from graded response models show accurate inference under straightlining and repeated response patterns, and an application to Big Five scales estimates the engaged mean of each scale.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: EDA for HLM: Visualization when probabilistic inference fails (55 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2605.26723v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2605.26723v2">fewer like this</a></p>
 </div>
 </article>
 </section>
