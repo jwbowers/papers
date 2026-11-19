@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>All weeks</title>
+<style>
+:root {
+  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #9a948a;
+  --rule: #e6e2da; --accent: #7a4b1f; --visited: #8a7a68;
+  --track: #ebe6dc; --fill: #b07a45; --chip: #f2eee6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #77736c;
+    --rule: #2c2c31; --accent: #e0b07c; --visited: #a8998a;
+    --track: #2c2c31; --fill: #c8915a; --chip: #222226;
+  }
+}
+* { box-sizing: border-box; }
+/* System fonts so the page draws at once with no download; Charter and
+   Iowan ship with Apple devices and read well at small sizes. */
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 17px/1.5 Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  -webkit-text-size-adjust: 100%;
+}
+main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 16px 3rem; }
+.meta, .closest, .vote, .intro, h2, footer {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0.5rem 0 0.25rem; }
+.intro { color: var(--muted); font-size: 0.85rem; margin: 0 0 1rem; }
+/* The day heading stays at the top of the screen while Jake scrolls a long
+   day, so he always knows which day he is reading. */
+h2 {
+  position: sticky; top: 0; z-index: 1; background: var(--bg);
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin: 1.5rem 0 0; padding: 0.6rem 0 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted);
+}
+h2 .count { font-weight: 400; letter-spacing: 0; text-transform: none; }
+section { counter-reset: pick; }
+/* The program lists each day's picks closest first, so a number lets Jake
+   see how far down the ranking a paper sits. */
+article {
+  counter-increment: pick; position: relative;
+  padding: 0.65rem 0 0.6rem 2rem; border-bottom: 1px solid var(--rule);
+}
+article::before {
+  content: counter(pick); position: absolute; left: 0; top: 0.85rem;
+  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums; color: var(--faint);
+}
+.title {
+  display: block; color: var(--ink); text-decoration: none;
+  font-size: 1.1rem; font-weight: 600; line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+/* A visited title fades, which shows Jake which papers he has opened. */
+.title:visited { color: var(--visited); }
+.title:hover, .title:focus { text-decoration: underline; }
+.meta { color: var(--muted); font-size: 0.85rem; margin: 0.3rem 0 0; }
+.source { font-style: italic; }
+.reason { margin: 0.45rem 0 0; }
+/* The reasons are empty until a model writes them; an empty paragraph
+   would only add space. */
+.reason:empty { display: none; }
+/* The first lines of the abstract sit in the summary, the part of a
+   details element that shows while it is closed, so Jake can read the
+   start of every abstract while he scrolls. A tap opens the whole text. */
+.abstract { margin: 0.4rem 0 0; }
+.abstract summary { display: block; cursor: pointer; list-style: none; }
+.abstract summary::-webkit-details-marker { display: none; }
+.abstract summary .text {
+  display: -webkit-box; -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4; overflow: hidden;
+  padding-left: 0.75rem; border-left: 2px solid var(--rule);
+  font-size: 0.92rem; line-height: 1.45; color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.abstract[open] summary .text { -webkit-line-clamp: unset; display: block; }
+.abstract summary::after {
+  content: "Show all"; display: block; margin: 0.15rem 0 0 0.75rem;
+  color: var(--accent); font-size: 0.75rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+.abstract[open] summary::after { content: "Show less"; }
+/* The closest line and the vote links share one line, wrapping on a
+   narrow phone, so each paper takes fewer lines. */
+.foot {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 0.2rem 1rem; margin: 0.35rem 0 0;
+}
+.foot > p { margin: 0; }
+.closest {
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  color: var(--muted); font-size: 0.8rem;
+}
+/* The bar restates the angle: empty at 90 degrees, the angle between
+   papers that share no word, and full at 30 degrees or less. */
+.meter {
+  flex: none; margin-top: 0.45em; width: 2.5rem; height: 0.3rem; border-radius: 1px;
+  background: var(--track); overflow: hidden;
+}
+.meter span { display: block; height: 100%; background: var(--fill); }
+.vote { display: flex; gap: 0.5rem; font-size: 0.8rem; }
+/* Vote links look quiet but are tall enough to hit with a thumb. */
+.vote a {
+  display: inline-flex; align-items: center; min-height: 1.75rem;
+  padding: 0 0.7rem; border-radius: 1rem; background: var(--chip);
+  color: var(--muted); text-decoration: none;
+}
+.vote a:hover, .vote a:focus { color: var(--accent); }
+footer { color: var(--faint); font-size: 0.8rem; margin-top: 2.5rem; }
+footer a { color: var(--muted); }
+.intro a { color: var(--accent); }
+/* The archive's index: one line per week, newest first. */
+.weeks { list-style: none; padding: 0; margin: 1rem 0 0; }
+.weeks li { padding: 0.55rem 0; border-bottom: 1px solid var(--rule); }
+.weeks a { color: var(--ink); font-weight: 600; text-decoration: none; }
+.weeks a:hover, .weeks a:focus { text-decoration: underline; }
+.weeks .count { color: var(--muted); font-size: 0.85rem; }
+/* On a desktop a single 40rem column left most of the screen empty, so each
+   paper becomes two columns: the paper on the left and its abstract on the
+   right. The list stays one column of papers in rank order. The abstract
+   column is capped at about 75 characters a line, and the page width is
+   the sum of the columns so no strip is left over at the right. Below
+   62rem the abstract would fall under about 60 characters a line. */
+@media (min-width: 62rem) {
+  main { max-width: 68.5rem; padding-left: 24px; padding-right: 24px; }
+  .intro, footer { max-width: 40rem; }
+  /* The second row takes any height the abstract adds, so the closest
+     line and the votes stay right under the reason. */
+  article {
+    display: grid; grid-template-columns: 27rem minmax(0, 34rem);
+    grid-template-rows: auto 1fr; column-gap: 2.5rem;
+  }
+  .lead { grid-column: 1; grid-row: 1; }
+  .foot { grid-column: 1; grid-row: 2; align-self: start; }
+  .abstract { grid-column: 2; grid-row: 1 / 3; margin: 0; }
+}
+</style>
+</head>
+<body>
+<main>
+<p class="intro"><a href="../">Back to the papers</a></p>
+<h1>All weeks</h1>
+<ul class="weeks">
+<li><a href="2026-11-16.html">16 to 22 November 2026</a> <span class="count">&middot; 60 papers</span></li>
+<li><a href="2026-11-09.html">9 to 15 November 2026</a> <span class="count">&middot; 132 papers</span></li>
+<li><a href="2026-11-02.html">2 to 8 November 2026</a> <span class="count">&middot; 72 papers</span></li>
+</ul>
+<footer><a href="../">Back to the papers</a></footer>
+</main>
+</body>
+</html>

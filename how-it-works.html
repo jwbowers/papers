@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>How this page works</title>
+<style>
+:root {
+  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #9a948a;
+  --rule: #e6e2da; --accent: #7a4b1f; --visited: #8a7a68;
+  --track: #ebe6dc; --fill: #b07a45; --chip: #f2eee6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #77736c;
+    --rule: #2c2c31; --accent: #e0b07c; --visited: #a8998a;
+    --track: #2c2c31; --fill: #c8915a; --chip: #222226;
+  }
+}
+* { box-sizing: border-box; }
+/* The same type as the main page, so the two read as one site. */
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 17px/1.55 Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  -webkit-text-size-adjust: 100%;
+}
+main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 16px 3rem; }
+nav, h2 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+nav { font-size: 0.85rem; }
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0.75rem 0 1rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; }
+a { color: var(--accent); overflow-wrap: anywhere; }
+ul { padding-left: 1.25rem; }
+li { margin: 0.3rem 0; }
+code { font-size: 0.9em; }
+</style>
+</head>
+<body>
+<main>
+<nav><a href="./">Back to the papers</a></nav>
+<h1>How this page works</h1>
+<p>This page lists new research papers for one reader, Jake Bowers, who works on
+research design, causal inference, randomization-based inference, policy
+evaluation, and political methodology. Every evening at 7:30 pm Central time,
+a Mac mini in Jake's house starts a program that rebuilds the page. The time is
+half an hour after arXiv announces its new papers, which it does at 7:00 pm
+Central from Sunday through Thursday.</p>
+<p>The program first gathers papers. From arXiv it takes the papers announced that
+evening. From the other sources listed below it takes the papers they added in
+the past seven days. For each paper it keeps the title, the authors, and the
+abstract. It then drops every paper it ranked on an earlier evening.</p>
+<p>Next the program puts the remaining papers in order. Jake gave it 62 passages
+of his own to compare each new paper with: the abstracts of 48 of his papers, and 14
+paragraphs he wrote about what he wants to read. Each paper he votes up, as
+described under "Votes" below, becomes one more passage. A small language model
+turns each text, whether a new paper's title and abstract or one of Jake's
+passages, into a list of numbers. The model's makers trained it so that two
+texts on the same subject get similar lists. For each new paper, the program
+finds the one passage of Jake's whose list is most like the paper's. The paper
+whose list comes closest to its passage's list goes first. The section "How the
+papers are put in order" below says how the program measures how close two
+lists are.</p>
+<p>Last, the program adds the first 20 papers in that order to the page, keeps the
+papers it added on the six evenings before, and sends the new page to GitHub,
+which publishes it at papers.jakebowers.org.</p>
+<p>Drew Dimmery runs a page of the same kind, <a href="https://papers.ddimmery.com/">https://papers.ddimmery.com/</a>. His
+program also turns abstracts into lists of numbers to rank new papers, and then
+has a larger language model choose a few and write one sentence on each. His
+code is not public, so this program is new code. This program has no step in
+which a language model writes a sentence.</p>
+<h2>Where the papers come from</h2>
+<p>The program reads the sources below. From arXiv it takes the papers announced
+that evening. From each of the others it takes every paper added in the past
+seven days.</p>
+<ul>
+<li>arXiv, in five categories: methodology (stat.ME), machine learning
+  (stat.ML), applied statistics (stat.AP), econometrics (econ.EM), and
+  computers and society (cs.CY).</li>
+<li>SocArXiv, the social science preprint server.</li>
+<li>NBER working papers.</li>
+<li>24 journals in statistics, political science, sociology, biometrics,
+  and econometrics, among them the Journal of the American Statistical
+  Association, Biometrika, Political Analysis, and the American Political
+  Science Review.</li>
+<li>Any journal at all, for papers that OpenAlex, a free index of research
+  papers, files under its topic "Advanced Causal Inference Techniques".</li>
+</ul>
+<p>Crossref, the agency that registers DOIs, the permanent identifiers of papers, says which papers the journals and NBER
+published each day. It usually lacks the abstract, so the program asks
+OpenAlex for it. When neither has one, the page shows the paper with no
+abstract, and the program ranks it by its title alone.</p>
+<p>The program asks the sources other than arXiv for a whole week every evening,
+so that a paper one of them was slow to list is found the next day. arXiv's
+evening announcement lists only that evening's papers, so on an evening when
+the program does not run, it misses that evening's arXiv papers. The program
+remembers every paper it has already ranked and ranks each one only once. A new
+arXiv version, or the journal version of a preprint, counts as a new paper.
+Papers not in English are left out.</p>
+<h2>How the papers are put in order</h2>
+<p>Jake gave the program two kinds of text to compare new papers with: the
+abstracts of 48 of his own papers, and 14 paragraphs he wrote about what he
+wants to read. Call each of these 62 texts a reference passage.</p>
+<p>The program compares texts with a small language model, Qwen3-Embedding-0.6B,
+which runs on the computer in Jake's house. The model reads a passage and
+returns a list of 1,024 numbers. A list of 1,024 numbers can be drawn as an
+arrow in 1,024 dimensions, just as a list of two numbers is an arrow on a
+flat page. Its makers trained it so that passages on similar subjects get
+arrows that point in nearly the same direction. So the angle between two
+arrows measures how close two passages are in subject. Two passages that
+share no subject at all have arrows at about 90 degrees.</p>
+<p>For each new paper, the program computes the angle between the arrow of
+the paper's title and abstract and the arrow of each of the 62 reference
+passages. The paper's score is the smallest of those 62 angles, and the
+page names the reference passage that gave it, on the line "Closest to".
+The bar beside that line restates the angle: it is empty at 90 degrees and
+full at 30 degrees or less. The papers picked so far fall between about 40
+and 60 degrees.</p>
+<p>Each evening the page adds up to 20 of the day's new papers, smallest angle
+first, and shows the past seven days.</p>
+<h2>Votes</h2>
+<p>Under each paper are two links, "more like this" and "fewer like this".
+Each opens a GitHub form, and submitting the form files a vote in the
+program's private GitHub repository. Only people with access to that
+repository can file one, so only Jake can vote. A paper Jake votes up becomes one more
+reference passage. When a new paper's closest passage is a paper he voted
+down, the program puts the new paper below every other paper of that day. A vote
+counts for one year.</p>
+<h2>Followed authors</h2>
+<p>Jake keeps a list of people he follows. Each evening the program asks
+OpenAlex, an index of research papers, for every paper by those people
+published in the past seven days. OpenAlex knows each person by an
+identifier, because a search by name alone would also find everyone else
+with that name, so the list gives each person's identifiers. The page shows
+those papers first, under the heading "From authors Jake follows," whether
+or not their abstracts come close to Jake's work. A paper can appear there
+and also among a day's picks.</p>
+<p>A paper with more than four authors shows the first three, then any author
+on Jake's list, then the number of other authors. Following an author does
+not change a paper's place in the day's list.</p>
+<h2>What the page does not do</h2>
+<p>The page does not judge whether a paper is correct or good. The program
+measures only how close a paper's words come to Jake's, and it reads only
+the sources listed above. A paper whose abstract uses words unlike Jake's gets a
+large angle and a low place, however relevant its mathematics is.</p>
+</main>
+</body>
+</html>
