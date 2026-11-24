@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Papers of 23 to 29 November 2026</title>
+<style>
+:root {
+  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #9a948a;
+  --rule: #e6e2da; --accent: #7a4b1f; --visited: #8a7a68;
+  --track: #ebe6dc; --fill: #b07a45; --chip: #f2eee6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #77736c;
+    --rule: #2c2c31; --accent: #e0b07c; --visited: #a8998a;
+    --track: #2c2c31; --fill: #c8915a; --chip: #222226;
+  }
+}
+* { box-sizing: border-box; }
+/* System fonts so the page draws at once with no download; Charter and
+   Iowan ship with Apple devices and read well at small sizes. */
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 17px/1.5 Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  -webkit-text-size-adjust: 100%;
+}
+main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 16px 3rem; }
+.meta, .closest, .vote, .intro, h2, footer {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0.5rem 0 0.25rem; }
+.intro { color: var(--muted); font-size: 0.85rem; margin: 0 0 1rem; }
+/* The day heading stays at the top of the screen while Jake scrolls a long
+   day, so he always knows which day he is reading. */
+h2 {
+  position: sticky; top: 0; z-index: 1; background: var(--bg);
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin: 1.5rem 0 0; padding: 0.6rem 0 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted);
+}
+h2 .count { font-weight: 400; letter-spacing: 0; text-transform: none; }
+section { counter-reset: pick; }
+/* The program lists each day's picks closest first, so a number lets Jake
+   see how far down the ranking a paper sits. */
+article {
+  counter-increment: pick; position: relative;
+  padding: 0.65rem 0 0.6rem 2rem; border-bottom: 1px solid var(--rule);
+}
+article::before {
+  content: counter(pick); position: absolute; left: 0; top: 0.85rem;
+  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums; color: var(--faint);
+}
+.title {
+  display: block; color: var(--ink); text-decoration: none;
+  font-size: 1.1rem; font-weight: 600; line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+/* A visited title fades, which shows Jake which papers he has opened. */
+.title:visited { color: var(--visited); }
+.title:hover, .title:focus { text-decoration: underline; }
+.meta { color: var(--muted); font-size: 0.85rem; margin: 0.3rem 0 0; }
+.source { font-style: italic; }
+.reason { margin: 0.45rem 0 0; }
+/* The reasons are empty until a model writes them; an empty paragraph
+   would only add space. */
+.reason:empty { display: none; }
+/* The first lines of the abstract sit in the summary, the part of a
+   details element that shows while it is closed, so Jake can read the
+   start of every abstract while he scrolls. A tap opens the whole text. */
+.abstract { margin: 0.4rem 0 0; }
+.abstract summary { display: block; cursor: pointer; list-style: none; }
+.abstract summary::-webkit-details-marker { display: none; }
+.abstract summary .text {
+  display: -webkit-box; -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4; overflow: hidden;
+  padding-left: 0.75rem; border-left: 2px solid var(--rule);
+  font-size: 0.92rem; line-height: 1.45; color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.abstract[open] summary .text { -webkit-line-clamp: unset; display: block; }
+.abstract summary::after {
+  content: "Show all"; display: block; margin: 0.15rem 0 0 0.75rem;
+  color: var(--accent); font-size: 0.75rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+.abstract[open] summary::after { content: "Show less"; }
+/* The closest line and the vote links share one line, wrapping on a
+   narrow phone, so each paper takes fewer lines. */
+.foot {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 0.2rem 1rem; margin: 0.35rem 0 0;
+}
+.foot > p { margin: 0; }
+.closest {
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  color: var(--muted); font-size: 0.8rem;
+}
+/* The bar restates the angle: empty at 90 degrees, the angle between
+   papers that share no word, and full at 30 degrees or less. */
+.meter {
+  flex: none; margin-top: 0.45em; width: 2.5rem; height: 0.3rem; border-radius: 1px;
+  background: var(--track); overflow: hidden;
+}
+.meter span { display: block; height: 100%; background: var(--fill); }
+.vote { display: flex; gap: 0.5rem; font-size: 0.8rem; }
+/* Vote links look quiet but are tall enough to hit with a thumb. */
+.vote a {
+  display: inline-flex; align-items: center; min-height: 1.75rem;
+  padding: 0 0.7rem; border-radius: 1rem; background: var(--chip);
+  color: var(--muted); text-decoration: none;
+}
+.vote a:hover, .vote a:focus { color: var(--accent); }
+footer { color: var(--faint); font-size: 0.8rem; margin-top: 2.5rem; }
+footer a { color: var(--muted); }
+.intro a { color: var(--accent); }
+/* The archive's index: one line per week, newest first. */
+.weeks { list-style: none; padding: 0; margin: 1rem 0 0; }
+.weeks li { padding: 0.55rem 0; border-bottom: 1px solid var(--rule); }
+.weeks a { color: var(--ink); font-weight: 600; text-decoration: none; }
+.weeks a:hover, .weeks a:focus { text-decoration: underline; }
+.weeks .count { color: var(--muted); font-size: 0.85rem; }
+/* On a desktop a single 40rem column left most of the screen empty, so each
+   paper becomes two columns: the paper on the left and its abstract on the
+   right. The list stays one column of papers in rank order. The abstract
+   column is capped at about 75 characters a line, and the page width is
+   the sum of the columns so no strip is left over at the right. Below
+   62rem the abstract would fall under about 60 characters a line. */
+@media (min-width: 62rem) {
+  main { max-width: 68.5rem; padding-left: 24px; padding-right: 24px; }
+  .intro, footer { max-width: 40rem; }
+  /* The second row takes any height the abstract adds, so the closest
+     line and the votes stay right under the reason. */
+  article {
+    display: grid; grid-template-columns: 27rem minmax(0, 34rem);
+    grid-template-rows: auto 1fr; column-gap: 2.5rem;
+  }
+  .lead { grid-column: 1; grid-row: 1; }
+  .foot { grid-column: 1; grid-row: 2; align-self: start; }
+  .abstract { grid-column: 2; grid-row: 1 / 3; margin: 0; }
+}
+</style>
+</head>
+<body>
+<main>
+<p class="intro"><a href="../">Back to the papers</a> &middot; <a href="./">All weeks</a></p>
+<h1>23 to 29 November 2026</h1>
+<section>
+<h2>Monday 23 November<span class="count">20 papers</span></h2>
+<article data-paper-id="arXiv:2607.04257v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2607.04257v2">Randomization Tests in Randomized Saturation Designs</a>
+<p class="meta">Jizhou Liu, Azeem M. Shaikh, Liang Zhong &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME, econ.EM</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Randomized saturation designs are widely used to study spillover effects in clustered populations. In these designs, clusters are first assigned to treatment saturation levels, and units are then randomized within clusters according to the assigned saturation. This paper develops randomization tests for such experiments under several null hypotheses that arise naturally in spillover analysis. We first compare each unit&#x27;s untreated potential outcomes at two saturation levels: the partially sharp null requires zero spillover for every unit, while the bounded null imposes a prespecified upper bound on each unit&#x27;s spillover effect. Both hypotheses can be tested using a common conditional randomization framework that provides finite-sample validity. We next develop a finite-sample valid unconditional randomization test of whether each unit&#x27;s untreated potential outcome is nondecreasing across saturation levels. Finally, we study weak average-spillover nulls and show that our conditional randomization framework delivers asymptotically valid inference using studentized statistics. Simulations and an application to the Zomba Cash Transfer experiment illustrate the finite-sample behavior and practical implementation of the methods.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:71%"></span></span><span>Closest to: Your interests: I want to read new work on randomization-based ... (48 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2607.04257v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2607.04257v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.27315v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.27315v1">Smoothed Conformal Testing with Small Calibration Sets</a>
+<p class="meta">Mingzhou Deng, Yan Fu &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME, math.ST, stat.TH</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">A small calibration sample restricts split conformal $p$-values to a coarse rank grid. Randomization removes this discretization, but its effect depends on both the smoothing interval and the allocation of auxiliary random variables. Independent tie-block randomization is exactly valid under null exchangeability. When calibration and null scores are jointly exchangeable conditional on the alternative scores, we prove positive regression dependence and hence Benjamini--Hochberg false discovery rate control, including for atomic score distributions. Smoothing over calibration-dependent rank cells agrees with tie-block randomization when calibration scores are distinct and no test score ties a calibration score, but can fail marginal validity with atoms. Assigning sorted random draws according to score order can invalidate even a single null $p$-value. An exact two-test example violates the usual $\pi_0\alpha$ bound, and simulations with continuous scores exhibit false discovery rates above the nominal level $\alpha$. Finally, conditional moment identities and normal-model illustrations show that removing the rank grid does not remove calibration uncertainty. Randomization can produce additional discoveries, including when ordinary conformal testing cannot reject at all, but it does not generally substitute for a larger calibration sample.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:65%"></span></span><span>Closest to: Your interests: I want to read new work on randomization-based ... (51 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.27315v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.27315v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.27961v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.27961v1">Explicational statistics: research for an AI age</a>
+<p class="meta">Sihai Dave Zhao &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.OT, stat.AP, stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">AI is dramatically changing the statistical research landscape. I argue that production of a distinct category of statistical knowledge, which I refer to as explicational statistics, is actually becoming more valuable as AI increasingly automates other parts of the research process. I define explicational statistics, contextualize it in terms of other forms of statistical knowledge, and explain why I think the rise of AI makes it more valuable. I demonstrate my framework by first developing a new dimension reduction method, Ambient Embedding Projection, that can simultaneously visualize the intrinsic geometry of a data manifold along with how that manifold is embedded into ambient space. I then use my new method to conceive of a new statistical property of a collection of manifolds, related to metric distortion, that in single-cell biology can capture the ensemble behavior of cell populations. I apply these ideas to single-nuclei RNA-seq data from the brains of mice from different behavioral conditions to reveal potential cellular mechanisms of chronic social defeat stress.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:65%"></span></span><span>Closest to: Your interests: I&#x27;m interested in the use of AI for ... (51 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.27961v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.27961v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2409.03962v3">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2409.03962v3">Average Causal Effect Estimation in DAGs with Hidden Variables: Beyond Back-Door and Front-Door Criteria</a>
+<p class="meta">Anna Guo, Razieh Nabi &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME, cs.LG, stat.ML</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">The identification theory for causal effects in directed acyclic graphs (DAGs) with hidden variables is well established, but methods for estimation and inference beyond the g-formula remain less developed. Previous studies have introduced influence-function-based estimators for broad classes of identifiable effects. When implemented through the observed-data density factorization, these estimators can require conditional density estimation and numerical integration, which can be statistically challenging and computationally demanding for continuous or multivariate variables. Prior work on related causal functionals has used sequential regressions and Bayes-rule representations of density ratios to avoid these requirements. Building on established identification and influence-function results, we make these reparameterizations explicit for effects identified under treatment primal fixability, Tian and Pearl&#x27;s necessary and sufficient condition for identification of post-intervention law, encompassing settings beyond classical back-door and front-door identification. We construct one-step estimators under alternative nuisance parameterizations and characterize how these choices affect robustness properties and nuisance-specific L2(P) product-rate conditions for asymptotic linearity and root-n consistency. The estimators accommodate data-adaptive machine learning for nuisance estimation. To address potential violations of the target parameter bounds by one-step estimators, we also develop targeted minimum loss-based estimators (TMLEs) that respect these bounds. Our robustness characterizations and sufficient rate conditions apply to both the one-step estimators and TMLEs. Building on prior efficiency theory for hidden-variable DAGs, we further develop modifications of our estimators that exploit ordinary independence restrictions. Implementations are provided in the R flexCausal package.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:63%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (52 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2409.03962v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2409.03962v3">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.27655v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.27655v1">Combining Past Experimental Data for Efficient Estimation: A Shrinkage Approach</a>
+<p class="meta">Qianxi Zhang, Dae Woong Ham, Stefanus Jasin &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME, stat.AP</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Firms routinely conduct randomized experiments, creating archives that could improve treatment-effect estimation in new experiments. However, past experiments evaluate related but different interventions, so their estimates may be biased for the current target. We study when and how borrowing from multiple auxiliary experiments can reduce the mean squared error (MSE) of a single treatment-effect estimate. In the oracle case, when biases and variances are known, borrowing from even one biased experiment strictly reduces MSE. In practice, we propose three shrinkage estimators and characterize their asymptotic MSE as the number of auxiliary experiments grows. Our analysis shows that average auxiliary bias and cross-study bias dispersion affect the relative performance of these estimators. As expected, smaller average bias magnitude generally improves performance. Surprisingly, bias dispersion can both benefit and harm our first estimator, the general plug-in estimator. On one hand, a more dispersed bias allows flexibility in cancelling the bias. On the other hand, the bias cancellation is imperfect as we only have an estimate of the bias, leading to overfitting. Motivated by this tradeoff, we propose a pooled plug-in estimator that restricts study-specific reweighting to limit this overfitting. However, both plug-in estimators can perform poorly when average bias is large. To address this, we develop a fixed-weight estimator with a hypothesis-testing gate that borrows only when the aggregate auxiliary mean is not significantly different from the target mean. Simulations illustrate the relative strengths of these estimators across bias environments and the relevance of the limiting analysis for finite collections of experiments. We also provide managerial guidance on which shrinkage estimator to use based on average bias and bias dispersion.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.27655v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.27655v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.1123/jpah.2026-0608">
+<div class="lead">
+<a class="title" href="https://doi.org/10.1123/jpah.2026-0608">Assessing Residual Confounding in Occupational Physical Activity Research: Negative Controls and Sensitivity Analyses for Unmeasured Confounding</a>
+<p class="meta">Charles Phillipe de Lucena Alves, Emmanuel Stamatakis, Andreas Holtermann, Leandro F. M. Rezende &middot; <span class="source">Journal of Physical Activity and Health</span> &middot; published 20 November 2026</p>
+<p class="reason"></p>
+</div>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: Your interests: I look for papers on sensitivity analysis: how ... (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1123%2Fjpah.2026-0608">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1123%2Fjpah.2026-0608">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2603.17984v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2603.17984v2">On min-Storey estimators for multiple testing and conformal novelty detection</a>
+<p class="meta">Zijun Gao, Etienne Roquain &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME, math.ST, stat.TH</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">In a multiple testing task, finding an appropriate estimator of the proportion $\pi_0$ of non-signal in the data to boost power of false discovery rate (FDR) controlling procedures is a long-standing research theme, sometimes referred to as &#x27;adaptive FDR control&#x27;. The interest in this theme has been reinforced in the recent years with conformal novelty detection, for which it turns out that similar tools can be used in combination with any &#x27;blackbox&#x27; machine learning algorithm. Nevertheless, perhaps surprisingly, finding a solution for &#x27;adaptive FDR control&#x27; that is optimal in a broad sense is still an open problem. This paper fills this gap by introducing new $\pi_0$-estimators, referred to as min-Storey (MS) and interval-min-Storey (IMS), which are built upon the so-called &#x27;Storey estimator&#x27;. Plugging these estimators in the adaptive Benjamini-Hochberg (BH) procedure is shown to deliver FDR control both in the independent and conformal settings. In addition, these methods satisfy an optimal power property over any (regular) alternative distribution. The excellent behaviors of the new adaptive procedures are illustrated with numerical experiments both in the independent and conformal models for various distribution structures.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: Your interests: I am interested in multiple testing in multisite ... (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2603.17984v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2603.17984v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2607.04885v4">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2607.04885v4">Learning Where to Look: The Geometry of Data Combination and Collection</a>
+<p class="meta">Giacomo Opocher &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; econ.EM</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Large datasets covering populations in the status quo are becoming increasingly available, while interventions can usually be rolled out only to small selected samples. How can these two sources of information be combined to estimate the effect on untreated units? And who should be treated next to improve estimation the most? I focus on matching estimators and shed light on both problems, drawing from results in computational geometry. First, I prove that interpolation over the Delaunay simplex minimizes worst-case bias at any untreated unit, given any treated sample. Second, I show the collection problem has a geometric representation that yields significant reductions in worst-case bias with few additions (80% with 20 additions in an empirical application), leading to sizeable cost-efficiency gains in collection plans.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:56%"></span></span><span>Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (56 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2607.04885v4">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2607.04885v4">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2608.10305v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2608.10305v2">COMPACT: Spectral Adjustment Scores from an Exhaustive and Nonredundant Set of Invariant Relations</a>
+<p class="meta">Eric V. Strobl &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME, stat.ML</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Observational datasets frequently contain many baseline variables, yet investigators estimating causal effects may not know which variables to include in the adjustment set. Confounding information may also be distributed weakly across many variables. Propensity scores can simplify adjustment by reducing high-dimensional covariates to a scalar with binary treatment. Although the propensity score is the coarsest balancing score, this balancing property does not necessarily distinguish among causal structures relevant to adjustment. We instead examine all causal graphs among a candidate score, treatment, and outcome while allowing latent variables. Under faithfulness, we identify all unconditional and conditional dependence relations that remain unchanged when the treatment-to-outcome edge is added or removed, leaving treatment-effect estimation to the downstream analysis. Together, these relations define the smallest compatible graph class expressible through the relations considered. We then develop the proposed algorithm, which implements this criterion through a generalized eigenvalue problem whose score space targets the span of a treatment-balancing coordinate and a residual-outcome coordinate. We show that sufficiently informative proxies can recover this span without direct observation of the adjustment variables, characterize the resulting score-recovery and downstream causal-estimation errors, and establish bootstrap validity for the full procedure. Simulations and a real-data application demonstrate superior performance over several alternatives.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:56%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (56 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2608.10305v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2608.10305v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2609.13976v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2609.13976v2">From priors to performance: enhancing statistical efficiency with Bayesian dynamic borrowing</a>
+<p class="meta">Xinxin Chen, Ezequiel Braga, Joseph G. Ibrahim, and 2 others &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">One of the main advantages of the Bayesian approach to statistical inference is the flexibility in incorporating information from various sources, from expert opinion to historical data. Whereas the literature on Bayesian dynamic borrowing is rich, practical guidance for how to implement such methods is comparatively sparse. We thoroughly review the most common dynamic borrowing approaches for external data, including how to incorporate multiple historical data sets. We then show how these techniques can be used in practice, using publicly available software, to perform important statistical tasks such as model selection, average treatment effect estimation and prior sensitivity analysis. The aim is to make analysts more confident in their use of Bayesian methods to incorporate external data. All code is made publicly available in a companion GitHub repository (https://github.com/EzequielEBS/hdbayes-tutorial).</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:55%"></span></span><span>Closest to: Your interests: I want to read new work that joins ... (57 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2609.13976v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2609.13976v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.18479v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.18479v2">Estimating a Rational Inattention Discrete Choice Model: A Semiparametric Approach</a>
+<p class="meta">Hanqi Wang &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; econ.EM, stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">People&#x27;s choices depend on both the payoffs of the available options and what they learn about those payoffs before deciding. This paper shows how choice data identify both unobserved payoff heterogeneity and the cost of information acquisition in a rational inattention discrete-choice model. I establish conditions for semiparametric point identification using exogenous payoff and information-cost shifters, without imposing parametric forms on the taste-shock distribution or on how the unit cost of information varies with observed characteristics. In the model with binary choice, I construct an unobserved choice threshold whose cumulative distribution function is the choice probability as a function of the payoff shifter. Moments of this threshold identify the payoff coefficients and the unit cost of information at each value of the information-cost shifter. A deconvolution argument then identifies the taste-shock distribution. I then extend identification to the model with multinomial choice. To estimate the model, I propose a sieve minimum-distance estimator based on observed market shares and establish its consistency. For inference, I construct confidence regions by test inversion because binding parameter constraints can make the estimator&#x27;s limiting distribution nonnormal. In an application to Amazon Mechanical Turk, model counterfactuals show that lower unit costs of information raise the average task-taking probability and reduce wage elasticity.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:55%"></span></span><span>Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (57 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.18479v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.18479v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.27983v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.27983v1">Optimal Linear Regression Without a Variance</a>
+<p class="meta">Artin Tajdini, Jasper C. H. Lee, Jonathan Scarlett, Kevin Jamieson &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ML, cs.AI, cs.IT, cs.LG, math.IT</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">We study high-probability linear regression in the infinite variance regime, wherecthe regression noise has only a finite conditional $\alpha$-moment $\nu$ for some unknown $\alpha\in(1,2)$, and the covariates may only have finite moments up to a given order (e.g., 4th moment). We give a black-box reduction that converts finite-variance regression procedures into weak-moment procedures. The reduction is based on empirical residual pruning and is agnostic to the moment exponent, the noise scale, the covariance, and the design moment. Under a finite fourth-moment condition on the covariates, any finite-variance subroutine attaining the sub-Gaussian rate yields the following when the number of samples $n$ is above a suitably defined threshold: Without knowing $\alpha$ or $\nu$, we have with probability at least $1-\delta$ that $ \|\widehat\theta-\theta^*\|_\Sigma \lesssim_\alpha \nu^{1/\alpha} \big(\frac{d+\log(1/\delta)}{n}\big)^{\frac{\alpha-1}{\alpha}}, $ where $d$ is the dimension, $\Sigma$ is the covariate covariance matrix, and $\|v\|_\Sigma:=(v^\top\Sigma v)^{1/2}$. We further prove a matching minimax lower bound that holds under the same conditions. The reduction is computationally efficient whenever the finite-variance subroutine is. We also obtain a distribution-free prediction guarantee under a bounded raw $\alpha$-moment assumption on the response, and give an analogous $\alpha$-agnostic reduction for mean estimation.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:54%"></span></span><span>Closest to: Regression without Regrets: A Modular Approach to Linear Models in (Quasi-)Experiments (57 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.27983v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.27983v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.27714v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.27714v1">Efficient inference for fairness-constrained sequential decision policies</a>
+<p class="meta">Yi-Hui Zhou &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME, stat.ML</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Adaptive decision systems in education and health choose interventions sequentially and are often required not to leave a protected group too far behind. We study the fairness-constrained optimal value: the largest population value attainable by a policy in a smooth parametric class subject to constraints that are smooth functions of group specific counterfactual functionals, such as value gaps, floors, max-min welfare and budgets. For multi-stage, non-Markov data under sequential ignorability, a sensitivity analysis of the Karush-Kuhn-Tucker system shows that this value is pathwise differentiable, with efficient influence function equal to the Lagrangian combination of the influence functions of the group values. The same analysis gives the influence functions of the optimal policy, the multiplier and the group values it delivers. A cross-fitted doubly robust estimator is efficient despite its data-dependent feasible set and yields confidence intervals for the constrained value and the price of fairness. When the constraint binds, any plug-in fair policy violates the population constraint, by a margin that vanishes as the sample grows, with probability tending to one half; tightening the estimated constraint by a one sided confidence margin certifies fairness at a small cost in value. Exact checks, simulations and a synthetic case study illustrate the theory.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:54%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (58 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.27714v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.27714v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.1016/j.annonc.2026.08.152">
+<div class="lead">
+<a class="title" href="https://doi.org/10.1016/j.annonc.2026.08.152">144P Matching the right drug to the right biology: External control arms with CURE AI</a>
+<p class="meta">N. Pfister, A. Weiss, T. Lederer, and 7 others &middot; <span class="source">Annals of Oncology</span> &middot; published 17 November 2026</p>
+<p class="reason"></p>
+</div>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:53%"></span></span><span>Closest to: Your interests: I&#x27;m interested in the use of AI for ... (58 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1016%2Fj.annonc.2026.08.152">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1016%2Fj.annonc.2026.08.152">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2604.24904v3">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2604.24904v3">Inference for Linear Systems with Unknown Coefficients</a>
+<p class="meta">Yuehao Bai, Kirill Ponomarev, Andres Santos, and 3 others &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; econ.EM, math.ST, stat.TH</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">This paper considers the problem of testing whether there exists a solution satisfying known linear constraints to a linear system of equations. Importantly and in contrast to some prior work, we allow all parameters in the system of equations, including the slope coefficients, to be unknown. For this reason, we describe the linear system as having unknown (as opposed to known) coefficients. This hypothesis testing problem arises naturally when constructing confidence sets for possibly partially identified parameters in the analysis of nonparametric instrumental variables models, treatment effect models, and random coefficient models, among other settings. We begin our analysis by providing a novel characterization of the set of coefficient pairs for which the linear system is feasible. Leveraging this characterization, we develop a testing procedure based on sample splitting. We establish its validity under weak and interpretable conditions on the linear system. An important feature of these conditions is that they permit the dimensionality of the problem to grow rapidly with the sample size. A further attractive property of our test is that it does not require simulation to compute suitable critical values. We illustrate the practical relevance of our theoretical results in a simulation study.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:53%"></span></span><span>Closest to: Your interests: I want to read new work on randomization-based ... (58 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2604.24904v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2604.24904v3">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2202.08062v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2202.08062v2">Where the Model Frequently Meets the Road: Combining Statistical, Formal, and Case Study Methods</a>
+<p class="meta">Andrew Bennett, Bear F. Braumoeller, John Severini &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">This paper briefly analyzes the working or default assumptions researchers in the formal, statistical, and case study traditions typically hold regarding the sources of unexplained variance, parameter values, functional forms, time, and external validity. We argue that these working assumptions are often not essential to each method, and that these assumptions can be relaxed in ways that allow multimethod work to proceed. We then analyze the comparative advantages of different combinations of formal, statistical, and case study methods, and offer advice on how to combine these methods.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:53%"></span></span><span>Closest to: Your interests: I want to read new work that joins ... (58 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2202.08062v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2202.08062v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="osf.io/ehga6_v2">
+<div class="lead">
+<a class="title" href="https://doi.org/10.31235/osf.io/ehga6_v2">Talking America Back from the Cliff—Messengers and Messages to Prevent Political Violence: Findings from a Nationally Representative Survey</a>
+<p class="meta">Garen Wintemute, Krista Neumann, Bradley Velasquez, and 7 others &middot; <span class="source">socarxiv</span> &middot; posted 22 November 2026</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Background: Trusted-messenger interventions are effective in preventing or mitigating many health problems, but their application to political violence has not been examined. This study explores how frequently persons who are willing to commit political violence are open to persuasion otherwise and assesses the potential effectiveness of specific messengers and messages at inducing that change. Methods: Findings are from Wave 5 (conducted May 15-June 15, 2026) of a nationally representative annual longitudinal survey of us adults. A new sample of young adults (ages 18-21y) was added in 2026, as no existing cohort members were in that age range. Survey respondents were included in this analysis if they were “very willing” or “completely willing” to commit political violence. Outcomes of primary interest were messengers and messages that respondents considered potentially effective (and most effective) in persuading them to be unwilling to commit violence. Secondary analyses categorized respondents by sociodemographic characteristics, political party and Make America Great Again (MAGA) movement affiliations, firearm ownership and use, and approval of right- and left-wing extremist organizations and movements. Results: The survey completion rate was 88.4%. Of 8,448 respondents, 1,058 (12.5%) met the eligibility criterion. A large majority of these respondents (n = 867; 77.4%, 95% CI 73.0%, 81.2%) reported that at least 1 messenger (n = 610) or message (n = 837) might make them unwilling to commit political violence. Respondents most frequently identified family members (34.8%, 95% CI 30.8%, 39.1%) and friends (29.1%, 95% CI 25.3%, 33.2%) as effective from a list of 8 messengers. Among 6 values-oriented messages, “violence is not who you are” was most often cited as potentially effective (36.5% of respondents, 95% CI 31.5%, 39.8%). Among 8 pragmatic messages, “violence could end up with you in prison or jail” was cited most often (36.7% of respondents, 95% CI 32.6%, 41.0%); 4 others were cited at similar frequencies. There was surprisingly little variation in messenger and message selection across respondent subgroups. Conclusions: Among the small proportion of respondents reporting a high degree of willingness to commit political violence, a large majority were open to change in response to interventions by trusted messengers—and willing to provide information in support of those interventions. These findings support targeted messaging for political violence prevention and suggest that large-scale prevention efforts are feasible and may be effective.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:52%"></span></span><span>Closest to: Intimidation and Resistance: A Case-Study of Race, Crossburnings and Political Behavior in North Carolina (59 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fehga6_v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fehga6_v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2608.14129v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2608.14129v2">Estimating Global Network Density from Snowball Samples</a>
+<p class="meta">Nurzhan Sapargali, Sergio Buttazzo, G\&#x27;&#x27;oran Kauermann &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Many analyses aim to estimate a global property of a population network, such as its density, yet only a subsample of the network is observed. Ignoring the sampling scheme, and treating the samples as complete networks leads to biased inference. Although this selection problem is generally intractable, we show that it admits an exact solution for snowball samples drawn from Erd\H{o}s--R\&#x27;enyi networks. We derive the exact likelihood of such a sample, showing that it forms a curved exponential family in the edge probability with a low-dimensional sufficient statistic. We obtain the maximum likelihood estimator that accounts for the sampling design, alongside valid confidence intervals constructed by inverting a test based on the exact sampling distribution, via Monte Carlo simulation. Simulations show that this estimator remains unbiased even when observing as little as 0.1\% of the vertices, with nominal confidence interval coverage. We further assess robustness to departures from the Erd\H{o}s--R\&#x27;enyi assumption using scale-free and small-world synthetic networks, as well as a real Facebook ego network. We find that, while the corrected estimator no longer attains unbiasedness under these departures, it still substantially outperforms the naive alternative throughout.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:52%"></span></span><span>Closest to: Models, methods and network topology: Experimental design for the study of interference (59 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2608.14129v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2608.14129v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2610.24178v2">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2610.24178v2">Multiple Testing Of Composite Null Hypotheses With High Dimensional Count Data: A Local False Discovery Rate Approach</a>
+<p class="meta">Emmanuel Asare, Pratyaydipta Rudra, Joshua Habiger &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">High throughput sequencing technology is routinely used to generate high dimensional (HD) count data. One objective is to determine which variables are associated with a covariate via the testing of multiple null hypotheses, say $H_m:\beta_m = 0$ for $m = 1, 2, ..., M$ where each $\beta_m$ is a regression parameter. The standard approach computes a $p$-value for each null hypothesis and applies some false discovery rate (FDR) method to determine which null hypotheses are rejected, i.e. which variables can be discovered as associated with the covariate. However, even if data are ``well modeled&#x27;&#x27;, this approach tends to provide a misleading list of discoveries in that some ``uninteresting&#x27;&#x27; negligible associations ($\beta_m \approx 0$) are discovered, while other interesting associations are not. This paper formally addresses this issue using Poisson Mixture models and a Local FDR (PMLFDR) procedure for testing of multiple composite null hypotheses $H_m:\beta_m\in[-\epsilon,\epsilon]$. It is shown that PMLFDR procedures allow for consistently estimable expressions for overdispersion, provide asymptotically optimal FDR control, and are robust with respect to model misspecification. Simulation studies and real data analysis illustrate that PMLFDR procedures perform favorably compared to established procedures in that they a) are flexible enough to model most HD count data regardless of the technology used in generation b) allow for continuous and categorical covariates and c) yield more meaningful discoveries without sacrificing FDR control.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:52%"></span></span><span>Closest to: Detecting Where Effects Occur by Testing Hypotheses in Order (59 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.24178v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.24178v2">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.27867v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.27867v1">Scalable Matrix-Free Algorithms for Variance Estimation of Survey-Weighted Survival Curves</a>
+<p class="meta">Jingchen Liang &middot; <span class="source">arxiv</span> &middot; posted 23 November 2026 &middot; stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Variance estimation for survey-weighted survival curves using existing statistical software can require substantial time and memory, particularly when the number of distinct event times is large. We developed two matrix-free algorithms that compute the conventional Taylor linearization variance estimator without constructing the full event-time covariance matrix: one accumulates individual-level linearization contributions, while the other directly updates aggregated contributions at the primary sampling unit (PSU) level. We evaluated numerical accuracy, runtime, and peak memory usage through an application to the National Health and Aging Trends Study (NHATS) and simulation experiments. Both approaches yielded survival and variance estimates identical to the R implementation. In the 7-year follow-up analysis of 7,608 NHATS participants with 2,879 deaths, computation time decreased from approximately 26 minutes to less than 3 seconds with the individual-level approach and less than 1 second with the PSU-level approach. Simulations with sample sizes of 1,000 to 10,000 showed similar results, with more pronounced computational advantages as sample size and the number of distinct event times increased. In more demanding settings, the existing implementation failed due to memory exhaustion, whereas both proposed approaches completed successfully. Matrix-free computation can improve the efficiency and scalability of design-based variance estimation while preserving numerical accuracy.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:52%"></span></span><span>Closest to: Your interests: I am interested in computation for permutation and ... (59 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.27867v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.27867v1">fewer like this</a></p>
+</div>
+</article>
+</section>
+<footer><a href="./">All weeks</a></footer>
+</main>
+</body>
+</html>
