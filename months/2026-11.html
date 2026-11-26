@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>November 2026</title>
+<style>
+:root {
+  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #746d62;
+  --rule: #e6e2da; --accent: #7a4b1f; --visited: #7d6d5b;
+  --track: #ebe6dc; --fill: #b07a45; --chip: #f2eee6;
+  --on: #1f1d1a; --onink: #fbfaf7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #98938a;
+    --rule: #2c2c31; --accent: #e0b07c; --visited: #a8998a;
+    --track: #2c2c31; --fill: #c8915a; --chip: #222226;
+    --on: #e8e4dc; --onink: #17171a;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 3.75rem; }
+/* System fonts so the page draws at once with no download; Charter and
+   Iowan ship with Apple devices and read well at small sizes. */
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 17px/1.5 Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  -webkit-text-size-adjust: 100%;
+}
+main { max-width: 40rem; margin: 0 auto; padding: 0.75rem 16px 3rem; }
+nav, .meta, .closest, .vote, .runline, .legend, .chips, .cal, .yr, .weeks .count, footer {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--accent); outline-offset: 2px;
+}
+h1 { font-size: 1.5rem; line-height: 1.2; margin: 0.4rem 0 0.2rem; }
+.runline {
+  color: var(--muted); font-size: 0.8rem; line-height: 1.4;
+  margin: 0 0 0.6rem; max-width: 60rem;
+}
+/* The day is the largest thing on the list, above the papers it holds. */
+h2 {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin: 0.6rem 0 0; padding: 0.9rem 0 0.4rem;
+  background: var(--bg); border-bottom: 2px solid var(--ink);
+  font-size: 1.3rem; font-weight: 700; line-height: 1.2;
+}
+h2 .count { font: 400 0.85rem/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: var(--muted); }
+
+/* The row of seven days, all of them together, and the month. It stays at
+   the top of the screen while Jake scrolls a long day. */
+.strip {
+  position: sticky; top: 0; z-index: 2; margin: 0 -16px;
+  background: var(--bg); border-bottom: 1px solid var(--rule);
+}
+.strip ul {
+  display: grid; grid-template-columns: repeat(9, 1fr);
+  list-style: none; margin: 0; padding: 0;
+}
+.strip a, .strip span.off {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 52px; color: var(--ink); text-decoration: none; line-height: 1.15;
+}
+.strip .dow { font-size: 0.7rem; color: var(--muted); }
+.strip .dom { font-size: 1.05rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.strip .word { font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+/* A phone has no room for the counts. */
+.strip .n { display: none; }
+.strip .off .dom { color: var(--faint); font-weight: 400; }
+.strip a:hover .dom, .strip a:hover .word { text-decoration: underline; }
+.strip li:nth-child(8) { border-left: 1px solid var(--rule); }
+.strip a:focus-visible { outline-offset: -3px; }
+/* A day of an earlier week opens at the top of its page, so that the dates
+   with their year and the way back to the new papers are in view. */
+.weekpage section.day, .weekpage #all { scroll-margin-top: 1000rem; }
+/* The newest day's cell goes to the top of the main page, where the links to
+   the two other lists are. */
+section.latest { scroll-margin-top: 1000rem; }
+
+/* Links to the lists that are not a day's, and to the years of the list of
+   weeks. */
+.chips {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  margin: 0.6rem 0 0; padding: 0; list-style: none;
+}
+.chips a {
+  display: flex; align-items: center; min-height: 44px; padding: 0 0.8rem;
+  border-radius: 0.5rem; background: var(--chip); color: var(--ink);
+  text-decoration: none; font-size: 0.85rem;
+}
+.chips .count { color: var(--muted); margin-left: 0.4em; }
+/* The earlier and the later day or week, one at each end of a line. */
+.steps { display: flex; justify-content: space-between; gap: 0.5rem; margin: 0.6rem 0; }
+.steps a {
+  display: flex; align-items: center; min-height: 48px; padding: 0 0.9rem;
+  border-radius: 0.5rem; background: var(--chip); color: var(--ink);
+  text-decoration: none; font-size: 0.9rem;
+}
+.steps a:hover { text-decoration: underline; }
+.steps .next { margin-left: auto; text-align: right; }
+/* A week's or a month's title, between links to its neighbors. */
+.head { display: flex; align-items: center; gap: 0.5rem; max-width: 34rem; margin-bottom: 0.4rem; }
+.head h1 { flex: 1; margin: 0; text-align: center; font-size: 1.3rem; }
+.head a, .head .gap {
+  flex: none; display: flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px;
+}
+.head a {
+  border-radius: 0.5rem; background: var(--chip); color: var(--ink);
+  text-decoration: none; font-size: 1.6rem; line-height: 1;
+}
+.crumbs { font-size: 0.9rem; }
+.crumbs a { text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+
+/* The papers. */
+section { counter-reset: pick; }
+/* The program lists each day's picks closest first, so a number lets Jake
+   see how far down the ranking a paper sits. */
+article {
+  counter-increment: pick; position: relative;
+  padding: 0.65rem 0 0.6rem 2rem; border-bottom: 1px solid var(--rule);
+}
+article::before {
+  content: counter(pick); position: absolute; left: 0; top: 0.85rem;
+  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-variant-numeric: tabular-nums; color: var(--faint);
+}
+.title {
+  display: block; color: var(--ink); text-decoration: none;
+  font-size: 1.1rem; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere;
+}
+/* A visited title fades, which shows Jake which papers he has opened. */
+.title:visited { color: var(--visited); }
+.title:hover, .title:focus { text-decoration: underline; }
+.meta { color: var(--muted); font-size: 0.85rem; margin: 0.3rem 0 0; }
+.source { font-style: italic; }
+.reason { margin: 0.45rem 0 0; }
+/* The reasons are empty; an empty paragraph would only add space. */
+.reason:empty { display: none; }
+/* The first lines of the abstract sit in the summary, the part of a
+   details element that shows while it is closed, so Jake can read the
+   start of every abstract while he scrolls. A tap opens the whole text. */
+.abstract { margin: 0.4rem 0 0; }
+.abstract summary { display: block; cursor: pointer; list-style: none; }
+.abstract summary::-webkit-details-marker { display: none; }
+.abstract summary .text {
+  display: -webkit-box; -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4; overflow: hidden;
+  padding-left: 0.75rem; border-left: 2px solid var(--rule);
+  font-size: 0.92rem; line-height: 1.45; color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.abstract[open] summary .text { -webkit-line-clamp: unset; display: block; }
+.abstract summary::after {
+  content: "Show all"; display: block; margin: 0.15rem 0 0 0.75rem;
+  color: var(--accent); font-size: 0.75rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.abstract[open] summary::after { content: "Show less"; }
+/* The closest line and the vote links share one line, wrapping on a
+   narrow phone, so each paper takes fewer lines. */
+.foot {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 0.2rem 1rem; margin: 0.35rem 0 0;
+}
+.foot > p { margin: 0; }
+.closest {
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  color: var(--muted); font-size: 0.8rem;
+}
+/* The bar restates the angle: empty at 90 degrees, the angle between
+   papers that share no word, and full at 30 degrees or less. */
+.meter {
+  flex: none; margin-top: 0.45em; width: 2.5rem; height: 0.3rem; border-radius: 1px;
+  background: var(--track); overflow: hidden;
+}
+.meter span { display: block; height: 100%; background: var(--fill); }
+.vote { display: flex; gap: 0.5rem; font-size: 0.8rem; }
+/* Vote links look quiet, 28 pixels tall, and take a tap over 44 pixels. */
+.vote a {
+  display: inline-flex; align-items: center; min-height: 1.75rem; position: relative;
+  padding: 0 0.7rem; border-radius: 1rem; background: var(--chip);
+  color: var(--muted); text-decoration: none;
+}
+.vote a::after { content: ""; position: absolute; inset: -8px -3px; }
+.vote a:hover, .vote a:focus { color: var(--accent); }
+
+/* The month pages: a calendar, the months and years, and the titles. */
+.cal { border-collapse: collapse; width: 100%; max-width: 34rem; table-layout: fixed; margin: 0.4rem 0 0; }
+.cal th { font-size: 0.75rem; font-weight: 600; color: var(--muted); padding: 0.3rem 0; }
+.cal td, .cal tbody th { padding: 0; border: 1px solid var(--rule); text-align: center; }
+.cal a, .cal .none {
+  display: flex; flex-direction: column; justify-content: center; min-height: 48px;
+  color: var(--ink); text-decoration: none; font-size: 1rem; line-height: 1.15;
+  font-weight: 600; font-variant-numeric: tabular-nums;
+}
+.cal .none { color: var(--faint); font-weight: 400; }
+.cal a:hover { background: var(--chip); text-decoration: underline; }
+.cal .k { font-size: 0.7rem; font-weight: 400; color: var(--muted); }
+.cal tbody th a { font-size: 0.75rem; color: var(--accent); background: var(--chip); }
+.yr {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; max-width: 34rem;
+  margin: 0.6rem 0 0; padding: 0; list-style: none;
+}
+.yr a, .yr span {
+  display: flex; align-items: center; justify-content: center; min-height: 44px;
+  border-radius: 0.4rem; font-size: 0.85rem; color: var(--ink);
+  text-decoration: none; background: var(--chip);
+}
+.yr span { color: var(--faint); background: none; }
+.yr a[aria-current] { background: var(--on); color: var(--onink); }
+.tl { list-style: none; counter-reset: t; padding: 0; margin: 0; }
+.tl li {
+  counter-increment: t; position: relative;
+  padding: 0.55rem 0 0.5rem 2rem; border-bottom: 1px solid var(--rule);
+}
+.tl li::before {
+  content: counter(t); position: absolute; left: 0; top: 0.8rem;
+  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: var(--faint);
+}
+.tl .title { font-size: 1rem; }
+.tl .meta { margin: 0.1rem 0 0; font-size: 0.8rem; }
+.months h2 { position: sticky; top: 0; z-index: 1; }
+.months h2 a { color: inherit; text-decoration: none; }
+.months h2 a:hover { text-decoration: underline; }
+
+/* The list of weeks. */
+.weeks { list-style: none; padding: 0; margin: 0; }
+.weeks li { display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid var(--rule); }
+.weeks a {
+  display: flex; align-items: center; min-height: 44px;
+  color: var(--ink); font-weight: 600; text-decoration: none;
+}
+.weeks a:hover, .weeks a:focus { text-decoration: underline; }
+.weeks .count { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+.wk > div:first-child h2 { margin-top: 0; }
+.wk h2 { font-size: 1.05rem; border-bottom-width: 1px; }
+
+.legend { color: var(--muted); font-size: 0.85rem; margin: 2rem 0 0; max-width: 40rem; }
+footer { color: var(--muted); font-size: 0.8rem; margin-top: 1rem; }
+footer a, .crumbs a { display: inline-block; padding: 0.7rem 0.9rem 0.7rem 0; color: var(--accent); }
+
+/* On a desktop a single 40rem column left most of the screen empty, so each
+   paper becomes two columns: the paper on the left and its abstract on the
+   right. The list stays one column of papers in rank order. The abstract
+   column is capped at about 75 characters a line, and the page width is
+   the sum of the columns so no strip is left over at the right. Below
+   62rem the abstract would fall under about 60 characters a line. */
+@media (min-width: 62rem) {
+  html { scroll-padding-top: 4.5rem; }
+  main { max-width: 68.5rem; padding-left: 24px; padding-right: 24px; }
+  footer { max-width: 40rem; }
+  .strip { margin: 0; }
+  .strip a, .strip span.off { min-height: 60px; }
+  .strip .n { display: block; font-size: 0.75rem; color: var(--muted); }
+  .strip .dow { font-size: 0.8rem; }
+  /* The second row takes any height the abstract adds, so the closest
+     line and the votes stay right under the reason. */
+  article {
+    display: grid; grid-template-columns: 27rem minmax(0, 34rem);
+    grid-template-rows: auto 1fr; column-gap: 2.5rem;
+  }
+  .lead { grid-column: 1; grid-row: 1; }
+  .foot { grid-column: 1; grid-row: 2; align-self: start; }
+  .abstract { grid-column: 2; grid-row: 1 / 3; margin: 0; }
+  .tl { columns: 2; column-gap: 2.5rem; }
+  .tl li { break-inside: avoid; }
+  .months-top { display: grid; grid-template-columns: 34rem 1fr; column-gap: 2.5rem; align-items: start; }
+  .wk { columns: 2; column-gap: 2.5rem; }
+  .wk div { break-inside: avoid; }
+}
+@media print { nav { display: none; } }
+
+</style>
+</head>
+<body class="months">
+<main>
+<nav class="crumbs" aria-label="Site"><a href="../">New papers</a><a href="../weeks/">All weeks</a><a href="./">All months</a></nav>
+<div class="head"><span class="gap"></span><h1>November 2026</h1><span class="gap"></span></div>
+<div class="months-top"><div>
+<table class="cal" aria-label="November 2026"><thead><tr><th scope="col"></th><th scope="col">Mon</th><th scope="col">Tue</th><th scope="col">Wed</th><th scope="col">Thu</th><th scope="col">Fri</th><th scope="col">Sat</th><th scope="col">Sun</th></tr></thead>
+<tbody>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><span class="none">1</span></td></tr>
+<tr><th scope="row"><a href="../weeks/2026-11-02.html" aria-label="Week of 2 to 8 November 2026">Week</a></th><td><a href="../weeks/2026-11-02.html#d-2026-11-02" aria-label="2 Monday, 19 papers">2<span class="k">19</span></a></td><td><span class="none">3</span></td><td><span class="none">4</span></td><td><span class="none">5</span></td><td><a href="../weeks/2026-11-02.html#d-2026-11-06" aria-label="6 Friday, 25 papers">6<span class="k">25</span></a></td><td><a href="../weeks/2026-11-02.html#d-2026-11-07" aria-label="7 Saturday, 20 papers">7<span class="k">20</span></a></td><td><a href="../weeks/2026-11-02.html#d-2026-11-08" aria-label="8 Sunday, 8 papers">8<span class="k">8</span></a></td></tr>
+<tr><th scope="row"><a href="../weeks/2026-11-09.html" aria-label="Week of 9 to 15 November 2026">Week</a></th><td><a href="../weeks/2026-11-09.html#d-2026-11-09" aria-label="9 Monday, 20 papers">9<span class="k">20</span></a></td><td><a href="../weeks/2026-11-09.html#d-2026-11-10" aria-label="10 Tuesday, 20 papers">10<span class="k">20</span></a></td><td><a href="../weeks/2026-11-09.html#d-2026-11-11" aria-label="11 Wednesday, 20 papers">11<span class="k">20</span></a></td><td><a href="../weeks/2026-11-09.html#d-2026-11-12" aria-label="12 Thursday, 20 papers">12<span class="k">20</span></a></td><td><a href="../weeks/2026-11-09.html#d-2026-11-13" aria-label="13 Friday, 20 papers">13<span class="k">20</span></a></td><td><a href="../weeks/2026-11-09.html#d-2026-11-14" aria-label="14 Saturday, 20 papers">14<span class="k">20</span></a></td><td><a href="../weeks/2026-11-09.html#d-2026-11-15" aria-label="15 Sunday, 12 papers">15<span class="k">12</span></a></td></tr>
+<tr><th scope="row"><a href="../weeks/2026-11-16.html" aria-label="Week of 16 to 22 November 2026">Week</a></th><td><a href="../weeks/2026-11-16.html#d-2026-11-16" aria-label="16 Monday, 20 papers">16<span class="k">20</span></a></td><td><a href="../weeks/2026-11-16.html#d-2026-11-17" aria-label="17 Tuesday, 20 papers">17<span class="k">20</span></a></td><td><a href="../weeks/2026-11-16.html#d-2026-11-18" aria-label="18 Wednesday, 20 papers">18<span class="k">20</span></a></td><td><a href="../weeks/2026-11-16.html#d-2026-11-19" aria-label="19 Thursday, 20 papers">19<span class="k">20</span></a></td><td><a href="../weeks/2026-11-16.html#d-2026-11-20" aria-label="20 Friday, 20 papers">20<span class="k">20</span></a></td><td><a href="../weeks/2026-11-16.html#d-2026-11-21" aria-label="21 Saturday, 20 papers">21<span class="k">20</span></a></td><td><a href="../weeks/2026-11-16.html#d-2026-11-22" aria-label="22 Sunday, 6 papers">22<span class="k">6</span></a></td></tr>
+<tr><th scope="row"><a href="../weeks/2026-11-23.html" aria-label="Week of 23 to 29 November 2026">Week</a></th><td><a href="../weeks/2026-11-23.html#d-2026-11-23" aria-label="23 Monday, 20 papers">23<span class="k">20</span></a></td><td><a href="../weeks/2026-11-23.html#d-2026-11-24" aria-label="24 Tuesday, 20 papers">24<span class="k">20</span></a></td><td><a href="../weeks/2026-11-23.html#d-2026-11-25" aria-label="25 Wednesday, 20 papers">25<span class="k">20</span></a></td><td><span class="none">26</span></td><td><span class="none">27</span></td><td><span class="none">28</span></td><td><span class="none">29</span></td></tr>
+<tr><td></td><td><span class="none">30</span></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody></table>
+</div><div>
+<ul class="yr" aria-label="Months of 2026">
+<li><span>Jan</span></li>
+<li><span>Feb</span></li>
+<li><span>Mar</span></li>
+<li><span>Apr</span></li>
+<li><span>May</span></li>
+<li><span>Jun</span></li>
+<li><span>Jul</span></li>
+<li><span>Aug</span></li>
+<li><span>Sep</span></li>
+<li><span>Oct</span></li>
+<li><a href="2026-11.html" aria-current="page">Nov</a></li>
+<li><span>Dec</span></li>
+</ul>
+
+</div></div>
+<p class="legend">A day opens its papers with their abstracts. Below are the month's titles alone.</p>
+<section><h2><a href="../weeks/2026-11-02.html#d-2026-11-02">Monday 2 November</a><span class="count">19 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.1080/09332480.2026.2725525"><a class="title" href="https://doi.org/10.1080/09332480.2026.2725525">A Simple Sensitivity Analysis for Observational Studies</a>
+<p class="meta">Jeffrey Zhang, Dylan S. Small &middot; 42 degrees</p></li>
+<li data-paper-id="arXiv:2512.05290v2"><a class="title" href="https://arxiv.org/abs/2512.05290v2">Does Rerandomization Help Beyond Covariate Adjustment? A Review and Guide for Theory and Practice</a>
+<p class="meta">Ant\^onio Carlos Herling Ribeiro Junior, Zach Branson &middot; 47 degrees</p></li>
+<li data-paper-id="10.5691/jjb.47.183"><a class="title" href="https://doi.org/10.5691/jjb.47.183">Introduction to and Recent Developments in Bayesian Causal Inference: Propensity Scores, Treatment Effect Heterogeneity, and Sensitivity Analysis</a>
+<p class="meta">Tomohiro Ohigashi, Shunichiro Orihara &middot; 48 degrees</p></li>
+<li data-paper-id="arXiv:2609.14170v3"><a class="title" href="https://arxiv.org/abs/2609.14170v3">Finite-Sample FDR Control for Greedy Aggregation over Networks</a>
+<p class="meta">Mehrdad Pournaderi &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2311.16529v4"><a class="title" href="https://arxiv.org/abs/2311.16529v4">Efficient and Globally Robust Causal Excursion Effect Estimation</a>
+<p class="meta">Zhaoxi Cheng, Lauren Bell, Tianchen Qian &middot; 52 degrees</p></li>
+<li data-paper-id="10.5705/ss.202025.0480"><a class="title" href="https://doi.org/10.5705/ss.202025.0480">Transfer Learning for Covariate-Adaptive Randomized Trials with High-Dimensional Generalized Linear Models</a>
+<p class="meta">Yujia Gu, Hanzhong Liu, Wei Ma &middot; 54 degrees</p></li>
+<li data-paper-id="osf.io/entwy_v1"><a class="title" href="https://doi.org/10.31235/osf.io/entwy_v1">ThSQCA: An R Package for Threshold-Sweep Qualitative Comparative Analysis</a>
+<p class="meta">Yuki Toyoda &middot; 54 degrees</p></li>
+<li data-paper-id="10.9734/ajpas/2026/v28i11974"><a class="title" href="https://doi.org/10.9734/ajpas/2026/v28i11974">A Simulation and Real-Data Evaluation of Causal Discovery Algorithms under Realistic Social Science Conditions</a>
+<p class="meta">Sacha Varin &middot; 54 degrees</p></li>
+<li data-paper-id="10.5281/zenodo.23680040"><a class="title" href="https://doi.org/10.5281/zenodo.23680040">Signed unbiased estimation without common exposure support</a>
+<p class="meta">Zihuan Xu &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2503.14314v3"><a class="title" href="https://arxiv.org/abs/2503.14314v3">Sharp bounds for within-household encouragement designs with interference</a>
+<p class="meta">Santiago Acerenza, Julian Martinez-Iriarte, Alejandro S\&#x27;anchez-Becerra, Pietro Emilio Spini &middot; 54 degrees</p></li>
+<li data-paper-id="10.1080/01621459.2026.2754151"><a class="title" href="https://doi.org/10.1080/01621459.2026.2754151">Sensitivity Analysis for the Test-Negative Design</a>
+<p class="meta">Soumyabrata Kundu, Peng Ding, Jingshu Wang, Xinran Li &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2607.19625v2"><a class="title" href="https://arxiv.org/abs/2607.19625v2">Estimating Network Spillovers under Dense Measurement Error</a>
+<p class="meta">Yingxing Li, Aureo De Paula, Weining Wang &middot; 55 degrees</p></li>
+<li data-paper-id="10.1177/30494826261503246"><a class="title" href="https://doi.org/10.1177/30494826261503246">When Balanced Covariates Conceal Selection: Anatomic Confounding in New Surgical Program Evaluation</a>
+<p class="meta">Queenne Kimverlee C. Landingin, Jayson Jamco &middot; 55 degrees</p></li>
+<li data-paper-id="10.1002/prm2.70052"><a class="title" href="https://doi.org/10.1002/prm2.70052">From prediction to intervention: Causal artificial intelligence as the missing link in precision therapeutics</a>
+<p class="meta">Gedion Mengistu &middot; 55 degrees</p></li>
+<li data-paper-id="10.1186/s12874-026-03059-w"><a class="title" href="https://doi.org/10.1186/s12874-026-03059-w">Implications of non-compliance in the experimental arm on treatment effect estimation in randomised controlled trials: a methodological assessment of four summary measures</a>
+<p class="meta">Tianyuan Gu, Junxian Zhu, Jialiang Li, and 3 others &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2610.41294v1"><a class="title" href="https://arxiv.org/abs/2610.41294v1">The Double Diagonal Estimator: Reducing Bias in Two-Sided Marketplace Experiments</a>
+<p class="meta">Saanvi Chawla, Vasilis Syrgkanis &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2610.41186v1"><a class="title" href="https://arxiv.org/abs/2610.41186v1">Balancing Covariates for Continuous Treatments by Exploiting Continuity</a>
+<p class="meta">Souhardya Sengupta, Kosuke Imai &middot; 55 degrees</p></li>
+<li data-paper-id="10.1038/s44401-026-00160-6"><a class="title" href="https://doi.org/10.1038/s44401-026-00160-6">FLAT-WHITE: from target trial emulation to federated high-throughput causal machine learning using decentralized real-world data</a>
+<p class="meta">Jiayi Tong, Lu Li, Dazheng Zhang, and 22 others &middot; 55 degrees</p></li>
+<li data-paper-id="10.1002/sim.70800"><a class="title" href="https://doi.org/10.1002/sim.70800">Two‐Stage Estimation for Causal Inference Involving Semi‐Continuous Exposures</a>
+<p class="meta">Xiaoya Wang, Richard J. Cook, Yeying Zhu, and 5 others &middot; 55 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-02.html#d-2026-11-06">Friday 6 November</a><span class="count">25 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.5281/zenodo.23916367"><a class="title" href="https://doi.org/10.5281/zenodo.23916367">Decision-Centric Artificial Intelligence for Causal Treatment Effect Estimation, Policy Learning, and Intervention Utility Evaluation</a>
+<p class="meta">Reddy Tokala Sai Srujan &middot; 47 degrees</p></li>
+<li data-paper-id="arXiv:2611.07879v1"><a class="title" href="https://arxiv.org/abs/2611.07879v1">Network Effect Decomposition for Causal Effect Estimation under Network Interference</a>
+<p class="meta">Zhirong Huang, Wenzhen Zhang, Guangquan Lu, and 3 others &middot; 48 degrees</p></li>
+<li data-paper-id="arXiv:2604.08853v2"><a class="title" href="https://arxiv.org/abs/2604.08853v2">The Illusion of Learning from Observational Data: An Empirical Bayes Perspective</a>
+<p class="meta">Bohan Wu, Sebastian Salazar, Donald P. Green, David M. Blei &middot; 49 degrees</p></li>
+<li data-paper-id="10.1038/d41586-026-03267-w"><a class="title" href="https://doi.org/10.1038/d41586-026-03267-w">People’s social networks can be unintentionally reshaped during randomized interventions</a>
+<p class="meta">Joana Gonçalves-Sá, Ana Maria Jaramillo &middot; 49 degrees</p></li>
+<li data-paper-id="10.1001/jama.2026.22318"><a class="title" href="https://doi.org/10.1001/jama.2026.22318">Causal Language for Studies Using Regression Discontinuity Approaches</a>
+<p class="meta">Issa J Dahabreh, Roger Lewis &middot; 49 degrees</p></li>
+<li data-paper-id="10.1016/j.inffus.2026.104915"><a class="title" href="https://doi.org/10.1016/j.inffus.2026.104915">FedCIP: Prototype-guided causal representation fusion for federated causal inference under feature imbalance</a>
+<p class="meta">Yuxuan Liu, Wenchao Xu, Haozhao Wang, and 5 others &middot; 50 degrees</p></li>
+<li data-paper-id="arXiv:2611.08378v1"><a class="title" href="https://arxiv.org/abs/2611.08378v1">An Improved Minimization Method: Eliminating Shift and Variance Inflation While Maintaining Marginal Balance</a>
+<p class="meta">Yuhang Tao, Li-Xin Zhang &middot; 50 degrees</p></li>
+<li data-paper-id="10.1002/sim.70806"><a class="title" href="https://doi.org/10.1002/sim.70806">Regression Adjusted Target Effects Using Auxiliary Strata Under Design‐Based Inference</a>
+<p class="meta">Zixuan Zhao, Yuehan Yang &middot; 51 degrees</p></li>
+<li data-paper-id="10.1016/j.knosys.2026.117262"><a class="title" href="https://doi.org/10.1016/j.knosys.2026.117262">Screening and refinement for causal feature selection under sample selection bias</a>
+<p class="meta">Jie Pan, Shuai Yang, Xinyu Miao, and 2 others &middot; 51 degrees</p></li>
+<li data-paper-id="10.13140/rg.2.2.17125.36326"><a class="title" href="https://doi.org/10.13140/rg.2.2.17125.36326">How Reliable Is Inference in Staggered Difference-in-Differences?</a>
+<p class="meta">Yannan Sun, Xing Hu &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2610.32105v2"><a class="title" href="https://arxiv.org/abs/2610.32105v2">When Statisticians Can Also Be AI Engineers, What Could We Build?</a>
+<p class="meta">Ruoqing Zhu &middot; 52 degrees</p></li>
+<li data-paper-id="10.13140/rg.2.2.26981.97761"><a class="title" href="https://doi.org/10.13140/rg.2.2.26981.97761">Certified Causal Flow Distillation in Autoregressive Do Calculus</a>
+<p class="meta">Debi Prasad Ghosh &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.07536v1"><a class="title" href="https://arxiv.org/abs/2611.07536v1">Identification and Bounding of Joint Expectation over Potential Outcomes</a>
+<p class="meta">Yuta Kawakami, Jin Tian &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.07459v1"><a class="title" href="https://arxiv.org/abs/2611.07459v1">Inference after selection on randomized p-values</a>
+<p class="meta">Ronan Perry, Daniela Witten &middot; 53 degrees</p></li>
+<li data-paper-id="10.7146/politica.v58i4.172004"><a class="title" href="https://doi.org/10.7146/politica.v58i4.172004">Selection and use of control variables</a>
+<p class="meta">Jonathan Doucette &middot; 53 degrees</p></li>
+<li data-paper-id="10.1007/s10614-026-11456-y"><a class="title" href="https://doi.org/10.1007/s10614-026-11456-y">Directional, Useful, and Robust Significance (DURS): A Robustness-Envelope Approach to Sign-Valid Inference</a>
+<p class="meta">Shuhrat Yarashov &middot; 53 degrees</p></li>
+<li data-paper-id="10.1007/s11222-026-11029-x"><a class="title" href="https://doi.org/10.1007/s11222-026-11029-x">Langevin-gradient rerandomization</a>
+<p class="meta">Antonio Carlos Herling Ribeiro &middot; 54 degrees</p></li>
+<li data-paper-id="10.1002/pst.70141"><a class="title" href="https://doi.org/10.1002/pst.70141">Estimands for Randomized Discontinuation Designs in Oncology</a>
+<p class="meta">Ayon Mukherjee, Oleksandr Sverdlov, Yu Deng &middot; 54 degrees</p></li>
+<li data-paper-id="osf.io/va8k6_v3"><a class="title" href="https://doi.org/10.31235/osf.io/va8k6_v3">Beyond Good and Bad Controls: Judicial Prejudice and Differential Measurement Error in Sentencing Research</a>
+<p class="meta">Jose Pina-Sánchez, Andrzej Uhl &middot; 54 degrees</p></li>
+<li data-paper-id="10.13140/rg.2.2.10384.98562"><a class="title" href="https://doi.org/10.13140/rg.2.2.10384.98562">Causal Valuation in Programmatic Advertising: A Mean-Field Analysis</a>
+<p class="meta">Abdou Kaba &middot; 54 degrees</p></li>
+<li data-paper-id="10.1016/j.jeconom.2026.106353"><a class="title" href="https://doi.org/10.1016/j.jeconom.2026.106353">The canonical decomposition of factor models: weak factors are everywhere</a>
+<p class="meta">Philipp Gersing, Matteo Barigozzi, Christoph Rust, Manfred Deistler &middot; 64 degrees</p></li>
+<li data-paper-id="osf.io/y9q5e_v1"><a class="title" href="https://doi.org/10.31235/osf.io/y9q5e_v1">Prediction markets doubt Le Pen&#x27;s run-off more than her first round: polls and prices in the 2027 French presidential campaign</a>
+<p class="meta">Dhafer Malouche &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/fznt5_v1"><a class="title" href="https://doi.org/10.31235/osf.io/fznt5_v1">Companion AI and Psychological Health: Resource or Risk? Affective Design as the Mechanism of the Human–Machine Bond</a>
+<p class="meta">Oliver Alexandre Reinis &middot; 68 degrees</p></li>
+<li data-paper-id="osf.io/c4bzq_v1"><a class="title" href="https://doi.org/10.31235/osf.io/c4bzq_v1">The Male Abstraction Bias in Internet Culture and Large Language Models</a>
+<p class="meta">Douglas Guilbeault, Bhargav Srinivasa Desikan &middot; 69 degrees</p></li>
+<li data-paper-id="osf.io/am3v8_v2"><a class="title" href="https://doi.org/10.31235/osf.io/am3v8_v2">Work-Hour Mismatches among Parents in Germany: A Dynamic Analysis on Post-Birth Employment and Work-Hour Preference Trajectories</a>
+<p class="meta">Sophia Fauser, Emanuela Struffolino &middot; 72 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-02.html#d-2026-11-07">Saturday 7 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.11124/jbies-26-00083"><a class="title" href="https://doi.org/10.11124/jbies-26-00083">Causal inference with real-world data in health care research: a scoping review protocol and study within a review protocol</a>
+<p class="meta">Stella Erdmann, Leonard Levin, Meinhard Kieser &middot; 54 degrees</p></li>
+<li data-paper-id="10.1186/s13054-026-06424-9"><a class="title" href="https://doi.org/10.1186/s13054-026-06424-9">Controlling time-related biases in ECPR observational studies</a>
+<p class="meta">Tal Soumagnac, Lucie Fanet, Alain Cariou, Wulfran Bougouin &middot; 56 degrees</p></li>
+<li data-paper-id="10.1111/1475-4932.70080"><a class="title" href="https://doi.org/10.1111/1475-4932.70080">Impact Evaluation in Firms and Organizations: With Applications in R and Python, by MartinHuber ( MIT Press, 2025), 144 pages + front and back matter</a>
+<p class="meta">Nick Zubanov &middot; 56 degrees</p></li>
+<li data-paper-id="10.1080/19466315.2026.2757005"><a class="title" href="https://doi.org/10.1080/19466315.2026.2757005">From Heterogeneous Treatment Effects to Treatment Policies: A Decision Focused Framework for Treatment Personalization in Drug Development</a>
+<p class="meta">Nan Miles Xi, Xin Huang, Lin Wang &middot; 57 degrees</p></li>
+<li data-paper-id="10.1177/0272989x261489606"><a class="title" href="https://doi.org/10.1177/0272989x261489606">An Experimental Design for Confirmatory Clinical Trials Testing the Clinical Utility of an Individualization Rule for 2 Treatments</a>
+<p class="meta">Francisco J. Díaz, Byron J. Gajewski, Matthew S. Mayo &middot; 57 degrees</p></li>
+<li data-paper-id="10.1177/09622802261495081"><a class="title" href="https://doi.org/10.1177/09622802261495081">Heterogeneous treatment effect estimation with instrumental variable methods</a>
+<p class="meta">Amirhossein Kazemi, Joseph Sexton, Inge Christoffer Olsen &middot; 59 degrees</p></li>
+<li data-paper-id="osf.io/g9q4t_v1"><a class="title" href="https://doi.org/10.31235/osf.io/g9q4t_v1">Viradas nas eleições majoritárias brasileiras: quando o segundo turno não repete o primeiro</a>
+<p class="meta">Vitor de Moraes Peixoto &middot; 61 degrees</p></li>
+<li data-paper-id="osf.io/dxbt8_v2"><a class="title" href="https://doi.org/10.31235/osf.io/dxbt8_v2">Generalised Conversational Implicature in Kenyan Generation Z Digital Protest Discourse: Q-, I-, and M-Heuristics in the 2024 Finance Bill Protests on X</a>
+<p class="meta">Castro Chebukosi, Bernard Kodak, Jane Ombati &middot; 62 degrees</p></li>
+<li data-paper-id="10.1111/1748-8583.70073"><a class="title" href="https://doi.org/10.1111/1748-8583.70073">Uncovering the Mechanisms of Policy Interventions: A Difference‐In‐Differences Framework for Mediation Analysis</a>
+<p class="meta">Robert Andersen, Anders Holm &middot; 62 degrees</p></li>
+<li data-paper-id="10.1257/jep.20261514"><a class="title" href="https://doi.org/10.1257/jep.20261514">In Praise of the Bayesian Bootstrap</a>
+<p class="meta">Isaiah Andrews, Sarah Moon, Jesse M. Shapiro &middot; 62 degrees</p></li>
+<li data-paper-id="osf.io/v9gte_v1"><a class="title" href="https://doi.org/10.31235/osf.io/v9gte_v1">You Talking to Me? The Diverging Effects of Organizational Communication on the Gender Ambition Gap</a>
+<p class="meta">Gulay Dogan, Aykut Öztürk &middot; 62 degrees</p></li>
+<li data-paper-id="10.1111/obes.70143"><a class="title" href="https://doi.org/10.1111/obes.70143">Distribution Regression for Partially Observed Discrete, Ordered Outcomes—The Case of Adolescent Substance Abuse</a>
+<p class="meta">Daniel Gutknecht, Cenchen Liu, Jan-Lukas Wermuth &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/df75m_v1"><a class="title" href="https://doi.org/10.31235/osf.io/df75m_v1">Operational versus Strategic Use of Analytics in Retail: A Comparative Case Study of Walmart and Zara</a>
+<p class="meta">arkan kurd &middot; 63 degrees</p></li>
+<li data-paper-id="10.1371/journal.pone.0352385"><a class="title" href="https://doi.org/10.1371/journal.pone.0352385">Evaluating a candidate predictor beyond statistical significance: Atmospheric pressure and psychiatric day-care attendance as a worked example</a>
+<p class="meta">Takahiro Okuma, Minoru Ishige, Shuichi Kikuchi &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/m5hsa_v1"><a class="title" href="https://doi.org/10.31235/osf.io/m5hsa_v1">Open to Interpretation: How Frontier AI Developers Practice Openness through Licensing</a>
+<p class="meta">Scott Robert Patterson, Jason Tucker &middot; 64 degrees</p></li>
+<li data-paper-id="osf.io/yw963_v4"><a class="title" href="https://doi.org/10.31235/osf.io/yw963_v4">Using Theories of Social Exchange and Status Construction in Mixed-Group Cooperative Learning Practices</a>
+<p class="meta">Joseph M Quinn, Valerie K. Barron &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/c47af_v2"><a class="title" href="https://doi.org/10.31235/osf.io/c47af_v2">Cedar Valley of Iowa Living Lab 2026: 10 Capacity-Building Briefs</a>
+<p class="meta">Emmalinde Roelofse, Megan Weber &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/bn8sj_v1"><a class="title" href="https://doi.org/10.31235/osf.io/bn8sj_v1">Beyond Parental Leave: Childcare Access and the Conditions for Participation in Research Careers</a>
+<p class="meta">Rachel-Ann Jones &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/q74pn_v1"><a class="title" href="https://doi.org/10.31235/osf.io/q74pn_v1">What sales-tax receipts can (and cannot) tell us about tourism: evidence from Tennessee&#x27;s counties</a>
+<p class="meta">Nicholas J. Sokol &middot; 66 degrees</p></li>
+<li data-paper-id="osf.io/fwjpq_v3"><a class="title" href="https://doi.org/10.31235/osf.io/fwjpq_v3">Are EU Kidding Me? Notes from a Poorly Drafted Social Media Ban</a>
+<p class="meta">Michael Veale &middot; 67 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-02.html#d-2026-11-08">Sunday 8 November</a><span class="count">8 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.1007/s10742-026-00401-z"><a class="title" href="https://doi.org/10.1007/s10742-026-00401-z">Treatment effect estimation from observational data in healthcare: study designs, inherent biases, and a propensity score-focused quality assessment scale</a>
+<p class="meta">Sangeeth P. Das, Sabrina Casucci, Forough Mahpouya, Alexander V. Nikolaev &middot; 51 degrees</p></li>
+<li data-paper-id="10.1016/j.trc.2026.106120"><a class="title" href="https://doi.org/10.1016/j.trc.2026.106120">A deep causal inference model for interpretable travel behaviour analysis</a>
+<p class="meta">Kimia Kamal, Bilal Farooq &middot; 55 degrees</p></li>
+<li data-paper-id="10.1111/exsy.70471"><a class="title" href="https://doi.org/10.1111/exsy.70471">Interpretable Uplift Modelling: Conditional Average Treatment Effect Attribution, Subgroup Rules and Constrained Recourse</a>
+<p class="meta">Yu Zhang, Yueguang Shan, Wanlong Ma &middot; 56 degrees</p></li>
+<li data-paper-id="10.1177/0193841x261504243"><a class="title" href="https://doi.org/10.1177/0193841x261504243">The Goldilocks Regression Discontinuity Design: A Dual-Threshold Framework for Evaluating Interventions Outside an Optimal Range</a>
+<p class="meta">Brian G. Moss &middot; 58 degrees</p></li>
+<li data-paper-id="10.7146/politica.v58i4.171997"><a class="title" href="https://doi.org/10.7146/politica.v58i4.171997">Udvælgelse og anvendelse af kontrolvariable</a>
+<p class="meta">Jonathan Doucette &middot; 59 degrees</p></li>
+<li data-paper-id="10.1111/jep.70720"><a class="title" href="https://doi.org/10.1111/jep.70720">Adding a ‘+’ to ‘EBM’ Is Insufficient and Misleading</a>
+<p class="meta">Trisha Greenhalgh &middot; 62 degrees</p></li>
+<li data-paper-id="10.1093/ptj/pzag126"><a class="title" href="https://doi.org/10.1093/ptj/pzag126">Target Trial Emulation: Considerations for Physical Therapy Research</a>
+<p class="meta">Kevin H. McLaughlin, Kelly N. Daley, Amanda McQueen, and 2 others &middot; 64 degrees</p></li>
+<li data-paper-id="10.1111/bmsp.70083"><a class="title" href="https://doi.org/10.1111/bmsp.70083">Two‐stage least squares as a mean and covariance structure estimator: Reconciling econometric and psychometric formulations</a>
+<p class="meta">Alberto Maydeu‐Olivares, Yves Rosseel &middot; 64 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-09.html#d-2026-11-09">Monday 9 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="arXiv:2611.08560v1"><a class="title" href="https://arxiv.org/abs/2611.08560v1">Minimax designs and estimators for causal inference under network interference</a>
+<p class="meta">Vishesh Karwa, Edoardo M. Airoldi &middot; 43 degrees</p></li>
+<li data-paper-id="10.3386/w36005"><a class="title" href="https://doi.org/10.3386/w36005">Policy Evaluation Beyond Significance Testing: Evidence from Chicago&#x27;s ShotSpotter Contract</a>
+<p class="meta">Terence Chau, Philip Cook, Javier Lopez, and 3 others &middot; 51 degrees</p></li>
+<li data-paper-id="10.58496/bjai/2026/013"><a class="title" href="https://doi.org/10.58496/bjai/2026/013">Coupling-Aware Counterfactual Reasoning for Causal Artificial Intelligence: Identification, Learnability Limits, and Sharp Bounds with Finite-Sample Inference</a>
+<p class="meta">Jordi Vallverdú &middot; 51 degrees</p></li>
+<li data-paper-id="10.4088/jcp.26f16740"><a class="title" href="https://doi.org/10.4088/jcp.26f16740">Functional Unblinding and Its Implications for the Internal Validity of Randomized Controlled Clinical Trials</a>
+<p class="meta">Chittaranjan Andrade &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2609.37477v2"><a class="title" href="https://arxiv.org/abs/2609.37477v2">Calibrated Order-Randomized Rosenblatt Tests</a>
+<p class="meta">Mehrdad Pournaderi &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.09231v1"><a class="title" href="https://arxiv.org/abs/2611.09231v1">Power improvements and exact shortcuts for closed permutation maxT testing with discrete data</a>
+<p class="meta">Giovanni Corradini, Marvin N. Wright, Ronja Foraita, Livio Finos &middot; 53 degrees</p></li>
+<li data-paper-id="10.13140/rg.2.2.28794.04804"><a class="title" href="https://doi.org/10.13140/rg.2.2.28794.04804">M-Estimation in Censored Regression Model under Endogeneity</a>
+<p class="meta">Swati Shukla, Subhra Sankar Dhar, Shalabh Shalabh &middot; 54 degrees</p></li>
+<li data-paper-id="10.3386/w35999"><a class="title" href="https://doi.org/10.3386/w35999">(In)Credible Development RCTs: False Discoveries, Low Power, and a Solution</a>
+<p class="meta">Qingyuan Chai, Kevin Lang, Liang Zhong &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2602.06910v2"><a class="title" href="https://arxiv.org/abs/2602.06910v2">Assessment of evidence against homogeneity in exhaustive subgroup treatment effect plots</a>
+<p class="meta">Bj\&quot;orn Bornkamp, Jiarui Lu, Frank Bretz &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.09214v1"><a class="title" href="https://arxiv.org/abs/2611.09214v1">Replication Certification at Publication: Checkable by Anyone, Anywhere, in Seconds, Forever</a>
+<p class="meta">Gary King, Yiqing Xu, Leo Yang Yang &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.09400v1"><a class="title" href="https://arxiv.org/abs/2611.09400v1">Causal graph fusion across incomplete cohorts and causal steering of tabular foundation models</a>
+<p class="meta">Yanke Li, Dhiyaa Al Jorf, Ayoube Ighissou, and 3 others &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.09432v1"><a class="title" href="https://arxiv.org/abs/2611.09432v1">A hybrid model for zero-inflated proportion data</a>
+<p class="meta">Yangzi Zheng, Qian Li, Binyan Jiang, Pinjun Dong &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.09792v1"><a class="title" href="https://arxiv.org/abs/2611.09792v1">Knowing When to Intervene: Causal Evaluation of AI Agents</a>
+<p class="meta">Ayush Sawarni, Wenqian Xing, Tijana Zrnic, and 2 others &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2510.13347v2"><a class="title" href="https://arxiv.org/abs/2510.13347v2">postcard: An R Package for Marginal Effect Estimation with or without Prognostic Score Adjustment</a>
+<p class="meta">Mathias Lerbech Jeppesen, Emilie H{\o}jbjerre-Frandsen &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2611.09665v1"><a class="title" href="https://arxiv.org/abs/2611.09665v1">Online Causal Configuration for Networked Systems via Doubly Robust Steady-State Learning</a>
+<p class="meta">Yuli Liu, Zhiheng Zhang &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2611.08501v1"><a class="title" href="https://arxiv.org/abs/2611.08501v1">Electoral Intelligence: A Neural Zero-Inflated Negative Binomial Model for Forecasting Swedish Municipal Elections</a>
+<p class="meta">Haodong Qi, Stefano M. Iacus, Pieter Bevelander, Derek S. Hutcheson &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2608.29083v2"><a class="title" href="https://arxiv.org/abs/2608.29083v2">Response-guided knockoffs for prespecified directional FDR control in linear models</a>
+<p class="meta">Jack Freestone, Garth Tarr, Samuel Muller, Uri Keich &middot; 58 degrees</p></li>
+<li data-paper-id="arXiv:2610.21837v2"><a class="title" href="https://arxiv.org/abs/2610.21837v2">Covariance-Calibrated Prediction-Powered Inference</a>
+<p class="meta">Siyuan Chen, Yang Bai, Huichen Zhu &middot; 58 degrees</p></li>
+<li data-paper-id="arXiv:2606.23662v2"><a class="title" href="https://arxiv.org/abs/2606.23662v2">Action-BED: Task-Driven Bayesian Experimental Design with Singly Intractable Objectives</a>
+<p class="meta">Tom Rossa, Angus Phillips, Tom Rainforth &middot; 58 degrees</p></li>
+<li data-paper-id="arXiv:2609.06379v2"><a class="title" href="https://arxiv.org/abs/2609.06379v2">Robust and Sparse Group Dynamic Causal Modeling via Student-t Parametric Empirical Bayes and Nonlocal Priors</a>
+<p class="meta">Godfred Arhin, Nilotpal Sanyal &middot; 58 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-09.html#d-2026-11-10">Tuesday 10 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="arXiv:2606.16683v3"><a class="title" href="https://arxiv.org/abs/2606.16683v3">A Fully Specified Bayes Factor Range for Hypothesis Testing and Sensitivity Analysis in Process Tracing</a>
+<p class="meta">Matias L\&#x27;opez, Jake Bowers, Daniel Gajardo Cooper &middot; 24 degrees</p></li>
+<li data-paper-id="arXiv:2611.12690v1"><a class="title" href="https://arxiv.org/abs/2611.12690v1">Average versus expected causal effects under interference: Modeling assumptions and estimation bottlenecks</a>
+<p class="meta">Vishesh Karwa, Edoardo M. Airoldi, Donald B. Rubin &middot; 49 degrees</p></li>
+<li data-paper-id="arXiv:2507.13552v3"><a class="title" href="https://arxiv.org/abs/2507.13552v3">Combining stated and revealed preferences: Matched and unmatched</a>
+<p class="meta">Romuald Meango, Marc Henry, Ismael Mourifie, Ju Hyun Oh &middot; 50 degrees</p></li>
+<li data-paper-id="arXiv:2611.10383v1"><a class="title" href="https://arxiv.org/abs/2611.10383v1">Asymptotic Theory of Integrated Pairwise-Difference Functionals of Kernel Estimators, with Applications to Treatment Effect Heterogeneity</a>
+<p class="meta">Julius Owusu &middot; 51 degrees</p></li>
+<li data-paper-id="10.1016/j.leaqua.2026.102013"><a class="title" href="https://doi.org/10.1016/j.leaqua.2026.102013">Causal inferences in social network analysis: practical insights for leadership research</a>
+<p class="meta">Mingxiang Li &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2611.11676v1"><a class="title" href="https://arxiv.org/abs/2611.11676v1">ATHOS: Agreement-based Testing of Hypotheses in Overlapping Subgroups</a>
+<p class="meta">Xiao Wang &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.11307v1"><a class="title" href="https://arxiv.org/abs/2611.11307v1">Sharp bounds for posterior causal attribution given complete factual records</a>
+<p class="meta">Liyao Zhou, Xinwei Sun &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2610.14895v2"><a class="title" href="https://arxiv.org/abs/2610.14895v2">Comparing randomized trials: a formal approach</a>
+<p class="meta">Yu-Han Chiu, Issa J. Dahabreh &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.11381v1"><a class="title" href="https://arxiv.org/abs/2611.11381v1">Does Predictive Performance Translate to Causal Performance? Evaluating tabular foundation models as nuisance learners for causal effect estimation</a>
+<p class="meta">Andrew R Weckstein, Issa J Dahabreh, Marinka Zitnik, and 2 others &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2602.08315v2"><a class="title" href="https://arxiv.org/abs/2602.08315v2">Reusable Conditional Resampling via Flow Matching for Constraint-Based Causal Discovery</a>
+<p class="meta">Shunyu Zhao, Yanfeng Yang, Shuai Li, Kenji Fukumizu &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.10388v1"><a class="title" href="https://arxiv.org/abs/2611.10388v1">Causal Discovery Grounding and the Naturalness Assumption</a>
+<p class="meta">Guilherme P. Soares, Andreas Koukorinis, Sander Beckers, and 3 others &middot; 54 degrees</p></li>
+<li data-paper-id="10.1080/00031305.2026.2742878"><a class="title" href="https://doi.org/10.1080/00031305.2026.2742878">Making social science reproducible: A Conceptualization of “reproducibility review” and learnings from its implementation</a>
+<p class="meta">Bernhard Clemm von Hohenberg &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2411.05839v3"><a class="title" href="https://arxiv.org/abs/2411.05839v3">Simulation Studies For Goodness-of-Fit and Two-Sample Methods For Univariate Data</a>
+<p class="meta">Wolfgang Rolke &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.12747v1"><a class="title" href="https://arxiv.org/abs/2611.12747v1">Clique Constraints for Exact Causal Structure Learning</a>
+<p class="meta">Xiaoyu He, Pavel Ryt\&#x27;i\v{r}, Petr Ry\v{s}av\&#x27;y, Jakub Mare\v{c}ek &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2601.02322v3"><a class="title" href="https://arxiv.org/abs/2601.02322v3">Environment-Adaptive Covariate Selection: Learning When to Use Spurious Correlations for Out-of-Distribution Prediction</a>
+<p class="meta">Shuozhi Zuo, Yixin Wang &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.01666v2"><a class="title" href="https://arxiv.org/abs/2611.01666v2">Stand-In Effects and Pooling Amplification: Lessons from Biological World Models for Testing Action Effects</a>
+<p class="meta">Bowen Xu, Boyu Chen, Jiaying Li &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2604.01342v3"><a class="title" href="https://arxiv.org/abs/2604.01342v3">Massively Parallel Exact Inference for Hawkes Processes</a>
+<p class="meta">Ahmer Raza, Hudson Smith &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.11311v1"><a class="title" href="https://arxiv.org/abs/2611.11311v1">Causal discernment and the direction of clinical research</a>
+<p class="meta">Carlo Berzuini, Luisa Bernardinelli &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.10957v1"><a class="title" href="https://arxiv.org/abs/2611.10957v1">A Unified Framework for Robust Blinded Sample Size Re-estimation Based on Nuisance Parameters</a>
+<p class="meta">Long-Hao Xu, Lei Li, Tim Friede &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2605.26723v2"><a class="title" href="https://arxiv.org/abs/2605.26723v2">An Exact Marginal Likelihood for Inference under Careless Responding</a>
+<p class="meta">Jaehoan Kim &middot; 55 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-09.html#d-2026-11-11">Wednesday 11 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="arXiv:2611.08560v2"><a class="title" href="https://arxiv.org/abs/2611.08560v2">Minimax designs and estimators for causal inference under network interference</a>
+<p class="meta">Vishesh Karwa, Edoardo M. Airoldi &middot; 43 degrees</p></li>
+<li data-paper-id="10.1093/biomet/asag073"><a class="title" href="https://doi.org/10.1093/biomet/asag073">Beyond biased coin minimization: eliminating shift in covariate-adaptive randomization for unequal allocation</a>
+<p class="meta">Hengjia Fang, Wei Ma &middot; 49 degrees</p></li>
+<li data-paper-id="arXiv:2611.13781v1"><a class="title" href="https://arxiv.org/abs/2611.13781v1">Prior Probabilities for Constrained Hypotheses: Invariance, Neutrality, and Model Search</a>
+<p class="meta">Joris Mulder &middot; 50 degrees</p></li>
+<li data-paper-id="arXiv:2106.15743v3"><a class="title" href="https://arxiv.org/abs/2106.15743v3">BONuS: Multiple multivariate testing with a data-adaptive test statistic</a>
+<p class="meta">Zhifei Li, Chiao-Yu Yang, Lihua Lei, and 2 others &middot; 50 degrees</p></li>
+<li data-paper-id="arXiv:2512.20851v2"><a class="title" href="https://arxiv.org/abs/2512.20851v2">Testing Exclusion and Shape Restrictions in Potential Outcomes Models</a>
+<p class="meta">Hiroaki Kaido, Kirill Ponomarev &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2611.13219v1"><a class="title" href="https://arxiv.org/abs/2611.13219v1">MediPFN: Amortized In-Context Nuisance Learning and Inference for Causal Mediation Analysis</a>
+<p class="meta">Shi Bo, Jiaming Hu &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2608.04839v3"><a class="title" href="https://arxiv.org/abs/2608.04839v3">Exact Inference in Fixed-Effect Regressions with Concentrated Identifying Variation</a>
+<p class="meta">Stanis{\l}aw M. S. Halkiewicz &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.13313v1"><a class="title" href="https://arxiv.org/abs/2611.13313v1">Instrumental variables with treatment clusters</a>
+<p class="meta">Didier Nibbering, Matthijs Oosterveen, Pedro Luis Silva &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.14369v1"><a class="title" href="https://arxiv.org/abs/2611.14369v1">A Bayesian approach for checking and estimating block designs in agricultural experiments</a>
+<p class="meta">Josefina Lacasa, Ignacio A. Ciampitti, Trevor J. Hefley &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.01666v3"><a class="title" href="https://arxiv.org/abs/2611.01666v3">Stand-In Effects and Pooling Amplification: Lessons from Biological World Models for Testing Action Effects</a>
+<p class="meta">Bowen Xu, Boyu Chen, Jiaying Li &middot; 55 degrees</p></li>
+<li data-paper-id="10.1186/s12962-026-00859-1"><a class="title" href="https://doi.org/10.1186/s12962-026-00859-1">How different propensity score methods change the estimated cost of healthcare-associated infections</a>
+<p class="meta">Mariagrazia Cicala, Leonardo Emberti-Gialloreti, Stefania Moramarco, and 3 others &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.13485v1"><a class="title" href="https://arxiv.org/abs/2611.13485v1">Differentially Private Statistical Inference for Rankings from Pairwise Comparisons</a>
+<p class="meta">Xintao Xia, Jia Gu &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.13451v1"><a class="title" href="https://arxiv.org/abs/2611.13451v1">Economics of Selection in Ranking &amp; Selection: Neither Fixed-Precision nor Fixed-Budget</a>
+<p class="meta">Stephen E. Chick, Zaile Li, L. Jeff Hong &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.13525v1"><a class="title" href="https://arxiv.org/abs/2611.13525v1">EJAI: Judgment-Preserving Civic AI for Data Center Environmental Justice</a>
+<p class="meta">Evan Pa\v{c}es-Wiles, Bryen Alvarez, Sara Gulabani, and 2 others &middot; 56 degrees</p></li>
+<li data-paper-id="10.1177/09622802261506990"><a class="title" href="https://doi.org/10.1177/09622802261506990">Efficient estimation of average causal effect with mismeasured exposures</a>
+<p class="meta">Zhumei Sui, Min Zeng, Hong Zhang &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.09792v2"><a class="title" href="https://arxiv.org/abs/2611.09792v2">Knowing When to Intervene: Causal Evaluation of AI Agents</a>
+<p class="meta">Ayush Sawarni, Wenqian Xing, Tijana Zrnic, and 2 others &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2610.04677v2"><a class="title" href="https://arxiv.org/abs/2610.04677v2">Estimation and inference in penalized function-on-function regression with within-curve residual dependence</a>
+<p class="meta">Fabian Scheipl &middot; 56 degrees</p></li>
+<li data-paper-id="10.1080/01621459.2026.2750972"><a class="title" href="https://doi.org/10.1080/01621459.2026.2750972">Expected Shortfall Regression via Optimization</a>
+<p class="meta">Yuanzhi Li, Shushu Zhang, Xuming He &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2611.14385v1"><a class="title" href="https://arxiv.org/abs/2611.14385v1">Semiparametric Inference in Panel Data with Interactive and High-dimensional Confounding</a>
+<p class="meta">Bin Chen, Yukun Ma, Qiyang Yu &middot; 57 degrees</p></li>
+<li data-paper-id="10.5281/zenodo.24119818"><a class="title" href="https://doi.org/10.5281/zenodo.24119818">Patient-Level Response Probabilities in Biomarker-Stratified Trials: A Local Averaging Approach</a>
+<p class="meta">Boris Klebanov &middot; 57 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-09.html#d-2026-11-12">Thursday 12 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.7916/4wm1-yx91"><a class="title" href="https://doi.org/10.7916/4wm1-yx91">Three Essays on Causal Inference and the Economics of Education</a>
+<p class="meta">Nicolas Rojas Souyet &middot; 53 degrees</p></li>
+<li data-paper-id="10.5281/zenodo.24146722"><a class="title" href="https://doi.org/10.5281/zenodo.24146722">Sharp Joint Sensitivity Bounds and Simultaneous Projection Inference for Latent Mediation</a>
+<p class="meta">Zhiping Liu &middot; 61 degrees</p></li>
+<li data-paper-id="osf.io/p94z3_v1"><a class="title" href="https://doi.org/10.31235/osf.io/p94z3_v1">Diffusion Maps and Sparse Reconstruction: A Two-Tier Approach to Ideal-Type Measurement</a>
+<p class="meta">Paula Pirker-Díaz, Radost Waszkiewicz, Matthew C. Wilson, Karoline Wiesner &middot; 61 degrees</p></li>
+<li data-paper-id="10.1002/sam.70120"><a class="title" href="https://doi.org/10.1002/sam.70120">Supervised Matrix Factorization for Estimating Individualized Treatment Rule: Incorporating Medical Notes in Decision Making</a>
+<p class="meta">Crystal Zang, Rebecca A. Deek, Lu Tang &middot; 62 degrees</p></li>
+<li data-paper-id="osf.io/e6vtz_v1"><a class="title" href="https://doi.org/10.31235/osf.io/e6vtz_v1">Incidental Perceptions Shape Strategies for Responding to Violence: Evidence from a Lab-in-the-field Experiment in Kenya</a>
+<p class="meta">Aidan Milliff &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/mj4c7_v3"><a class="title" href="https://doi.org/10.31235/osf.io/mj4c7_v3">Recycling fabricated narratives about an early-career researcher is not a valid defence: a reply to Caruso et al.</a>
+<p class="meta">Saul Newman &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/ef7a5_v2"><a class="title" href="https://doi.org/10.31235/osf.io/ef7a5_v2">Complete-Association Factorizations of Discrete Copulas: Existence, Tree Characterization, and Log-Linear Representations</a>
+<p class="meta">Pablo A. Mitnik, Junchao Tang &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/vn4ck_v1"><a class="title" href="https://doi.org/10.31235/osf.io/vn4ck_v1">Forecasting Cohort Fertility with a Simple Neural Network</a>
+<p class="meta">Paige Park &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/5zpfb_v1"><a class="title" href="https://doi.org/10.31235/osf.io/5zpfb_v1">Who Speaks in the News? Measuring Voice through Automated Quote Extraction.</a>
+<p class="meta">Emma Bonutti D&#x27;Agostini, Etienne Ollion, Guilhem Sicard &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/aqst2_v1"><a class="title" href="https://doi.org/10.31235/osf.io/aqst2_v1">Electoral Systems and Resistance to Democratic Backsliding</a>
+<p class="meta">Sean Gailmard, Andrew T. Little, Carlo Prato &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/vcw89_v1"><a class="title" href="https://doi.org/10.31235/osf.io/vcw89_v1">Mapping the Digital Public Organisation: Adapting Kevin Lynch’s Methods to Digital Tool Imageability in a Local Authority</a>
+<p class="meta">David Batchelor, Jennifer Schooling &middot; 64 degrees</p></li>
+<li data-paper-id="osf.io/5ch89_v1"><a class="title" href="https://doi.org/10.31235/osf.io/5ch89_v1">Immigrants and their descendants as supporters of the populist right: Finding a coherent narrative</a>
+<p class="meta">Gianni D&#x27;Amato, Camilla Bilò, Simon Mastrangelo, and 2 others &middot; 64 degrees</p></li>
+<li data-paper-id="osf.io/d7cnk_v1"><a class="title" href="https://doi.org/10.31235/osf.io/d7cnk_v1">Expanding Mortality Research: The Demography of Bereavement</a>
+<p class="meta">Emily Smith-Greenaway, Ashton M. Verdery &middot; 64 degrees</p></li>
+<li data-paper-id="osf.io/84a9h_v1"><a class="title" href="https://doi.org/10.31235/osf.io/84a9h_v1">Willing or not: how older adults in Chile respond to the obligation to go online</a>
+<p class="meta">Manuel Torres-Sahli, María Fernanda Cerda-Díez &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/agnwe_v2"><a class="title" href="https://doi.org/10.31235/osf.io/agnwe_v2">The Cooperative Scope of Local Gods: Punishment, Omniscience, and Distant Cooperation among the Sihanaka of Madagascar</a>
+<p class="meta">Anders Norge, Daniel Major-Smith, Benjamin Grant Purzycki &middot; 66 degrees</p></li>
+<li data-paper-id="osf.io/t68dy_v3"><a class="title" href="https://doi.org/10.31235/osf.io/t68dy_v3">Convergence and continuity of time use for housework and childcare in German couples, 1991–2022</a>
+<p class="meta">Florian Schulz &middot; 66 degrees</p></li>
+<li data-paper-id="10.1111/ajps.70096"><a class="title" href="https://doi.org/10.1111/ajps.70096">America&#x27;s most “far‐reaching institution”: The work and legacies of the Freedmen&#x27;s Bureau</a>
+<p class="meta">Michael Albertus, Jon Rogowski &middot; 67 degrees</p></li>
+<li data-paper-id="osf.io/avm47_v2"><a class="title" href="https://doi.org/10.31235/osf.io/avm47_v2">Parenting education through an adult learning lens: A qualitative content analysis of a parenting education workbook</a>
+<p class="meta">Dalila Medina-Rangel, Mona Askari &middot; 68 degrees</p></li>
+<li data-paper-id="osf.io/s6xyc_v2"><a class="title" href="https://doi.org/10.31235/osf.io/s6xyc_v2">Diverse Paths After First Birth: Maternal Employment Trajectories in Hungary, East Germany, and West Germany, 1991–2012</a>
+<p class="meta">Lili Vargha, Antonino Polizzi, Anette Eva Fasang &middot; 68 degrees</p></li>
+<li data-paper-id="osf.io/d9468_v1"><a class="title" href="https://doi.org/10.31235/osf.io/d9468_v1">Shared Answers, Different Paths: Gender and University Plans among Japanese Adolescents</a>
+<p class="meta">Yuko Nozaki &middot; 70 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-09.html#d-2026-11-13">Friday 13 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="arXiv:1611.03439v2"><a class="title" href="https://arxiv.org/abs/1611.03439v2">A Family-Level Graphical Gatekeeping Procedure with Iterative Retesting</a>
+<p class="meta">Zhiying Qiu, Wenge Guo, Sanat Sarkar &middot; 46 degrees</p></li>
+<li data-paper-id="arXiv:2611.16559v1"><a class="title" href="https://arxiv.org/abs/2611.16559v1">Inverse Confounding Analysis: Part 2. Applications to Real- World Observational Data</a>
+<p class="meta">Sergey Porotsky &middot; 48 degrees</p></li>
+<li data-paper-id="arXiv:2611.14830v1"><a class="title" href="https://arxiv.org/abs/2611.14830v1">A Geometric Perspective for Marginal R2: Estimation and Inference in Generalized Linear Mixed Models</a>
+<p class="meta">Hao Qin, Ayumi Mizuno, Kyle Morrison, and 2 others &middot; 50 degrees</p></li>
+<li data-paper-id="arXiv:2611.15607v1"><a class="title" href="https://arxiv.org/abs/2611.15607v1">FADO: Learning Causal Explanations with Prior-Fitted Networks</a>
+<p class="meta">Seth Flaxman, Jess Carr, Annabel Jakob, and 2 others &middot; 50 degrees</p></li>
+<li data-paper-id="arXiv:2605.06655v2"><a class="title" href="https://arxiv.org/abs/2605.06655v2">Improving Variance Estimation for Covariate Adjustment with Binary Outcomes</a>
+<p class="meta">Kaitlyn Lee, Alex Ocampo, Courtney Schiffman, and 3 others &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2511.00612v3"><a class="title" href="https://arxiv.org/abs/2511.00612v3">Improving control over unobservables with network data</a>
+<p class="meta">Vincent Starck &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2601.17621v4"><a class="title" href="https://arxiv.org/abs/2601.17621v4">No prior over nuisance parameters is required for credible intervals and Bayes factors</a>
+<p class="meta">Tim Ritmeester &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2611.16278v1"><a class="title" href="https://arxiv.org/abs/2611.16278v1">On Ignorability Beyond Missing at Random: Completion-Invariant Missingness for Nonmonotone Missing Data</a>
+<p class="meta">Kosuke Morikawa, Yutaka Kano, Shonosuke Sugasawa &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.13219v2"><a class="title" href="https://arxiv.org/abs/2611.13219v2">MediPFN: Amortized In-Context Nuisance Learning and Inference for Causal Mediation Analysis</a>
+<p class="meta">Shi Bo, Jiaming Hu &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.15071v1"><a class="title" href="https://arxiv.org/abs/2611.15071v1">Improving Efficiency and Power in Small Rare-Disease Trials Through Prespecified, Data-Adaptive Covariate Adjustment</a>
+<p class="meta">Tianyue Zhou, Susan Gruber, Hana Lee, and 3 others &middot; 53 degrees</p></li>
+<li data-paper-id="10.5281/zenodo.24152763"><a class="title" href="https://doi.org/10.5281/zenodo.24152763">Causation, Correlation and Association</a>
+<p class="meta">Slava Vaisman &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.15552v1"><a class="title" href="https://arxiv.org/abs/2611.15552v1">Inference After Model Refutation: Uniform Post-Relaxation Inference for Partially Identified Models</a>
+<p class="meta">Ulrich Hounyo &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.14660v1"><a class="title" href="https://arxiv.org/abs/2611.14660v1">Hypothesis testing for estimable parameters with missing data: available cases or complete cases?</a>
+<p class="meta">M. Romero-Madro\~nal, M. D. Jim\&#x27;enez-Gamero, B. Milo\v{s}evi\&#x27;c &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2204.00473v5"><a class="title" href="https://arxiv.org/abs/2204.00473v5">Finite Sample Inference in Incomplete Models</a>
+<p class="meta">Lixiong Li, Marc Henry &middot; 54 degrees</p></li>
+<li data-paper-id="10.1186/s43058-026-01171-y"><a class="title" href="https://doi.org/10.1186/s43058-026-01171-y">Aligning research questions with randomized design features for implementation strategy trials: a practical framework with tools and exemplars</a>
+<p class="meta">Jonah K. Amponsah, Felice Resnik, Shellie D. Ellis &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2605.07665v2"><a class="title" href="https://arxiv.org/abs/2605.07665v2">Debiased Counterfactual Generation via Flow Matching from Observations</a>
+<p class="meta">Hugh Dance, Johnny Xi, Peter Orbanz, Benjamin Bloem-Reddy &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.16335v1"><a class="title" href="https://arxiv.org/abs/2611.16335v1">From More to Better: Causal Inference and Digital Experimentation in the Age of AI</a>
+<p class="meta">Winston Chou, M{\aa}rten Schultzberg, Lo-Hua Yuan, and 18 others &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.15052v1"><a class="title" href="https://arxiv.org/abs/2611.15052v1">Common-DAG Support from Targeted Covariance Changes under Confounding</a>
+<p class="meta">Peida Li &middot; 54 degrees</p></li>
+<li data-paper-id="10.13140/rg.2.2.35601.60005"><a class="title" href="https://doi.org/10.13140/rg.2.2.35601.60005">The Unobserved Alternative: Counterfactual Stewardship, Selective Visibility, and the Limits of AI-Governed Evidence</a>
+<p class="meta">James A. Nathan &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.14789v1"><a class="title" href="https://arxiv.org/abs/2611.14789v1">Lost in the Bins: Treatment Effects with Discretized Covariates</a>
+<p class="meta">Cenchen Liu &middot; 54 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-09.html#d-2026-11-14">Saturday 14 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.1093/aje/kwag294"><a class="title" href="https://doi.org/10.1093/aje/kwag294">Causal Machine Learning for Treatment Effect Heterogeneity: Interpretation, Benchmarking, Validation</a>
+<p class="meta">Philip Heesen, Maresa Schröder, Rishi J. Desai, Stefan Feuerriegel &middot; 50 degrees</p></li>
+<li data-paper-id="10.34740/kaggle/w/125929"><a class="title" href="https://doi.org/10.34740/kaggle/w/125929">Verifier Gaming in Small Models: A Positive-Control Study</a>
+<p class="meta">viraj sawant &middot; 53 degrees</p></li>
+<li data-paper-id="10.1080/24725854.2026.2762135"><a class="title" href="https://doi.org/10.1080/24725854.2026.2762135">Optimizing Feature Selection in Causal Inference: A Three-Stage Computational Framework for Unbiased Estimation</a>
+<p class="meta">Tianyu Yang, Md. Noor‐E‐Alam &middot; 54 degrees</p></li>
+<li data-paper-id="10.13140/rg.2.2.26714.91844"><a class="title" href="https://doi.org/10.13140/rg.2.2.26714.91844">Average Treatment Effect Under Bilateral Strategic Endogeneity: A Mixture-Corrected Doubly Robust Framework for Robust Estimation with Negative-Control Calibration</a>
+<p class="meta">Syed Toushik Hossain &middot; 54 degrees</p></li>
+<li data-paper-id="10.1186/s13054-026-06454-3"><a class="title" href="https://doi.org/10.1186/s13054-026-06454-3">Drawing before counting: causal diagrams and g-methods in critical care evidence synthesis</a>
+<p class="meta">Vincent Pey, Louis Calvel, François Labaste, Vincent Minville &middot; 56 degrees</p></li>
+<li data-paper-id="10.5281/zenodo.24202017"><a class="title" href="https://doi.org/10.5281/zenodo.24202017">Evidence-Graded Bounds Analysis (EGBA): Protocol for Application</a>
+<p class="meta">Seyed Mehdi Alavi &middot; 57 degrees</p></li>
+<li data-paper-id="10.5281/zenodo.24204613"><a class="title" href="https://doi.org/10.5281/zenodo.24204613">Non-Identification Across an Admissible Inquiry Set: Why More of the Same Inquiry Cannot Settle Some Questions</a>
+<p class="meta">Alexandra Cary &middot; 58 degrees</p></li>
+<li data-paper-id="osf.io/57xp6_v2"><a class="title" href="https://doi.org/10.31235/osf.io/57xp6_v2">Os três corpos de uma eleição: Eleitorado, candidaturas e eleitos no Brasil (1998–2026)</a>
+<p class="meta">Vitor de Moraes Peixoto &middot; 58 degrees</p></li>
+<li data-paper-id="10.1177/0193841x261506639"><a class="title" href="https://doi.org/10.1177/0193841x261506639">Structural Multicollinearity in Interrupted Time Series Designs</a>
+<p class="meta">Banafsheh Aghayeeabianeh &middot; 59 degrees</p></li>
+<li data-paper-id="10.1073/pnas.2626810123"><a class="title" href="https://doi.org/10.1073/pnas.2626810123">Physical distancing to prevent influenza-like illness on a college campus: The eX-FLU trial</a>
+<p class="meta">Brian E. Richardson, Allison E. Aiello, Michael G. Hudgens &middot; 61 degrees</p></li>
+<li data-paper-id="osf.io/uyspw_v1"><a class="title" href="https://doi.org/10.31235/osf.io/uyspw_v1">The Cloud-Pattern Illusion: Falsifiability, Transferability, and the Market for Discretionary Trading Education</a>
+<p class="meta">Bahram Rakhshani Pourfard &middot; 62 degrees</p></li>
+<li data-paper-id="10.1186/s12874-026-03091-w"><a class="title" href="https://doi.org/10.1186/s12874-026-03091-w">Target trial emulation of randomised controlled trials: lessons from benchmarking and risk of bias assessment</a>
+<p class="meta">Elisa Giallongo, Orlagh Carroll, Padmanabhan Ramnarayan, and 6 others &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/cm2bz_v1"><a class="title" href="https://doi.org/10.31235/osf.io/cm2bz_v1">When the Melting Pot Becomes a Stressor: Changes in Racial Composition and Psychological Distress among Non-Hispanic Whites</a>
+<p class="meta">Pui Yin Cheung, David S. Curtis, Ming Wen &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/6qwxp_v1"><a class="title" href="https://doi.org/10.31235/osf.io/6qwxp_v1">Civic Architecture: A Statement of the Research Program</a>
+<p class="meta">Robert M Ceresa &middot; 63 degrees</p></li>
+<li data-paper-id="osf.io/uw845_v1"><a class="title" href="https://doi.org/10.31235/osf.io/uw845_v1">Where Americans Moved — and the Money That Moved With Them: Interstate Migration of Households and Income in IRS Statistics of Income Data, 2022–2023</a>
+<p class="meta">Moe Kahok &middot; 64 degrees</p></li>
+<li data-paper-id="osf.io/fts4q_v2"><a class="title" href="https://doi.org/10.31235/osf.io/fts4q_v2">Key network disruptors: A structural analysis of the #DisruptJMM network influencers and actions</a>
+<p class="meta">Drew Lewis, Rachel Roca, Stephanie Marshall, and 2 others &middot; 64 degrees</p></li>
+<li data-paper-id="osf.io/52nma_v1"><a class="title" href="https://doi.org/10.31235/osf.io/52nma_v1">The Justice Engagement Gap: Comparative Institutions and Anti-Trafficking Enforcement in the United States, Brazil, and China</a>
+<p class="meta">Caye Lee, Mayank Kejriwal &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/4fhtx_v1"><a class="title" href="https://doi.org/10.31235/osf.io/4fhtx_v1">Credibility and Connection: A Field Experiment Comparing the Democratic Effects of Traditional News, News Influencers, and Social-First News</a>
+<p class="meta">Erin Wertz, Wonjeong Jo, Emma Hoes, Magdalena Wojcieszak &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/ghr65_v1"><a class="title" href="https://doi.org/10.31235/osf.io/ghr65_v1">The wealth of algorithms: generative AI, jobs and inequality in a global dynamic CGE model</a>
+<p class="meta">David Radi &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/t8wdg_v2"><a class="title" href="https://doi.org/10.31235/osf.io/t8wdg_v2">LLM-Based Measurement of Latent Attributes in Trade Data</a>
+<p class="meta">Matthew DiGiuseppe, Xuelong Fu, Michael E Flynn &middot; 65 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-09.html#d-2026-11-15">Sunday 15 November</a><span class="count">12 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.13140/rg.2.2.12998.23363"><a class="title" href="https://doi.org/10.13140/rg.2.2.12998.23363">Semi-Automating Risk of Bias Assessment in Randomized Controlled Trials with Deep Learning Methods: A Retrospective Modelling Study</a>
+<p class="meta">Daniel Xie, Fangwen Zhou, Ashirbani Saha, Cynthia Lokker &middot; 55 degrees</p></li>
+<li data-paper-id="10.1080/10543406.2026.2762010"><a class="title" href="https://doi.org/10.1080/10543406.2026.2762010">Beyond covariate balance: statistical resilience of Machine Learning-Augmented Inverse Probability Weighting versus Entropy Balancing in clinical evidence translation</a>
+<p class="meta">Aiden Yi-Fei Wang, Lu Mao, Xiu-Wen Ling, and 3 others &middot; 58 degrees</p></li>
+<li data-paper-id="10.13140/rg.2.2.32029.88806"><a class="title" href="https://doi.org/10.13140/rg.2.2.32029.88806">Homogeneity and Simpson’s paradox</a>
+<p class="meta">Ken Gillman &middot; 58 degrees</p></li>
+<li data-paper-id="10.17605/osf.io/aydw6"><a class="title" href="https://doi.org/10.17605/osf.io/aydw6">Classification or conditional projection : auditing a cross-sectional composite index for nudge targeting</a>
+<p class="meta">Igor Zela &middot; 58 degrees</p></li>
+<li data-paper-id="10.5281/zenodo.24220464"><a class="title" href="https://doi.org/10.5281/zenodo.24220464">Policy-Conditioned Projection Across Alternative Actions: Why a Forecast Used to Choose Must Say What It Assumes Will Be Done</a>
+<p class="meta">Alexandra Cary &middot; 60 degrees</p></li>
+<li data-paper-id="10.1016/j.lanepe.2026.101927"><a class="title" href="https://doi.org/10.1016/j.lanepe.2026.101927">Clone-censor weighting and dementia risk after statin initiation in diabetes: when the analyzed population is no longer the observed population</a>
+<p class="meta">Ali Ahmed, Andrew J. S. Coats, Michael Böhm, and 3 others &middot; 61 degrees</p></li>
+<li data-paper-id="10.5281/zenodo.24231117"><a class="title" href="https://doi.org/10.5281/zenodo.24231117">From Theory to Practice: A Practitioner led Framework for An Integrated Process, Impact and Realist Evaluation Approach</a>
+<p class="meta">Angela M. Kiwanuka &middot; 62 degrees</p></li>
+<li data-paper-id="osf.io/ay4v2_v2"><a class="title" href="https://doi.org/10.31235/osf.io/ay4v2_v2">Metrics by Default: Bibliometric Gatekeeping, Institutional Logics, and Early-Career Research Evaluation in India</a>
+<p class="meta">Moumita Koley, Yogesh Vijay Krishna &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/atsz5_v1"><a class="title" href="https://doi.org/10.31235/osf.io/atsz5_v1">Early Screen Time, Children&#x27;s Mental Well-Being and Physical Health: Intersectional Inequalities by Socioeconomic Status, Gender and Ethnicity</a>
+<p class="meta">Beyda Çineli, Pablo Gracia &middot; 69 degrees</p></li>
+<li data-paper-id="10.1093/jrsssc/qlag063"><a class="title" href="https://doi.org/10.1093/jrsssc/qlag063">Contents of volume 75, 2026</a>
+<p class="meta"> &middot; 69 degrees</p></li>
+<li data-paper-id="osf.io/jdn8b_v1"><a class="title" href="https://doi.org/10.31235/osf.io/jdn8b_v1">Breaking the contract: Imagining the reader in online content on synthetic creative fiction book writing</a>
+<p class="meta">Margaret K. Merga &middot; 69 degrees</p></li>
+<li data-paper-id="osf.io/p5uha_v1"><a class="title" href="https://doi.org/10.31235/osf.io/p5uha_v1">A Job That Comes with an Audience: Night Work and the Wage of Being Seen</a>
+<p class="meta">Shiyun Zhang Isabelle &middot; 71 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-16.html#d-2026-11-16">Monday 16 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="arXiv:2309.06305v4"><a class="title" href="https://arxiv.org/abs/2309.06305v4">Sensitivity Analysis for Linear Estimators</a>
+<p class="meta">Jacob Dorn, Luther Yap &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2611.17771v1"><a class="title" href="https://arxiv.org/abs/2611.17771v1">Interpretable confidence regions for causal discovery</a>
+<p class="meta">Jian Kang, Arnav Mazumder, Giovanni Carter Lembo, Armeen Taeb &middot; 53 degrees</p></li>
+<li data-paper-id="10.1007/s11222-026-11007-3"><a class="title" href="https://doi.org/10.1007/s11222-026-11007-3">Strategy-driven sequential testing for qualitative treatment effects</a>
+<p class="meta">Xi Chen, Chang-Yu Liu, Meichen Liu, and 3 others &middot; 53 degrees</p></li>
+<li data-paper-id="10.3386/w36032"><a class="title" href="https://doi.org/10.3386/w36032">Clouds of Credit: Mapping the Financial Web Behind AI Compute</a>
+<p class="meta">Stijn Van Nieuwerburgh, Zijin Su &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2603.07255v2"><a class="title" href="https://arxiv.org/abs/2603.07255v2">Approximating an Ideal Experiment with Induced Order Statistics</a>
+<p class="meta">Federico A. Bugni, Ivan A. Canay, Deborah Kim &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.17875v1"><a class="title" href="https://arxiv.org/abs/2611.17875v1">Stratified Randomization Incorporating Historical Control Data</a>
+<p class="meta">Masatoshi Shoji, Isao Yokota, Carolin Herrmann &middot; 54 degrees</p></li>
+<li data-paper-id="10.1001/jama.2026.24386"><a class="title" href="https://doi.org/10.1001/jama.2026.24386">Tale of Two Estimands: Distinguishing What Is Observed From What Is Inferred</a>
+<p class="meta">Patrick J. Heagerty, Roger Lewis &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.18116v1"><a class="title" href="https://arxiv.org/abs/2611.18116v1">Positive Weights Do Not Certify TWFE Inference: A Design Diagnostic under Treatment-Effect Heterogeneity</a>
+<p class="meta">Stanis{\l}aw M. S. Halkiewicz &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.18444v1"><a class="title" href="https://arxiv.org/abs/2611.18444v1">Constrained Stochastic Policy Targeting under Heterogeneous Partial Interference</a>
+<p class="meta">Elena Dal Torrione, Chan Park, Laura Forastiere &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2604.24652v2"><a class="title" href="https://arxiv.org/abs/2604.24652v2">Benefits and Costs of Adaptive Sampling</a>
+<p class="meta">Yu-Shiou Willy Lin, Dae Woong Ham, Iavor Bojinov &middot; 55 degrees</p></li>
+<li data-paper-id="10.3386/w36017"><a class="title" href="https://doi.org/10.3386/w36017">fereg: Fast High-Dimensional Fixed-Effects Regressions in Stata</a>
+<p class="meta">Johannes Schmieder &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.18225v1"><a class="title" href="https://arxiv.org/abs/2611.18225v1">Causal and conditional tail coefficients: asymptotics, inference and graph recovery</a>
+<p class="meta">Axel B\&quot;ucher, Mario Krali &middot; 55 degrees</p></li>
+<li data-paper-id="10.3386/w36021"><a class="title" href="https://doi.org/10.3386/w36021">Impacts of AI in Higher Education: A Panel Survey of Undergraduates</a>
+<p class="meta">Bruce Sacerdote, Mason Parris-Bacon &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.18291v1"><a class="title" href="https://arxiv.org/abs/2611.18291v1">Identification and Inference of Bi-directional Causal Effects in Mendelian Randomization without Instrument Selection</a>
+<p class="meta">Liyuan Mo, Qingyuan Zhao &middot; 56 degrees</p></li>
+<li data-paper-id="10.3386/w36015"><a class="title" href="https://doi.org/10.3386/w36015">Education and Gender Voting Polarization: The Effect of Compulsory Schooling on Sex-Based Preferences for the Democratic and Republican Parties</a>
+<p class="meta">Philip DeCicca, Harry Krashinsky, Erik Nesson &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2609.11728v2"><a class="title" href="https://arxiv.org/abs/2609.11728v2">Reproducibility in the Age of Agentic AI: Context Engineering at the Timescale of a Codebase</a>
+<p class="meta">Lorena A. Barba &middot; 56 degrees</p></li>
+<li data-paper-id="10.1080/01621459.2026.2751578"><a class="title" href="https://doi.org/10.1080/01621459.2026.2751578">Uniform-over-dimension location tests for multivariate and high-dimensional data</a>
+<p class="meta">Ritabrata Karmakar, Joydeep Chowdhury, Subhajit Dutta, Marc G. Genton &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.17528v1"><a class="title" href="https://arxiv.org/abs/2611.17528v1">Regularized parametric modal regression for positive responses with high-dimensional covariates</a>
+<p class="meta">Christian E. Galarza, V\&#x27;ictor H. Lachos, Dashun Liu &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2403.00422v3"><a class="title" href="https://arxiv.org/abs/2403.00422v3">Post-Selection Inference for Partially Identified Parameters</a>
+<p class="meta">Sukjin Han, Adam McCloskey &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2611.18479v1"><a class="title" href="https://arxiv.org/abs/2611.18479v1">Estimating a Rational Inattention Discrete Choice Model: A Semiparametric Approach</a>
+<p class="meta">Hanqi Wang &middot; 57 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-16.html#d-2026-11-17">Tuesday 17 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="arXiv:2611.21425v1"><a class="title" href="https://arxiv.org/abs/2611.21425v1">Randomization protects the average, not the trial: chance covariate imbalance and a calibration of balance $P$ values at the design stage</a>
+<p class="meta">William J. Dwyer, David Zurakowski &middot; 44 degrees</p></li>
+<li data-paper-id="arXiv:2603.03035v2"><a class="title" href="https://arxiv.org/abs/2603.03035v2">Generalized Bayes for Causal Inference</a>
+<p class="meta">Emil Javurek, Dennis Frauen, Yuxin Wang, Stefan Feuerriegel &middot; 49 degrees</p></li>
+<li data-paper-id="arXiv:2611.19209v1"><a class="title" href="https://arxiv.org/abs/2611.19209v1">Unit-Level Conformal Inference for Panel Counterfactuals</a>
+<p class="meta">Ziyi Liu, Yiqing Xu &middot; 49 degrees</p></li>
+<li data-paper-id="arXiv:2611.05608v2"><a class="title" href="https://arxiv.org/abs/2611.05608v2">Debiased Conditional Independence Tests for Causal Effects</a>
+<p class="meta">Susan Athey, Maria Nareklishvili, Jann Spiess &middot; 50 degrees</p></li>
+<li data-paper-id="10.13140/rg.2.2.17323.60969"><a class="title" href="https://doi.org/10.13140/rg.2.2.17323.60969">Pearl: Causal inference and the ‘do-operator’</a>
+<p class="meta">Ken Gillman &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2611.21564v1"><a class="title" href="https://arxiv.org/abs/2611.21564v1">Assessing Distributional Covariate Balance After Weighting: A Practical Guide</a>
+<p class="meta">Ariel Linden &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2610.01362v2"><a class="title" href="https://arxiv.org/abs/2610.01362v2">The Cochran--Mantel--Haenszel test as a test of the average treatment effect in stratified randomized trials</a>
+<p class="meta">Ekkehard Glimm &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2611.03561v2"><a class="title" href="https://arxiv.org/abs/2611.03561v2">Studentized inference in randomized experiments when a few units dominate the outcome variation</a>
+<p class="meta">Xinyuan Chen, Jonathan W. Kiesel, Jonathan R. Woody &middot; 51 degrees</p></li>
+<li data-paper-id="10.1093/jrsssb/qkag145"><a class="title" href="https://doi.org/10.1093/jrsssb/qkag145">A decorrelation method for general regression adjustment in randomized experiments</a>
+<p class="meta">Fangzhou Su, Wenlong Mou, Peng Ding, Martin J Wainwright &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2605.04838v2"><a class="title" href="https://arxiv.org/abs/2605.04838v2">PAIR-CI: Calibrated Conditional Independence Testing for Causal Discovery with Incomplete Data</a>
+<p class="meta">Thomas S. Robinson, Ranjit Lall &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.21496v1"><a class="title" href="https://arxiv.org/abs/2611.21496v1">Never too LATE: Exploiting restrictions for inference on the Local Average Treatment Effect</a>
+<p class="meta">Xavier D&#x27;Haultf{\oe}uille, Yagan Hazard, Philipp Ketz &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.18814v1"><a class="title" href="https://arxiv.org/abs/2611.18814v1">Causal Regularization for Robust Prediction</a>
+<p class="meta">Alessia Berarducci, Melania Lembo, Veronica Vinciotti, Ernst C. Wit &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2608.10294v2"><a class="title" href="https://arxiv.org/abs/2608.10294v2">Testing Sign Agreement</a>
+<p class="meta">Deborah Kim &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2610.36176v2"><a class="title" href="https://arxiv.org/abs/2610.36176v2">Probabilistic Causal Panel Analysis</a>
+<p class="meta">Carl Bonander, Qinyun Lin, Ulf Str\&quot;omberg, Marta Blangiardo &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.20490v1"><a class="title" href="https://arxiv.org/abs/2611.20490v1">False Discovery Rate Control in Ordered Sequential Testing: Rejection-Count and Fallback Procedures</a>
+<p class="meta">Anjana Grandhi, Wenge Guo, Ji Meng Loh, Sanat Sarkar &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.19432v1"><a class="title" href="https://arxiv.org/abs/2611.19432v1">Cluster-Robust Inference in Small Samples Using Bias Corrections</a>
+<p class="meta">M. Hashem Pesaran, Yimeng Xie &middot; 54 degrees</p></li>
+<li data-paper-id="10.3390/ijerph23111419"><a class="title" href="https://doi.org/10.3390/ijerph23111419">Unequal Variances and Differential Follow-Up in Small Community Physical-Activity Evaluations: An Evidence- Informed Simulation Study</a>
+<p class="meta">Fabricio Ruperto Arteaga Mendieta, Alberto Urzúa, Jorge Méndez-Cornejo, and 4 others &middot; 54 degrees</p></li>
+<li data-paper-id="10.1177/09520767261503790"><a class="title" href="https://doi.org/10.1177/09520767261503790">Randomized controlled trials in experimental policymaking: The perceptions of public administrators</a>
+<p class="meta">Ringa Raudla, Külli Sarapuu, Johanna Vallistu, James W. B. Douglas &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2605.26288v2"><a class="title" href="https://arxiv.org/abs/2605.26288v2">Beyond Differences: Estimating and Tuning Ratio-Based Treatment Effects</a>
+<p class="meta">Michael Fuchs, Dominik Kreiss &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.19710v1"><a class="title" href="https://arxiv.org/abs/2611.19710v1">Joint Learning of Factual and Counterfactual Worlds for Causal Prior-data Fitted Networks</a>
+<p class="meta">Furkan Danisman, Luke Zhang, Zhijing Jin, Dehan Kong &middot; 55 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-16.html#d-2026-11-18">Wednesday 18 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="arXiv:2611.22542v1"><a class="title" href="https://arxiv.org/abs/2611.22542v1">Randomization-Based Nonparanormal Adjusted Marginal Inference</a>
+<p class="meta">Leticia W\&quot;uthrich, Mark Baillie, Susanne Dandl &middot; 48 degrees</p></li>
+<li data-paper-id="arXiv:2606.17516v2"><a class="title" href="https://arxiv.org/abs/2606.17516v2">FoundCause: A Foundation Model for Causal Discovery with Latent Confounders from Observational Data</a>
+<p class="meta">Patrick Bl\&quot;obaum, Krishnakumar Balasubramanian, Shiva Prasad Kasiviswanathan &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2611.22339v1"><a class="title" href="https://arxiv.org/abs/2611.22339v1">Small Area Causal Inference</a>
+<p class="meta">Yilin Li, Jiangshan Zhang, Jiming Jiang &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.22948v1"><a class="title" href="https://arxiv.org/abs/2611.22948v1">Symmetries of Counterfactuals: Identification and Testability of Counterfactual Maps from Covariate Heterogeneity</a>
+<p class="meta">Marc Braun, Adel Daoud, Jose M. Pe\~na &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.16406v2"><a class="title" href="https://arxiv.org/abs/2611.16406v2">One-Sided Randomization in Two-Sided Platform Experiments: Which Side Should be Randomized?</a>
+<p class="meta">Ramesh Johari, Anushka Murthy &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.22096v1"><a class="title" href="https://arxiv.org/abs/2611.22096v1">COSI: A Framework for Robustly Valid Inference</a>
+<p class="meta">Arun K. Kuchibhotla, Sivaraman Balakrishnan, Larry Wasserman &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.22022v1"><a class="title" href="https://arxiv.org/abs/2611.22022v1">A mechanistic characterization of missingness at random</a>
+<p class="meta">Maya B. Mathur, Willi Zhang, Shaun Seaman, and 2 others &middot; 55 degrees</p></li>
+<li data-paper-id="osf.io/2b7cn_v1"><a class="title" href="https://doi.org/10.31235/osf.io/2b7cn_v1">Navigating the Bias-Variance Trade-off in Sequential Causal Inference: An Empirical Study of Functional Features and Representation Balancing</a>
+<p class="meta">Shunxin Yao &middot; 55 degrees</p></li>
+<li data-paper-id="10.1016/j.jns.2026.126245"><a class="title" href="https://doi.org/10.1016/j.jns.2026.126245">Evaluating metformin efficacy in ALS using real-world data: A causal inference approach</a>
+<p class="meta">Julia A. Geller, Alex Berger, Matteo Locatelli, and 17 others &middot; 56 degrees</p></li>
+<li data-paper-id="10.1016/j.annonc.2026.08.4629"><a class="title" href="https://doi.org/10.1016/j.annonc.2026.08.4629">4378P Weighted 1:1 case:control matching with iterative resampling for pseudorandomised survival analysis</a>
+<p class="meta">D. Thomas, M. Yap, R. Chan, D. Kee &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.23174v1"><a class="title" href="https://arxiv.org/abs/2611.23174v1">Inference after coding agents</a>
+<p class="meta">Florian Gunsilius, David Van Dijcke, Kaspar W\&quot;uthrich &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2509.15280v3"><a class="title" href="https://arxiv.org/abs/2509.15280v3">A Bayesian Framework for Latent Compliance Modeling in Cluster Randomized Trials with One-Sided Noncompliance</a>
+<p class="meta">Anthony Sisti, Ellen McCreedy, Roee Gutman &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2604.18863v4"><a class="title" href="https://arxiv.org/abs/2604.18863v4">Overstuffed sandwiches and separation anxiety: finite-sample variance estimation for penalized GEE with near-separated binary data</a>
+<p class="meta">Awan Afiaz, M. Shafiqur Rahman &middot; 57 degrees</p></li>
+<li data-paper-id="10.1021/ehp.6c01507"><a class="title" href="https://doi.org/10.1021/ehp.6c01507">Nondifferential Exposure Measurement Error in Air Pollution Epidemiology: Insights from Causal Diagrams and Simulations</a>
+<p class="meta">Hong Chen, Matthew Quick, Jeffrey C. Kwong, and 4 others &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2603.16833v5"><a class="title" href="https://arxiv.org/abs/2603.16833v5">Refined Inference for Asymptotically Linear Estimators with Non-Negligible Second-Order Remainders</a>
+<p class="meta">Lin Li, Pengcheng Wu &middot; 57 degrees</p></li>
+<li data-paper-id="osf.io/cnjm8_v1"><a class="title" href="https://doi.org/10.31235/osf.io/cnjm8_v1">The Structural Number of Parties: An Electoral-Outcome-Independent Baseline for Comparing Party-System Scale</a>
+<p class="meta">Adama Nouboukpo, Kodzo Michel Aladji, Bappa Muktar &middot; 58 degrees</p></li>
+<li data-paper-id="osf.io/zk26u_v1"><a class="title" href="https://doi.org/10.31235/osf.io/zk26u_v1">Peer Review and the Technical Soundness of Research: Evidence from Automated Audits of Political Science Working Papers</a>
+<p class="meta">Tak-Huen Chau, Andrew T. Little &middot; 58 degrees</p></li>
+<li data-paper-id="osf.io/5f94x_v1"><a class="title" href="https://doi.org/10.31235/osf.io/5f94x_v1">Trinity or Trilemma? How researchers assess publications, data and software</a>
+<p class="meta">Judith Hartstein, Nathalie Schwichtenberg, Alexander Schniedermann &middot; 58 degrees</p></li>
+<li data-paper-id="arXiv:2611.22384v1"><a class="title" href="https://arxiv.org/abs/2611.22384v1">Finite-Smoothing Efficiency and Inference in Single-Index Models</a>
+<p class="meta">Jiayang Xu, Yusen Jia, Yangzhou Chen, Xin Chen &middot; 58 degrees</p></li>
+<li data-paper-id="arXiv:2611.16102v2"><a class="title" href="https://arxiv.org/abs/2611.16102v2">Is generative AI really changing public sector work? Evidence from a multi-country survey</a>
+<p class="meta">Saba Esnaashari, Tvesha Sippy, Youmna Hashem, and 2 others &middot; 59 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-16.html#d-2026-11-19">Thursday 19 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="arXiv:2611.21425v2"><a class="title" href="https://arxiv.org/abs/2611.21425v2">Randomization protects the average, not the trial: chance covariate imbalance and a calibration of balance $P$ values at the design stage</a>
+<p class="meta">William J. Dwyer, David Zurakowski &middot; 44 degrees</p></li>
+<li data-paper-id="arXiv:2611.24402v1"><a class="title" href="https://arxiv.org/abs/2611.24402v1">Design-Based Inference for Fuzzy Difference-in-Differences</a>
+<p class="meta">Pedro Picchetti &middot; 45 degrees</p></li>
+<li data-paper-id="10.3982/ecta22545"><a class="title" href="https://doi.org/10.3982/ecta22545">An Exact &lt;i&gt;t&lt;/i&gt; ‐Test</a>
+<p class="meta">Guillaume A. Pouliot &middot; 47 degrees</p></li>
+<li data-paper-id="arXiv:2611.24143v1"><a class="title" href="https://arxiv.org/abs/2611.24143v1">Fill-Distance-Guided Active Learning for Causal Function Recovery under Network Interference</a>
+<p class="meta">Peiyao Liu, Hongtao Zhu, Sizhe Zhang, and 3 others &middot; 47 degrees</p></li>
+<li data-paper-id="arXiv:2611.24821v1"><a class="title" href="https://arxiv.org/abs/2611.24821v1">On the Validity of Fisher Randomization Tests under the Weak Null</a>
+<p class="meta">Timothy Sudijono, Edgar Dobriban, Eric Tchetgen Tchetgen &middot; 48 degrees</p></li>
+<li data-paper-id="arXiv:2610.28983v2"><a class="title" href="https://arxiv.org/abs/2610.28983v2">Estimand frameworks for causal inference in clinical research and regulatory decision making</a>
+<p class="meta">Miguel A. Hern\&#x27;an, Mats J. Stensrud, Xabier Garc\&#x27;ia-Alb\&#x27;eniz, and 2 others &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2611.23568v1"><a class="title" href="https://arxiv.org/abs/2611.23568v1">Confounding Heterogeneity in Multivariate Sensitivity Analysis for Observational Studies</a>
+<p class="meta">Anthony Frazier, Siyu Heng, Wen Zhou &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2602.08647v2"><a class="title" href="https://arxiv.org/abs/2602.08647v2">Beyond Conditional Average Effects: Quantifying Positive and Negative Causal Contributions</a>
+<p class="meta">Yuta Kawakami, Jin Tian &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2412.10213v2"><a class="title" href="https://arxiv.org/abs/2412.10213v2">Collaborative Optimal Design of Controlled Experiments with Subject Covariates</a>
+<p class="meta">William Fisher, Minshen Xu, Qiong Zhang, and 2 others &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.24031v1"><a class="title" href="https://arxiv.org/abs/2611.24031v1">Is It Worth Collecting Additional Covariates?</a>
+<p class="meta">Wen Zhang, Yanyuan Ma, Liping Zhu &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2408.14671v2"><a class="title" href="https://arxiv.org/abs/2408.14671v2">Inference on Treatment Effects with Repeatedly Mismeasured High-Dimensional Controls</a>
+<p class="meta">Geonwoo Kim, Suyong Song &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.24438v1"><a class="title" href="https://arxiv.org/abs/2611.24438v1">FRCI: An R Package for fuzzy and randomized confidence intervals</a>
+<p class="meta">Carlos Henrique Trigo Nasser Felix, Nancy Lopes Garcia, Alex Rodrigo dos Santos Sousa &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.23524v1"><a class="title" href="https://arxiv.org/abs/2611.23524v1">Balancing Partition Forest for Causal Weighting</a>
+<p class="meta">Felipe Angelim, Alessandro Leite &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2609.17288v2"><a class="title" href="https://arxiv.org/abs/2609.17288v2">Semiparametric Efficient Inference under Non-Informative Complex Survey Designs</a>
+<p class="meta">Hiroki Chiba, Kosuke Morikawa &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2602.04611v4"><a class="title" href="https://arxiv.org/abs/2602.04611v4">Targeted Synthetic Control Method</a>
+<p class="meta">Yuxin Wang, Dennis Frauen, Emil Javurek, and 3 others &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.23775v1"><a class="title" href="https://arxiv.org/abs/2611.23775v1">Anytime-valid goodness-of-fit test by $e$-spacings</a>
+<p class="meta">Yunda Hao, Kin Wai Chan &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.24015v1"><a class="title" href="https://arxiv.org/abs/2611.24015v1">NOTREKS: Marginal Independence in Score-based Structure Learning</a>
+<p class="meta">Fabian Bleile, Sarah Lumpp, Mathias Drton &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.01857v2"><a class="title" href="https://arxiv.org/abs/2611.01857v2">Inference for conditional Fr\&#x27;echet means via Riemannian Robust Bias Correction</a>
+<p class="meta">Ryunosuke Miyazaki, Chang Jun Im &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2605.19519v2"><a class="title" href="https://arxiv.org/abs/2605.19519v2">Inference for Fr\&#x27;echet Regression</a>
+<p class="meta">Wookyeong Song, Paromita Dubey, Hans-Georg M\&quot;uller, Alexander Petersen &middot; 57 degrees</p></li>
+<li data-paper-id="10.3982/ecta24250"><a class="title" href="https://doi.org/10.3982/ecta24250">Optimal Formula Instruments</a>
+<p class="meta">Kirill Borusyak, Peter Hull &middot; 57 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-16.html#d-2026-11-20">Friday 20 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.1080/01621459.2026.2760596"><a class="title" href="https://doi.org/10.1080/01621459.2026.2760596">Robust Causal Inference for EHR-based Studies of Point Exposures with Missingness in Eligibility Criteria</a>
+<p class="meta">Luke Benz, Rajarshi Mukherjee, Rui Wang, and 6 others &middot; 47 degrees</p></li>
+<li data-paper-id="arXiv:2611.25915v1"><a class="title" href="https://arxiv.org/abs/2611.25915v1">General Methodology for Asymptotically Balanced Multiple Tests</a>
+<p class="meta">Merle Munko &middot; 48 degrees</p></li>
+<li data-paper-id="osf.io/9gqpx_v1"><a class="title" href="https://doi.org/10.31235/osf.io/9gqpx_v1">How causal are published QCA solutions? Bounding the probabilities of causation behind configurational findings</a>
+<p class="meta">Maikel Yelandi Leyva Vázquez &middot; 48 degrees</p></li>
+<li data-paper-id="10.5705/ss.202025.0502"><a class="title" href="https://doi.org/10.5705/ss.202025.0502">Cross-Validation Model Averaging Under Covariate-Adaptive Randomization</a>
+<p class="meta">Fuyi Tu, Jiahui Xin, Wei Ma &middot; 48 degrees</p></li>
+<li data-paper-id="arXiv:2609.13736v2"><a class="title" href="https://arxiv.org/abs/2609.13736v2">Adjusting for Many Covariates in Randomized Clinical Trials with GLMs: Bias Reduction by Jackknife and Practical Guidance</a>
+<p class="meta">Sihui Zhao, Xinbo Wang, Yongyong Ren, and 3 others &middot; 48 degrees</p></li>
+<li data-paper-id="10.5705/ss.202025.0493"><a class="title" href="https://doi.org/10.5705/ss.202025.0493">To Adaptively Randomize or to Rerandomize: A Comparison of Covariate-adaptive Randomization and Rerandomization</a>
+<p class="meta">Ziji Qin, Feifang Hu, Yang Liu &middot; 49 degrees</p></li>
+<li data-paper-id="10.5705/ss.202025.0214"><a class="title" href="https://doi.org/10.5705/ss.202025.0214">Statistical Inference on Quantile Treatment Effect Under Covariate-adaptive Randomization</a>
+<p class="meta">Yuhang Tao, Li-Xin Zhang &middot; 51 degrees</p></li>
+<li data-paper-id="10.5705/ss.202025.0290"><a class="title" href="https://doi.org/10.5705/ss.202025.0290">Efficient Covariate-adaptive Randomization in Clinical Trials with Smallest Selection Bias</a>
+<p class="meta">Li-Xin Zhang &middot; 51 degrees</p></li>
+<li data-paper-id="10.5705/ss.202025.0427"><a class="title" href="https://doi.org/10.5705/ss.202025.0427">Model-robust Inference for Seamless Ii/iii Trials with Covariate Adaptive Randomization</a>
+<p class="meta">Kun Yi, Lucy Xia &middot; 52 degrees</p></li>
+<li data-paper-id="10.5705/ss.202025.0213"><a class="title" href="https://doi.org/10.5705/ss.202025.0213">Explicit Form of the Asymptotic Covariance Matrix of the Normalized Within-Stratum Imbalances Following Minimization with Independent Factors with Application to the Log-Rank Test</a>
+<p class="meta">Olga M. Kuznetsova, Victoria P. Johnson, Michael Gekhtman &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2604.21721v2"><a class="title" href="https://arxiv.org/abs/2604.21721v2">A Riesz Representer Perspective on Targeted Learning</a>
+<p class="meta">Salvador V. Balkus, Christian Testa, Nima S. Hejazi &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2610.01935v3"><a class="title" href="https://arxiv.org/abs/2610.01935v3">Pragmatic DML with AI-Learned Representations</a>
+<p class="meta">Andres Aradillas Fernandez, Victor Chernozhukov, Carlos Cinelli, and 5 others &middot; 53 degrees</p></li>
+<li data-paper-id="10.5705/ss.202025.0495"><a class="title" href="https://doi.org/10.5705/ss.202025.0495">Sharp Bounds and Covariate Adjustment for Ordinal Outcomes in Stratified Randomized Experiments</a>
+<p class="meta">Guangyuran Liao, Yuehan Yang &middot; 53 degrees</p></li>
+<li data-paper-id="10.5705/ss.202025.0243"><a class="title" href="https://doi.org/10.5705/ss.202025.0243">Valid Test for Multi-arm Trials with Generalized Linear Models Under Covariate-adaptive Randomization</a>
+<p class="meta">Guannan Zhai, Feifang Hu &middot; 53 degrees</p></li>
+<li data-paper-id="10.1080/01621459.2026.2758421"><a class="title" href="https://doi.org/10.1080/01621459.2026.2758421">Nonparametric efficient causal estimation of the intervention-specific expected number of recurrent events with continuous-time targeted maximum likelihood and highly adaptive lasso estimation</a>
+<p class="meta">Helene C. W. Rytgaard, Mark J. van der Laan &middot; 53 degrees</p></li>
+<li data-paper-id="10.5281/zenodo.24381124"><a class="title" href="https://doi.org/10.5281/zenodo.24381124">Delegation Under Evidentiary Drift: Restricted Experimental Preregistration</a>
+<p class="meta">Narnaiezzsshaa Truong &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.25376v1"><a class="title" href="https://arxiv.org/abs/2611.25376v1">Causal Discovery with False Positive Error Control</a>
+<p class="meta">Erik Jahn, Venkat Chandrasekaran, Frederick Eberhardt, Leonard Schulman &middot; 54 degrees</p></li>
+<li data-paper-id="10.5705/ss.202023.0202"><a class="title" href="https://doi.org/10.5705/ss.202023.0202">Addressing Label Noise in Causation Classification via Kernel Embeddings</a>
+<p class="meta">Pingbo Hu, Grace Y. Yi &middot; 54 degrees</p></li>
+<li data-paper-id="10.1177/09622802261507290"><a class="title" href="https://doi.org/10.1177/09622802261507290">Optimal strategies for covariate-matched cohort study designs</a>
+<p class="meta">Kirsty Andresen, Helena Carreira, Elizabeth Williamson, Krishnan Bhaskaran &middot; 54 degrees</p></li>
+<li data-paper-id="10.1161/strokeaha.126.053678"><a class="title" href="https://doi.org/10.1161/strokeaha.126.053678">Defining Analytic Populations in Randomized Trials: Revisiting the Role of Intention to Treat</a>
+<p class="meta">Megan E. McCabe, Xiaoxiao Zhou, Gary Cutter, and 2 others &middot; 54 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-16.html#d-2026-11-21">Saturday 21 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.1086/743440"><a class="title" href="https://doi.org/10.1086/743440">A Primer on the Analysis of Randomized Experiments and a Survey of Some Recent Advances</a>
+<p class="meta">Yuehao Bai, Azeem M. Shaikh, Max Tabord‐Meehan &middot; 47 degrees</p></li>
+<li data-paper-id="10.1080/19466315.2026.2738472"><a class="title" href="https://doi.org/10.1080/19466315.2026.2738472">Sample Size and Cost-Efficient Planning for Stepped-Wedge Cluster Randomized Trials with Varying Cluster Size</a>
+<p class="meta">Medha P Sharma, Priyanka Majumder, Samiran Ghosh &middot; 55 degrees</p></li>
+<li data-paper-id="10.1177/00222437261511867"><a class="title" href="https://doi.org/10.1177/00222437261511867">EXPRESS: Causal Inference With Endogenous Price Response</a>
+<p class="meta">Przemysław Jeziorski, Dingzhe Leng, Stephan Seiler &middot; 56 degrees</p></li>
+<li data-paper-id="10.1016/j.ins.2026.124439"><a class="title" href="https://doi.org/10.1016/j.ins.2026.124439">Risk-aware uplift modeling for intelligent marketing decision support: A conformal CVaR-LP framework with automatic budget protection</a>
+<p class="meta">Yu Zhang, Wanlong Ma, Yueguang Shan &middot; 56 degrees</p></li>
+<li data-paper-id="10.1001/jamanetworkopen.2026.43921"><a class="title" href="https://doi.org/10.1001/jamanetworkopen.2026.43921">Applying Target Trial Emulation in Vaccine Research: A Scoping Review</a>
+<p class="meta">Hao Dai, Tien-Yu Chang, Xing He, and 10 others &middot; 58 degrees</p></li>
+<li data-paper-id="10.1177/09622802261507853"><a class="title" href="https://doi.org/10.1177/09622802261507853">Interpretability of estimands based on mean function regression models for recurrent and terminal events</a>
+<p class="meta">Alexandra Bühler, Richard J. Cook, Jerald F. Lawless &middot; 58 degrees</p></li>
+<li data-paper-id="osf.io/zk26u_v2"><a class="title" href="https://doi.org/10.31235/osf.io/zk26u_v2">Peer Review and the Technical Soundness of Research: Evidence from Automated Audits of Political Science Working Papers</a>
+<p class="meta">Tak-Huen Chau, Andrew T. Little &middot; 58 degrees</p></li>
+<li data-paper-id="10.1186/s41512-026-00246-7"><a class="title" href="https://doi.org/10.1186/s41512-026-00246-7">An estimand framework to guide model and algorithm validation in predictive modelling</a>
+<p class="meta">Rieke Alpers, Max Westphal &middot; 59 degrees</p></li>
+<li data-paper-id="10.1002/bimj.70200"><a class="title" href="https://doi.org/10.1002/bimj.70200">Evaluating the Strength of Instrumental Variables in in the Evaluation of Time‐Varying Treatments</a>
+<p class="meta">Daniel Tompsett, Manuel Gomes &middot; 59 degrees</p></li>
+<li data-paper-id="10.1017/s0266462326107727"><a class="title" href="https://doi.org/10.1017/s0266462326107727">AI-ENABLED REAL-WORLD EVIDENCE FOR HEALTH TECHNOLOGY ASSESSMENT: A RESPONSIBLE PATH FOR ADOPTION</a>
+<p class="meta">Jing Wang-Silvanto, Stephen J. Duffield, Julian Isla, and 3 others &middot; 59 degrees</p></li>
+<li data-paper-id="osf.io/5g34x_v2"><a class="title" href="https://doi.org/10.31235/osf.io/5g34x_v2">The Frontier Premium Is Narrow: Benchmark Capability, Price, and Open Weights in LLM Coding of Open-Ended Survey Responses</a>
+<p class="meta">Chris Soria &middot; 63 degrees</p></li>
+<li data-paper-id="10.1080/02331888.2026.2760774"><a class="title" href="https://doi.org/10.1080/02331888.2026.2760774">An automated method for identifying impact patterns in interrupted time-series analysis</a>
+<p class="meta">Yan Xie, Hui Yan, 段会龙 &middot; 64 degrees</p></li>
+<li data-paper-id="osf.io/rpbg6_v1"><a class="title" href="https://doi.org/10.31235/osf.io/rpbg6_v1">Holistic Parenting &amp;amp; Student Support Inventory (HPSSI): Multi-Informant Psychometric Validation, Incremental Validity, and COSMIN Two-Week Test–Retest Reliability Across Grades K–12</a>
+<p class="meta">Alexander Kuznetsov &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/3dn9y_v2"><a class="title" href="https://doi.org/10.31235/osf.io/3dn9y_v2">Incarceration and Deservingness: Experimental Evidence on Less Eligibility</a>
+<p class="meta">Christopher Berk, Lucas Nunez, Brett Burkhardt &middot; 65 degrees</p></li>
+<li data-paper-id="osf.io/qvcdr_v1"><a class="title" href="https://doi.org/10.31235/osf.io/qvcdr_v1">Access Before Recruitment: Reaching a Discreet Community in Turkey</a>
+<p class="meta">Hatice Büber Kaya, David Galloway &middot; 66 degrees</p></li>
+<li data-paper-id="osf.io/fktgy_v1"><a class="title" href="https://doi.org/10.31235/osf.io/fktgy_v1">Cartographic Knowledge: Redefining Knowledge in Light of Evolutionary Theory — An Anthropological Study</a>
+<p class="meta">Saadoon Mohsin Damad &middot; 68 degrees</p></li>
+<li data-paper-id="osf.io/2nsaq_v4"><a class="title" href="https://doi.org/10.31235/osf.io/2nsaq_v4">Perception, language, and information gaps: Parental involvement in refugee children’s destination language learning in Türkiye and Germany</a>
+<p class="meta">Abdullah Atmacasoy, Simone Plöger &middot; 68 degrees</p></li>
+<li data-paper-id="osf.io/xpuqe_v1"><a class="title" href="https://doi.org/10.31235/osf.io/xpuqe_v1">State-Level Two-Child Policies and Progression to a Third Child in India: Evidence from Three Policy Waves How Effective are they, and for Whom?</a>
+<p class="meta">Varnitha Kurli, Jane Menken &middot; 68 degrees</p></li>
+<li data-paper-id="osf.io/5ygpc_v1"><a class="title" href="https://doi.org/10.31235/osf.io/5ygpc_v1">Rehearse Before You Travel: A Conceptual Model of AI-Assisted Travel Rehearsal and the Self-Fading AI Hypothesis</a>
+<p class="meta">Cemil GÜNDÜZ &middot; 69 degrees</p></li>
+<li data-paper-id="osf.io/vrkyh_v1"><a class="title" href="https://doi.org/10.31235/osf.io/vrkyh_v1">The data center next door: Feared and realized effects on home values in the Seoul metropolitan area, South Korea</a>
+<p class="meta">Doil Kim &middot; 70 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-16.html#d-2026-11-22">Sunday 22 November</a><span class="count">6 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.5281/zenodo.24426809"><a class="title" href="https://doi.org/10.5281/zenodo.24426809">Causal Inference Methods Guide: Measuring treatment effects from observational data</a>
+<p class="meta">Michael J. Allen &middot; 53 degrees</p></li>
+<li data-paper-id="10.13140/rg.2.2.26089.04962"><a class="title" href="https://doi.org/10.13140/rg.2.2.26089.04962">Estimating the Effects of Medications for Opioid Use Disorder on Treatment Completion An Analysis Using Directed Acyclic Graphs, Causal Forests, and Bayesian Methods</a>
+<p class="meta">Graham Zulu, Adoley Acquaye², Mina Ghobadi &middot; 55 degrees</p></li>
+<li data-paper-id="10.1016/j.lindif.2026.103029"><a class="title" href="https://doi.org/10.1016/j.lindif.2026.103029">Adaptivity complicates causality: How to evaluate the effects of adaptive support</a>
+<p class="meta">Jasmin Breitwieser, Mirijam Schaaf, Garvin Brod &middot; 56 degrees</p></li>
+<li data-paper-id="osf.io/cdaw3_v2"><a class="title" href="https://doi.org/10.31235/osf.io/cdaw3_v2">Antigypsyism in France: Persistent Distance, Distant Empathy</a>
+<p class="meta">Tommaso Vitale, Yuma Ando, Nonna Mayer, Vincent Tiberj &middot; 66 degrees</p></li>
+<li data-paper-id="osf.io/wdm9p_v1"><a class="title" href="https://doi.org/10.31235/osf.io/wdm9p_v1">Out of Sync at the Table: Habit, Absence, and the Silent Drift of Family Taste</a>
+<p class="meta">Shiyun Zhang Isabelle &middot; 67 degrees</p></li>
+<li data-paper-id="osf.io/d9ap3_v2"><a class="title" href="https://doi.org/10.31235/osf.io/d9ap3_v2">Leftovers and Conditional Care in a Rotterdam Soup Kitchen</a>
+<p class="meta">Kevin Pijpers &middot; 67 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-23.html#d-2026-11-23">Monday 23 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="arXiv:2607.04257v2"><a class="title" href="https://arxiv.org/abs/2607.04257v2">Randomization Tests in Randomized Saturation Designs</a>
+<p class="meta">Jizhou Liu, Azeem M. Shaikh, Liang Zhong &middot; 48 degrees</p></li>
+<li data-paper-id="arXiv:2611.27315v1"><a class="title" href="https://arxiv.org/abs/2611.27315v1">Smoothed Conformal Testing with Small Calibration Sets</a>
+<p class="meta">Mingzhou Deng, Yan Fu &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2611.27961v1"><a class="title" href="https://arxiv.org/abs/2611.27961v1">Explicational statistics: research for an AI age</a>
+<p class="meta">Sihai Dave Zhao &middot; 51 degrees</p></li>
+<li data-paper-id="arXiv:2409.03962v3"><a class="title" href="https://arxiv.org/abs/2409.03962v3">Average Causal Effect Estimation in DAGs with Hidden Variables: Beyond Back-Door and Front-Door Criteria</a>
+<p class="meta">Anna Guo, Razieh Nabi &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2611.27655v1"><a class="title" href="https://arxiv.org/abs/2611.27655v1">Combining Past Experimental Data for Efficient Estimation: A Shrinkage Approach</a>
+<p class="meta">Qianxi Zhang, Dae Woong Ham, Stefanus Jasin &middot; 53 degrees</p></li>
+<li data-paper-id="10.1123/jpah.2026-0608"><a class="title" href="https://doi.org/10.1123/jpah.2026-0608">Assessing Residual Confounding in Occupational Physical Activity Research: Negative Controls and Sensitivity Analyses for Unmeasured Confounding</a>
+<p class="meta">Charles Phillipe de Lucena Alves, Emmanuel Stamatakis, Andreas Holtermann, Leandro F. M. Rezende &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2603.17984v2"><a class="title" href="https://arxiv.org/abs/2603.17984v2">On min-Storey estimators for multiple testing and conformal novelty detection</a>
+<p class="meta">Zijun Gao, Etienne Roquain &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2607.04885v4"><a class="title" href="https://arxiv.org/abs/2607.04885v4">Learning Where to Look: The Geometry of Data Combination and Collection</a>
+<p class="meta">Giacomo Opocher &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2608.10305v2"><a class="title" href="https://arxiv.org/abs/2608.10305v2">COMPACT: Spectral Adjustment Scores from an Exhaustive and Nonredundant Set of Invariant Relations</a>
+<p class="meta">Eric V. Strobl &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2609.13976v2"><a class="title" href="https://arxiv.org/abs/2609.13976v2">From priors to performance: enhancing statistical efficiency with Bayesian dynamic borrowing</a>
+<p class="meta">Xinxin Chen, Ezequiel Braga, Joseph G. Ibrahim, and 2 others &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2611.18479v2"><a class="title" href="https://arxiv.org/abs/2611.18479v2">Estimating a Rational Inattention Discrete Choice Model: A Semiparametric Approach</a>
+<p class="meta">Hanqi Wang &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2611.27983v1"><a class="title" href="https://arxiv.org/abs/2611.27983v1">Optimal Linear Regression Without a Variance</a>
+<p class="meta">Artin Tajdini, Jasper C. H. Lee, Jonathan Scarlett, Kevin Jamieson &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2611.27714v1"><a class="title" href="https://arxiv.org/abs/2611.27714v1">Efficient inference for fairness-constrained sequential decision policies</a>
+<p class="meta">Yi-Hui Zhou &middot; 58 degrees</p></li>
+<li data-paper-id="10.1016/j.annonc.2026.08.152"><a class="title" href="https://doi.org/10.1016/j.annonc.2026.08.152">144P Matching the right drug to the right biology: External control arms with CURE AI</a>
+<p class="meta">N. Pfister, A. Weiss, T. Lederer, and 7 others &middot; 58 degrees</p></li>
+<li data-paper-id="arXiv:2604.24904v3"><a class="title" href="https://arxiv.org/abs/2604.24904v3">Inference for Linear Systems with Unknown Coefficients</a>
+<p class="meta">Yuehao Bai, Kirill Ponomarev, Andres Santos, and 3 others &middot; 58 degrees</p></li>
+<li data-paper-id="arXiv:2202.08062v2"><a class="title" href="https://arxiv.org/abs/2202.08062v2">Where the Model Frequently Meets the Road: Combining Statistical, Formal, and Case Study Methods</a>
+<p class="meta">Andrew Bennett, Bear F. Braumoeller, John Severini &middot; 58 degrees</p></li>
+<li data-paper-id="osf.io/ehga6_v2"><a class="title" href="https://doi.org/10.31235/osf.io/ehga6_v2">Talking America Back from the Cliff—Messengers and Messages to Prevent Political Violence: Findings from a Nationally Representative Survey</a>
+<p class="meta">Garen Wintemute, Krista Neumann, Bradley Velasquez, and 7 others &middot; 59 degrees</p></li>
+<li data-paper-id="arXiv:2608.14129v2"><a class="title" href="https://arxiv.org/abs/2608.14129v2">Estimating Global Network Density from Snowball Samples</a>
+<p class="meta">Nurzhan Sapargali, Sergio Buttazzo, G\&#x27;&#x27;oran Kauermann &middot; 59 degrees</p></li>
+<li data-paper-id="arXiv:2610.24178v2"><a class="title" href="https://arxiv.org/abs/2610.24178v2">Multiple Testing Of Composite Null Hypotheses With High Dimensional Count Data: A Local False Discovery Rate Approach</a>
+<p class="meta">Emmanuel Asare, Pratyaydipta Rudra, Joshua Habiger &middot; 59 degrees</p></li>
+<li data-paper-id="arXiv:2611.27867v1"><a class="title" href="https://arxiv.org/abs/2611.27867v1">Scalable Matrix-Free Algorithms for Variance Estimation of Survey-Weighted Survival Curves</a>
+<p class="meta">Jingchen Liang &middot; 59 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-23.html#d-2026-11-24">Tuesday 24 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="arXiv:2607.18601v3"><a class="title" href="https://arxiv.org/abs/2607.18601v3">Robust Signal Maximization in Spillover Experiments</a>
+<p class="meta">Kirill Borusyak, Peter Hull, Evan Munro &middot; 48 degrees</p></li>
+<li data-paper-id="arXiv:2611.30595v1"><a class="title" href="https://arxiv.org/abs/2611.30595v1">Adaptive experiments with observational data: Efficient experimental design and asymptotic time-uniform inference for long-term treatment effects</a>
+<p class="meta">Kentaro Kawato &middot; 52 degrees</p></li>
+<li data-paper-id="arXiv:2611.28380v1"><a class="title" href="https://arxiv.org/abs/2611.28380v1">Statistical inference under response-adaptive experimental designs: a systematic review</a>
+<p class="meta">Haochen Song, Joseph Williams, Kiarash Kianidehkordi, and 4 others &middot; 52 degrees</p></li>
+<li data-paper-id="10.1080/01621459.2026.2766219"><a class="title" href="https://doi.org/10.1080/01621459.2026.2766219">Identifiability of Measurement-Error Variance in Error-in-Variables Regression</a>
+<p class="meta">Donguk Shin, Seunghwan Noh, Euijong Song, Gunwoong Park &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.15071v2"><a class="title" href="https://arxiv.org/abs/2611.15071v2">Improving Efficiency and Power in Small Rare-Disease Trials Through Prespecified, Data-Adaptive Covariate Adjustment</a>
+<p class="meta">Tianyue Zhou, Susan Gruber, Hana Lee, and 3 others &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.28372v1"><a class="title" href="https://arxiv.org/abs/2611.28372v1">Treatment Policy Design in the Presence of Measurement Error</a>
+<p class="meta">Chang Liu, AmirEmad Ghassami &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.30031v1"><a class="title" href="https://arxiv.org/abs/2611.30031v1">Discovery-Targeted False Discovery Rate Control</a>
+<p class="meta">Zijun Gao &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.24031v2"><a class="title" href="https://arxiv.org/abs/2611.24031v2">Is It Worth Collecting Additional Covariates?</a>
+<p class="meta">Wen Zhang, Yanyuan Ma, Liping Zhu &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.30599v1"><a class="title" href="https://arxiv.org/abs/2611.30599v1">What Should an Experiment Measure? Combining a Short-Term Experiment with Confounded Observational Data to Identify Long-Term Treatment Effects</a>
+<p class="meta">Kentaro Kawato &middot; 54 degrees</p></li>
+<li data-paper-id="10.1002/pds.70537"><a class="title" href="https://doi.org/10.1002/pds.70537">Accounting for Uncertainty in the Standardized Mean Difference</a>
+<p class="meta">Karen L. Diepstra, Paul N. Zivich, Mollie E. Wood, and 2 others &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.30122v1"><a class="title" href="https://arxiv.org/abs/2611.30122v1">Empirical Null Estimation via Adaptive Shifting and Tail Reconstruction for Large-Scale Multiple Testing</a>
+<p class="meta">Kyuram Kim, Junsik Kim, Junyong Park &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.28497v1"><a class="title" href="https://arxiv.org/abs/2611.28497v1">When AI Performance Is Not Enough: Statistical Guardrails for Clinical Development</a>
+<p class="meta">Siddhesh Kulkarni, Gina D&#x27;Angelo, Swarna Reddy, Rakhi Kilaru &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2611.30845v1"><a class="title" href="https://arxiv.org/abs/2611.30845v1">Quantifying and calibrating precision gain from covariate adjustment in clinical trials with binary endpoints</a>
+<p class="meta">Jannik Hammerschmied, Christian Stock, Martin Schnuerch &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2610.37049v4"><a class="title" href="https://arxiv.org/abs/2610.37049v4">Doubly robust estimation of direct and spillover effects using multiple pre-treatment periods</a>
+<p class="meta">Martin Huber &middot; 54 degrees</p></li>
+<li data-paper-id="arXiv:2609.23303v4"><a class="title" href="https://arxiv.org/abs/2609.23303v4">Uniform Inference for Parameters Identified by Conditional Quantile Restrictions</a>
+<p class="meta">Xuqing Lin, Xiaojun Song &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.29908v1"><a class="title" href="https://arxiv.org/abs/2611.29908v1">Identification multiplicity across study designs</a>
+<p class="meta">Carlos Garc\&#x27;ia Meixide, David R\&#x27;ios Insua &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2601.03377v2"><a class="title" href="https://arxiv.org/abs/2601.03377v2">On estimands in sequential target trial emulation</a>
+<p class="meta">Edoardo Efrem Gervasoni, Liesbet De Bus, Stijn Vansteelandt, Oliver Dukes &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.28634v1"><a class="title" href="https://arxiv.org/abs/2611.28634v1">KernelMix: Bayesian kernel machine regression in Python</a>
+<p class="meta">Nilson Chapagain &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.30256v1"><a class="title" href="https://arxiv.org/abs/2611.30256v1">How long must an honest confidence interval be after causal discovery? Benign and malignant weak edges</a>
+<p class="meta">Ruiqi Zhao &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.29632v1"><a class="title" href="https://arxiv.org/abs/2611.29632v1">Probability-Feasible Historical Transport: Sharp Bounds and Falsification Tests for Distributional Pre-Trend Designs</a>
+<p class="meta">Ulrich Hounyo &middot; 55 degrees</p></li>
+</ol></section>
+<section><h2><a href="../weeks/2026-11-23.html#d-2026-11-25">Wednesday 25 November</a><span class="count">20 papers</span></h2>
+<ol class="tl">
+<li data-paper-id="10.1093/jbmr/zjag159"><a class="title" href="https://doi.org/10.1093/jbmr/zjag159">When Randomization Is Not an Option: Lessons in Causal Inference from Long-Term Real-World Evidence in XLH</a>
+<p class="meta">Michael K. Parides &middot; 49 degrees</p></li>
+<li data-paper-id="arXiv:2607.18601v4"><a class="title" href="https://arxiv.org/abs/2607.18601v4">Robust Signal Maximization in Spillover Experiments</a>
+<p class="meta">Kirill Borusyak, Peter Hull, Evan Munro &middot; 50 degrees</p></li>
+<li data-paper-id="10.7916/0ztb-dw61"><a class="title" href="https://doi.org/10.7916/0ztb-dw61">Causal Effect Identification in Psychology: A Within-Study Comparison Using Data from Gender Bias Training</a>
+<p class="meta">Ngalula Fleurant &middot; 52 degrees</p></li>
+<li data-paper-id="10.1108/fteco-07-2026-0050"><a class="title" href="https://doi.org/10.1108/fteco-07-2026-0050">Machine learning in econometrics</a>
+<p class="meta">Martin Huber &middot; 53 degrees</p></li>
+<li data-paper-id="arXiv:2611.31662v1"><a class="title" href="https://arxiv.org/abs/2611.31662v1">Correcting for Differential Nonresponse Using Past Election Data</a>
+<p class="meta">David Metrick, Harper Wang &middot; 54 degrees</p></li>
+<li data-paper-id="10.13140/rg.2.2.32570.56008"><a class="title" href="https://doi.org/10.13140/rg.2.2.32570.56008">Externally anchored covariate completion for network meta-interpolation without trial individual participant data: a simulation study</a>
+<p class="meta">Lingyao Sun, Dachuang Zhou, Lei Tian &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2104.04190v3"><a class="title" href="https://arxiv.org/abs/2104.04190v3">Measurement Errors in Semiparametric Generalized Regression Models</a>
+<p class="meta">Mohammad W. Hattab, David Ruppert &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2306.11697v3"><a class="title" href="https://arxiv.org/abs/2306.11697v3">Treatment Effects in Extreme Regimes</a>
+<p class="meta">Ahmed Aloui, Ali Hasan, Yuting Ng, and 2 others &middot; 55 degrees</p></li>
+<li data-paper-id="10.1038/s43856-026-02007-5"><a class="title" href="https://doi.org/10.1038/s43856-026-02007-5">Towards causal prediction models to guide personalised clinical decisions</a>
+<p class="meta">Samuel Leighton, Damian Machlanski, Sotirios A. Tsaftaris, and 2 others &middot; 55 degrees</p></li>
+<li data-paper-id="10.1111/josh.70295"><a class="title" href="https://doi.org/10.1111/josh.70295">Clarifying Temporal Ordering in a Two‐Wave Moderated Mediation Study</a>
+<p class="meta">Muhammad Ivan Dwi Saputra, Ari Khusumadewi, Retno Tri Hariastuti &middot; 55 degrees</p></li>
+<li data-paper-id="arXiv:2611.31900v1"><a class="title" href="https://arxiv.org/abs/2611.31900v1">A General Framework for Identifying the Joint Potential Outcome Distribution through Support Restrictions</a>
+<p class="meta">Benedikt Koch, Kosuke Imai &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2607.10246v4"><a class="title" href="https://arxiv.org/abs/2607.10246v4">Inference for Fixed Effects Estimators when Panels are Unbalanced</a>
+<p class="meta">Daniel Czarnowske, Amrei Stammann &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.23775v3"><a class="title" href="https://arxiv.org/abs/2611.23775v3">Anytime-valid goodness-of-fit test by $e$-spacings</a>
+<p class="meta">Yunda Hao, Kin Wai Chan &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.32888v1"><a class="title" href="https://arxiv.org/abs/2611.32888v1">Generalizing Couple-Randomized Trials Under Limited Overlap and Missing Partner Linkage</a>
+<p class="meta">Subir Hait &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.31539v1"><a class="title" href="https://arxiv.org/abs/2611.31539v1">Agent Evaluation Without Ground Truth: A Null Proportion Perspective</a>
+<p class="meta">Brian M. Cho, Michael Lindon, Nathan Kallus &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.32182v1"><a class="title" href="https://arxiv.org/abs/2611.32182v1">Asymptotically Efficient Conformal Inference for Individual Treatment Effects under Multivalued Treatments</a>
+<p class="meta">Lequn Ge, Gaorong Li, Hui Zhao &middot; 56 degrees</p></li>
+<li data-paper-id="arXiv:2611.32930v1"><a class="title" href="https://arxiv.org/abs/2611.32930v1">Efficient inferential models and their fiducial connections</a>
+<p class="meta">Max Raner &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2601.11242v4"><a class="title" href="https://arxiv.org/abs/2601.11242v4">Deriving Complete Constraints in Hidden Variable Models</a>
+<p class="meta">Michael C. Sachs, Erin E. Gabriel, Robin J. Evans, Arvid Sj\&quot;olander &middot; 57 degrees</p></li>
+<li data-paper-id="10.1111/jgh.70905"><a class="title" href="https://doi.org/10.1111/jgh.70905">Response to “Within‐Group Improvement Is Not a Treatment Effect in the Mikoto Simulator Trial”</a>
+<p class="meta">Daisuke Yamaguchi, Motohiro Esaki &middot; 57 degrees</p></li>
+<li data-paper-id="arXiv:2611.33069v1"><a class="title" href="https://arxiv.org/abs/2611.33069v1">Pragmatic Deeply Debiased ML</a>
+<p class="meta">Victor Chernozhukov, Chengchun Shi &middot; 57 degrees</p></li>
+</ol></section>
+<footer><a href="../how-it-works.html">How this page works</a> <a href="../weeks/">Earlier weeks</a> <a href="../months/">All months</a></footer>
+</main>
+</body>
+</html>

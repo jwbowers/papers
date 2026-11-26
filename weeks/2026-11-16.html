@@ -7,18 +7,21 @@
 <title>Papers of 16 to 22 November 2026</title>
 <style>
 :root {
-  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #9a948a;
-  --rule: #e6e2da; --accent: #7a4b1f; --visited: #8a7a68;
+  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #746d62;
+  --rule: #e6e2da; --accent: #7a4b1f; --visited: #7d6d5b;
   --track: #ebe6dc; --fill: #b07a45; --chip: #f2eee6;
+  --on: #1f1d1a; --onink: #fbfaf7;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #77736c;
+    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #98938a;
     --rule: #2c2c31; --accent: #e0b07c; --visited: #a8998a;
     --track: #2c2c31; --fill: #c8915a; --chip: #222226;
+    --on: #e8e4dc; --onink: #17171a;
   }
 }
 * { box-sizing: border-box; }
+html { scroll-padding-top: 3.75rem; }
 /* System fonts so the page draws at once with no download; Charter and
    Iowan ship with Apple devices and read well at small sizes. */
 body {
@@ -26,24 +29,94 @@ body {
   font: 17px/1.5 Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   -webkit-text-size-adjust: 100%;
 }
-main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 16px 3rem; }
-.meta, .closest, .vote, .intro, h2, footer {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+main { max-width: 40rem; margin: 0 auto; padding: 0.75rem 16px 3rem; }
+nav, .meta, .closest, .vote, .runline, .legend, .chips, .cal, .yr, .weeks .count, footer {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
-h1 { font-size: 1.6rem; line-height: 1.2; margin: 0.5rem 0 0.25rem; }
-.intro { color: var(--muted); font-size: 0.85rem; margin: 0 0 1rem; }
-/* The day heading stays at the top of the screen while Jake scrolls a long
-   day, so he always knows which day he is reading. */
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--accent); outline-offset: 2px;
+}
+h1 { font-size: 1.5rem; line-height: 1.2; margin: 0.4rem 0 0.2rem; }
+.runline {
+  color: var(--muted); font-size: 0.8rem; line-height: 1.4;
+  margin: 0 0 0.6rem; max-width: 60rem;
+}
+/* The day is the largest thing on the list, above the papers it holds. */
 h2 {
-  position: sticky; top: 0; z-index: 1; background: var(--bg);
   display: flex; justify-content: space-between; align-items: baseline;
-  margin: 1.5rem 0 0; padding: 0.6rem 0 0.4rem;
-  border-bottom: 1px solid var(--rule);
-  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--muted);
+  margin: 0.6rem 0 0; padding: 0.9rem 0 0.4rem;
+  background: var(--bg); border-bottom: 2px solid var(--ink);
+  font-size: 1.3rem; font-weight: 700; line-height: 1.2;
 }
-h2 .count { font-weight: 400; letter-spacing: 0; text-transform: none; }
+h2 .count { font: 400 0.85rem/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: var(--muted); }
+
+/* The row of seven days, all of them together, and the month. It stays at
+   the top of the screen while Jake scrolls a long day. */
+.strip {
+  position: sticky; top: 0; z-index: 2; margin: 0 -16px;
+  background: var(--bg); border-bottom: 1px solid var(--rule);
+}
+.strip ul {
+  display: grid; grid-template-columns: repeat(9, 1fr);
+  list-style: none; margin: 0; padding: 0;
+}
+.strip a, .strip span.off {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 52px; color: var(--ink); text-decoration: none; line-height: 1.15;
+}
+.strip .dow { font-size: 0.7rem; color: var(--muted); }
+.strip .dom { font-size: 1.05rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.strip .word { font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+/* A phone has no room for the counts. */
+.strip .n { display: none; }
+.strip .off .dom { color: var(--faint); font-weight: 400; }
+.strip a:hover .dom, .strip a:hover .word { text-decoration: underline; }
+.strip li:nth-child(8) { border-left: 1px solid var(--rule); }
+.strip a:focus-visible { outline-offset: -3px; }
+/* A day of an earlier week opens at the top of its page, so that the dates
+   with their year and the way back to the new papers are in view. */
+.weekpage section.day, .weekpage #all { scroll-margin-top: 1000rem; }
+/* The newest day's cell goes to the top of the main page, where the links to
+   the two other lists are. */
+section.latest { scroll-margin-top: 1000rem; }
+
+/* Links to the lists that are not a day's, and to the years of the list of
+   weeks. */
+.chips {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  margin: 0.6rem 0 0; padding: 0; list-style: none;
+}
+.chips a {
+  display: flex; align-items: center; min-height: 44px; padding: 0 0.8rem;
+  border-radius: 0.5rem; background: var(--chip); color: var(--ink);
+  text-decoration: none; font-size: 0.85rem;
+}
+.chips .count { color: var(--muted); margin-left: 0.4em; }
+/* The earlier and the later day or week, one at each end of a line. */
+.steps { display: flex; justify-content: space-between; gap: 0.5rem; margin: 0.6rem 0; }
+.steps a {
+  display: flex; align-items: center; min-height: 48px; padding: 0 0.9rem;
+  border-radius: 0.5rem; background: var(--chip); color: var(--ink);
+  text-decoration: none; font-size: 0.9rem;
+}
+.steps a:hover { text-decoration: underline; }
+.steps .next { margin-left: auto; text-align: right; }
+/* A week's or a month's title, between links to its neighbors. */
+.head { display: flex; align-items: center; gap: 0.5rem; max-width: 34rem; margin-bottom: 0.4rem; }
+.head h1 { flex: 1; margin: 0; text-align: center; font-size: 1.3rem; }
+.head a, .head .gap {
+  flex: none; display: flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px;
+}
+.head a {
+  border-radius: 0.5rem; background: var(--chip); color: var(--ink);
+  text-decoration: none; font-size: 1.6rem; line-height: 1;
+}
+.crumbs { font-size: 0.9rem; }
+.crumbs a { text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+
+/* The papers. */
 section { counter-reset: pick; }
 /* The program lists each day's picks closest first, so a number lets Jake
    see how far down the ranking a paper sits. */
@@ -53,13 +126,11 @@ article {
 }
 article::before {
   content: counter(pick); position: absolute; left: 0; top: 0.85rem;
-  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-variant-numeric: tabular-nums; color: var(--faint);
+  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-variant-numeric: tabular-nums; color: var(--faint);
 }
 .title {
   display: block; color: var(--ink); text-decoration: none;
-  font-size: 1.1rem; font-weight: 600; line-height: 1.3;
-  overflow-wrap: anywhere;
+  font-size: 1.1rem; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere;
 }
 /* A visited title fades, which shows Jake which papers he has opened. */
 .title:visited { color: var(--visited); }
@@ -67,8 +138,7 @@ article::before {
 .meta { color: var(--muted); font-size: 0.85rem; margin: 0.3rem 0 0; }
 .source { font-style: italic; }
 .reason { margin: 0.45rem 0 0; }
-/* The reasons are empty until a model writes them; an empty paragraph
-   would only add space. */
+/* The reasons are empty; an empty paragraph would only add space. */
 .reason:empty { display: none; }
 /* The first lines of the abstract sit in the summary, the part of a
    details element that shows while it is closed, so Jake can read the
@@ -86,9 +156,7 @@ article::before {
 .abstract[open] summary .text { -webkit-line-clamp: unset; display: block; }
 .abstract summary::after {
   content: "Show all"; display: block; margin: 0.15rem 0 0 0.75rem;
-  color: var(--accent); font-size: 0.75rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  color: var(--accent); font-size: 0.75rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 .abstract[open] summary::after { content: "Show less"; }
 /* The closest line and the vote links share one line, wrapping on a
@@ -110,22 +178,70 @@ article::before {
 }
 .meter span { display: block; height: 100%; background: var(--fill); }
 .vote { display: flex; gap: 0.5rem; font-size: 0.8rem; }
-/* Vote links look quiet but are tall enough to hit with a thumb. */
+/* Vote links look quiet, 28 pixels tall, and take a tap over 44 pixels. */
 .vote a {
-  display: inline-flex; align-items: center; min-height: 1.75rem;
+  display: inline-flex; align-items: center; min-height: 1.75rem; position: relative;
   padding: 0 0.7rem; border-radius: 1rem; background: var(--chip);
   color: var(--muted); text-decoration: none;
 }
+.vote a::after { content: ""; position: absolute; inset: -8px -3px; }
 .vote a:hover, .vote a:focus { color: var(--accent); }
-footer { color: var(--faint); font-size: 0.8rem; margin-top: 2.5rem; }
-footer a { color: var(--muted); }
-.intro a { color: var(--accent); }
-/* The archive's index: one line per week, newest first. */
-.weeks { list-style: none; padding: 0; margin: 1rem 0 0; }
-.weeks li { padding: 0.55rem 0; border-bottom: 1px solid var(--rule); }
-.weeks a { color: var(--ink); font-weight: 600; text-decoration: none; }
+
+/* The month pages: a calendar, the months and years, and the titles. */
+.cal { border-collapse: collapse; width: 100%; max-width: 34rem; table-layout: fixed; margin: 0.4rem 0 0; }
+.cal th { font-size: 0.75rem; font-weight: 600; color: var(--muted); padding: 0.3rem 0; }
+.cal td, .cal tbody th { padding: 0; border: 1px solid var(--rule); text-align: center; }
+.cal a, .cal .none {
+  display: flex; flex-direction: column; justify-content: center; min-height: 48px;
+  color: var(--ink); text-decoration: none; font-size: 1rem; line-height: 1.15;
+  font-weight: 600; font-variant-numeric: tabular-nums;
+}
+.cal .none { color: var(--faint); font-weight: 400; }
+.cal a:hover { background: var(--chip); text-decoration: underline; }
+.cal .k { font-size: 0.7rem; font-weight: 400; color: var(--muted); }
+.cal tbody th a { font-size: 0.75rem; color: var(--accent); background: var(--chip); }
+.yr {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; max-width: 34rem;
+  margin: 0.6rem 0 0; padding: 0; list-style: none;
+}
+.yr a, .yr span {
+  display: flex; align-items: center; justify-content: center; min-height: 44px;
+  border-radius: 0.4rem; font-size: 0.85rem; color: var(--ink);
+  text-decoration: none; background: var(--chip);
+}
+.yr span { color: var(--faint); background: none; }
+.yr a[aria-current] { background: var(--on); color: var(--onink); }
+.tl { list-style: none; counter-reset: t; padding: 0; margin: 0; }
+.tl li {
+  counter-increment: t; position: relative;
+  padding: 0.55rem 0 0.5rem 2rem; border-bottom: 1px solid var(--rule);
+}
+.tl li::before {
+  content: counter(t); position: absolute; left: 0; top: 0.8rem;
+  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: var(--faint);
+}
+.tl .title { font-size: 1rem; }
+.tl .meta { margin: 0.1rem 0 0; font-size: 0.8rem; }
+.months h2 { position: sticky; top: 0; z-index: 1; }
+.months h2 a { color: inherit; text-decoration: none; }
+.months h2 a:hover { text-decoration: underline; }
+
+/* The list of weeks. */
+.weeks { list-style: none; padding: 0; margin: 0; }
+.weeks li { display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid var(--rule); }
+.weeks a {
+  display: flex; align-items: center; min-height: 44px;
+  color: var(--ink); font-weight: 600; text-decoration: none;
+}
 .weeks a:hover, .weeks a:focus { text-decoration: underline; }
-.weeks .count { color: var(--muted); font-size: 0.85rem; }
+.weeks .count { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+.wk > div:first-child h2 { margin-top: 0; }
+.wk h2 { font-size: 1.05rem; border-bottom-width: 1px; }
+
+.legend { color: var(--muted); font-size: 0.85rem; margin: 2rem 0 0; max-width: 40rem; }
+footer { color: var(--muted); font-size: 0.8rem; margin-top: 1rem; }
+footer a, .crumbs a { display: inline-block; padding: 0.7rem 0.9rem 0.7rem 0; color: var(--accent); }
+
 /* On a desktop a single 40rem column left most of the screen empty, so each
    paper becomes two columns: the paper on the left and its abstract on the
    right. The list stays one column of papers in rank order. The abstract
@@ -133,8 +249,13 @@ footer a { color: var(--muted); }
    the sum of the columns so no strip is left over at the right. Below
    62rem the abstract would fall under about 60 characters a line. */
 @media (min-width: 62rem) {
+  html { scroll-padding-top: 4.5rem; }
   main { max-width: 68.5rem; padding-left: 24px; padding-right: 24px; }
-  .intro, footer { max-width: 40rem; }
+  footer { max-width: 40rem; }
+  .strip { margin: 0; }
+  .strip a, .strip span.off { min-height: 60px; }
+  .strip .n { display: block; font-size: 0.75rem; color: var(--muted); }
+  .strip .dow { font-size: 0.8rem; }
   /* The second row takes any height the abstract adds, so the closest
      line and the votes stay right under the reason. */
   article {
@@ -144,14 +265,44 @@ footer a { color: var(--muted); }
   .lead { grid-column: 1; grid-row: 1; }
   .foot { grid-column: 1; grid-row: 2; align-self: start; }
   .abstract { grid-column: 2; grid-row: 1 / 3; margin: 0; }
+  .tl { columns: 2; column-gap: 2.5rem; }
+  .tl li { break-inside: avoid; }
+  .months-top { display: grid; grid-template-columns: 34rem 1fr; column-gap: 2.5rem; align-items: start; }
+  .wk { columns: 2; column-gap: 2.5rem; }
+  .wk div { break-inside: avoid; }
 }
+@media print { nav { display: none; } }
+
+@media screen {
+@supports selector(:has(a)) {
+main:has(section.day:target) section.day:not(:target) { display: none; }
+main:not(:has(section.day:target)) section.day .steps { display: none; }
+main:not(:has(section.day:target)) .strip a[href="#all"] { background: var(--on); }
+main:not(:has(section.day:target)) .strip a[href="#all"] .dow, main:not(:has(section.day:target)) .strip a[href="#all"] .dom, main:not(:has(section.day:target)) .strip a[href="#all"] .word, main:not(:has(section.day:target)) .strip a[href="#all"] .n { color: var(--onink); }
+main:has(#d-2026-11-16:target) .strip a[href="#d-2026-11-16"] { background: var(--on); }
+main:has(#d-2026-11-16:target) .strip a[href="#d-2026-11-16"] .dow, main:has(#d-2026-11-16:target) .strip a[href="#d-2026-11-16"] .dom, main:has(#d-2026-11-16:target) .strip a[href="#d-2026-11-16"] .word, main:has(#d-2026-11-16:target) .strip a[href="#d-2026-11-16"] .n { color: var(--onink); }
+main:has(#d-2026-11-17:target) .strip a[href="#d-2026-11-17"] { background: var(--on); }
+main:has(#d-2026-11-17:target) .strip a[href="#d-2026-11-17"] .dow, main:has(#d-2026-11-17:target) .strip a[href="#d-2026-11-17"] .dom, main:has(#d-2026-11-17:target) .strip a[href="#d-2026-11-17"] .word, main:has(#d-2026-11-17:target) .strip a[href="#d-2026-11-17"] .n { color: var(--onink); }
+main:has(#d-2026-11-18:target) .strip a[href="#d-2026-11-18"] { background: var(--on); }
+main:has(#d-2026-11-18:target) .strip a[href="#d-2026-11-18"] .dow, main:has(#d-2026-11-18:target) .strip a[href="#d-2026-11-18"] .dom, main:has(#d-2026-11-18:target) .strip a[href="#d-2026-11-18"] .word, main:has(#d-2026-11-18:target) .strip a[href="#d-2026-11-18"] .n { color: var(--onink); }
+main:has(#d-2026-11-19:target) .strip a[href="#d-2026-11-19"] { background: var(--on); }
+main:has(#d-2026-11-19:target) .strip a[href="#d-2026-11-19"] .dow, main:has(#d-2026-11-19:target) .strip a[href="#d-2026-11-19"] .dom, main:has(#d-2026-11-19:target) .strip a[href="#d-2026-11-19"] .word, main:has(#d-2026-11-19:target) .strip a[href="#d-2026-11-19"] .n { color: var(--onink); }
+main:has(#d-2026-11-20:target) .strip a[href="#d-2026-11-20"] { background: var(--on); }
+main:has(#d-2026-11-20:target) .strip a[href="#d-2026-11-20"] .dow, main:has(#d-2026-11-20:target) .strip a[href="#d-2026-11-20"] .dom, main:has(#d-2026-11-20:target) .strip a[href="#d-2026-11-20"] .word, main:has(#d-2026-11-20:target) .strip a[href="#d-2026-11-20"] .n { color: var(--onink); }
+main:has(#d-2026-11-21:target) .strip a[href="#d-2026-11-21"] { background: var(--on); }
+main:has(#d-2026-11-21:target) .strip a[href="#d-2026-11-21"] .dow, main:has(#d-2026-11-21:target) .strip a[href="#d-2026-11-21"] .dom, main:has(#d-2026-11-21:target) .strip a[href="#d-2026-11-21"] .word, main:has(#d-2026-11-21:target) .strip a[href="#d-2026-11-21"] .n { color: var(--onink); }
+main:has(#d-2026-11-22:target) .strip a[href="#d-2026-11-22"] { background: var(--on); }
+main:has(#d-2026-11-22:target) .strip a[href="#d-2026-11-22"] .dow, main:has(#d-2026-11-22:target) .strip a[href="#d-2026-11-22"] .dom, main:has(#d-2026-11-22:target) .strip a[href="#d-2026-11-22"] .word, main:has(#d-2026-11-22:target) .strip a[href="#d-2026-11-22"] .n { color: var(--onink); }
+} }
 </style>
 </head>
-<body>
+<body class="weekpage">
 <main>
-<p class="intro"><a href="../">Back to the papers</a> &middot; <a href="./">All weeks</a></p>
-<h1>16 to 22 November 2026</h1>
-<section>
+<nav class="crumbs" aria-label="Site"><a href="../">New papers</a><a href="./">All weeks</a></nav>
+<div class="head"><a href="2026-11-09.html" aria-label="Earlier: 9 to 15 November 2026" title="9 to 15 November 2026">&lsaquo;</a><h1>16 to 22 November 2026</h1><a href="2026-11-23.html" aria-label="Later: 23 to 29 November 2026" title="23 to 29 November 2026">&rsaquo;</a></div>
+<nav class="strip" aria-label="Days" data-default="#all"><ul><li><a href="#d-2026-11-16" aria-label="Mon 16 Nov, 20 papers"><span class="dow">Mon</span><span class="dom">16</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-17" aria-label="Tue 17 Nov, 20 papers"><span class="dow">Tue</span><span class="dom">17</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-18" aria-label="Wed 18 Nov, 20 papers"><span class="dow">Wed</span><span class="dom">18</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-19" aria-label="Thu 19 Nov, 20 papers"><span class="dow">Thu</span><span class="dom">19</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-20" aria-label="Fri 20 Nov, 20 papers"><span class="dow">Fri</span><span class="dom">20</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-21" aria-label="Sat 21 Nov, 20 papers"><span class="dow">Sat</span><span class="dom">21</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-22" aria-label="Sun 22 Nov, 6 papers"><span class="dow">Sun</span><span class="dom">22</span><span class="n">6 papers</span></a></li><li><a href="#all" aria-label="Whole week: every day on one page"><span class="dow">Whole</span><span class="word">week</span></a></li><li><a href="../months/2026-11.html" aria-label="Month Nov: calendar and earlier papers"><span class="dow">Month</span><span class="word">Nov</span></a></li></ul></nav>
+<div id="all">
+<section class="day" id="d-2026-11-16">
 <h2>Monday 16 November<span class="count">20 papers</span></h2>
 <article data-paper-id="arXiv:2309.06305v4">
 <div class="lead">
@@ -386,8 +537,9 @@ footer a { color: var(--muted); }
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.18479v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.18479v1">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="2026-11-09.html#d-2026-11-15">&lsaquo;&nbsp;Sun 15 Nov</a><a class="next" href="#d-2026-11-17">Tue 17 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-17">
 <h2>Tuesday 17 November<span class="count">20 papers</span></h2>
 <article data-paper-id="arXiv:2611.21425v1">
 <div class="lead">
@@ -628,8 +780,9 @@ footer a { color: var(--muted); }
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.19710v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.19710v1">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-16">&lsaquo;&nbsp;Mon 16 Nov</a><a class="next" href="#d-2026-11-18">Wed 18 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-18">
 <h2>Wednesday 18 November<span class="count">20 papers</span></h2>
 <article data-paper-id="arXiv:2611.22542v1">
 <div class="lead">
@@ -868,8 +1021,9 @@ footer a { color: var(--muted); }
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.16102v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.16102v2">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-17">&lsaquo;&nbsp;Tue 17 Nov</a><a class="next" href="#d-2026-11-19">Thu 19 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-19">
 <h2>Thursday 19 November<span class="count">20 papers</span></h2>
 <article data-paper-id="arXiv:2611.21425v2">
 <div class="lead">
@@ -1111,8 +1265,9 @@ footer a { color: var(--muted); }
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.3982%2Fecta24250">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.3982%2Fecta24250">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-18">&lsaquo;&nbsp;Wed 18 Nov</a><a class="next" href="#d-2026-11-20">Fri 20 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-20">
 <h2>Friday 20 November<span class="count">20 papers</span></h2>
 <article data-paper-id="10.1080/01621459.2026.2760596">
 <div class="lead">
@@ -1352,8 +1507,9 @@ footer a { color: var(--muted); }
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1161%2Fstrokeaha.126.053678">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1161%2Fstrokeaha.126.053678">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-19">&lsaquo;&nbsp;Thu 19 Nov</a><a class="next" href="#d-2026-11-21">Sat 21 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-21">
 <h2>Saturday 21 November<span class="count">20 papers</span></h2>
 <article data-paper-id="10.1086/743440">
 <div class="lead">
@@ -1594,8 +1750,9 @@ footer a { color: var(--muted); }
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fvrkyh_v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fvrkyh_v1">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-20">&lsaquo;&nbsp;Fri 20 Nov</a><a class="next" href="#d-2026-11-22">Sun 22 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-22">
 <h2>Sunday 22 November<span class="count">6 papers</span></h2>
 <article data-paper-id="10.5281/zenodo.24426809">
 <div class="lead">
@@ -1668,8 +1825,26 @@ footer a { color: var(--muted); }
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fd9ap3_v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fd9ap3_v2">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-21">&lsaquo;&nbsp;Sat 21 Nov</a><a class="next" href="2026-11-23.html#d-2026-11-23">Mon 23 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<footer><a href="./">All weeks</a></footer>
+</div>
+<nav class="steps" aria-label="Weeks"><a class="prev" href="2026-11-09.html">&lsaquo;&nbsp;9 to 15 Nov</a><a class="next" href="2026-11-23.html">23 to 29 Nov&nbsp;&rsaquo;</a></nav>
+<footer><a href="../how-it-works.html">How this page works</a> <a href="../weeks/">Earlier weeks</a> <a href="../months/">All months</a></footer>
 </main>
+<script>
+(function () {
+  var links = document.querySelectorAll('.strip a[href^="#"]');
+  var start = document.querySelector('.strip').dataset.default;
+  function mark() {
+    var h = location.hash, hit = false;
+    links.forEach(function (a) { if (a.getAttribute('href') === h) { hit = true; } });
+    links.forEach(function (a) {
+      if (a.getAttribute('href') === (hit ? h : start)) { a.setAttribute('aria-current', 'true'); }
+      else { a.removeAttribute('aria-current'); }
+    });
+  }
+  addEventListener('hashchange', mark); mark();
+})();
+</script>
 </body>
 </html>

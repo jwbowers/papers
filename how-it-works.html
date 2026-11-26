@@ -7,15 +7,17 @@
 <title>How this page works</title>
 <style>
 :root {
-  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #9a948a;
-  --rule: #e6e2da; --accent: #7a4b1f; --visited: #8a7a68;
+  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #746d62;
+  --rule: #e6e2da; --accent: #7a4b1f; --visited: #7d6d5b;
   --track: #ebe6dc; --fill: #b07a45; --chip: #f2eee6;
+  --on: #1f1d1a; --onink: #fbfaf7;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #77736c;
+    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #98938a;
     --rule: #2c2c31; --accent: #e0b07c; --visited: #a8998a;
     --track: #2c2c31; --fill: #c8915a; --chip: #222226;
+    --on: #e8e4dc; --onink: #17171a;
   }
 }
 * { box-sizing: border-box; }
@@ -129,6 +131,14 @@ repository can file one, so only Jake can vote. A paper Jake votes up becomes on
 reference passage. When a new paper's closest passage is a paper he voted
 down, the program puts the new paper below every other paper of that day. A vote
 counts for one year.</p>
+<h2>Earlier papers</h2>
+<p>The row at the top of the page names the past seven days. The page opens on
+the newest day that has papers, and a tap on another day shows that day's
+papers instead. "All days" shows all seven. "Month" opens a calendar with the
+number of papers the program picked each day. A day on the calendar opens that
+day's papers, and "Week" opens all the papers of one week. The papers by
+followed authors and the Semantic Scholar recommendations, described below,
+leave the page after seven days and do not appear on the calendar.</p>
 <h2>Followed authors</h2>
 <p>Jake keeps a list of people he follows. Each evening the program asks
 OpenAlex, an index of research papers, for every paper by those people
@@ -141,10 +151,21 @@ and also among a day's picks.</p>
 <p>A paper with more than four authors shows the first three, then any author
 on Jake's list, then the number of other authors. Following an author does
 not change a paper's place in the day's list.</p>
+<h2>Semantic Scholar recommendations</h2>
+<p>Each evening the program also sends 18 of Jake's methods papers to Semantic
+Scholar, a search service for research papers, as examples. Semantic Scholar
+answers with up to 20 papers it finds similar, from everything it indexes,
+so they can come from places the program does not read. Most are recent.
+The program leaves out any paper it has already picked or shown as a
+recommendation, adds the first 5 of the rest to the page under the heading
+"Semantic Scholar recommends," below the day's papers, and keeps each there
+for seven days. Semantic Scholar, not the program, chose these papers and
+their order. Jake can vote on them as he does on the day's papers.</p>
 <h2>What the page does not do</h2>
 <p>The page does not judge whether a paper is correct or good. The program
 measures only how close a paper's words come to Jake's, and it reads only
-the sources listed above. A paper whose abstract uses words unlike Jake's gets a
+the sources listed above, apart from the papers by followed authors and the
+Semantic Scholar recommendations. A paper whose abstract uses words unlike Jake's gets a
 large angle and a low place, however relevant its mathematics is.</p>
 </main>
 </body>

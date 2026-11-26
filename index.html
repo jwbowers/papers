@@ -7,18 +7,21 @@
 <title>New papers</title>
 <style>
 :root {
-  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #9a948a;
-  --rule: #e6e2da; --accent: #7a4b1f; --visited: #8a7a68;
+  --bg: #fbfaf7; --ink: #1f1d1a; --muted: #6b665e; --faint: #746d62;
+  --rule: #e6e2da; --accent: #7a4b1f; --visited: #7d6d5b;
   --track: #ebe6dc; --fill: #b07a45; --chip: #f2eee6;
+  --on: #1f1d1a; --onink: #fbfaf7;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #77736c;
+    --bg: #17171a; --ink: #e8e4dc; --muted: #a29d94; --faint: #98938a;
     --rule: #2c2c31; --accent: #e0b07c; --visited: #a8998a;
     --track: #2c2c31; --fill: #c8915a; --chip: #222226;
+    --on: #e8e4dc; --onink: #17171a;
   }
 }
 * { box-sizing: border-box; }
+html { scroll-padding-top: 3.75rem; }
 /* System fonts so the page draws at once with no download; Charter and
    Iowan ship with Apple devices and read well at small sizes. */
 body {
@@ -26,24 +29,94 @@ body {
   font: 17px/1.5 Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   -webkit-text-size-adjust: 100%;
 }
-main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 16px 3rem; }
-.meta, .closest, .vote, .intro, h2, footer {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+main { max-width: 40rem; margin: 0 auto; padding: 0.75rem 16px 3rem; }
+nav, .meta, .closest, .vote, .runline, .legend, .chips, .cal, .yr, .weeks .count, footer {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
-h1 { font-size: 1.6rem; line-height: 1.2; margin: 0.5rem 0 0.25rem; }
-.intro { color: var(--muted); font-size: 0.85rem; margin: 0 0 1rem; }
-/* The day heading stays at the top of the screen while Jake scrolls a long
-   day, so he always knows which day he is reading. */
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--accent); outline-offset: 2px;
+}
+h1 { font-size: 1.5rem; line-height: 1.2; margin: 0.4rem 0 0.2rem; }
+.runline {
+  color: var(--muted); font-size: 0.8rem; line-height: 1.4;
+  margin: 0 0 0.6rem; max-width: 60rem;
+}
+/* The day is the largest thing on the list, above the papers it holds. */
 h2 {
-  position: sticky; top: 0; z-index: 1; background: var(--bg);
   display: flex; justify-content: space-between; align-items: baseline;
-  margin: 1.5rem 0 0; padding: 0.6rem 0 0.4rem;
-  border-bottom: 1px solid var(--rule);
-  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--muted);
+  margin: 0.6rem 0 0; padding: 0.9rem 0 0.4rem;
+  background: var(--bg); border-bottom: 2px solid var(--ink);
+  font-size: 1.3rem; font-weight: 700; line-height: 1.2;
 }
-h2 .count { font-weight: 400; letter-spacing: 0; text-transform: none; }
+h2 .count { font: 400 0.85rem/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: var(--muted); }
+
+/* The row of seven days, all of them together, and the month. It stays at
+   the top of the screen while Jake scrolls a long day. */
+.strip {
+  position: sticky; top: 0; z-index: 2; margin: 0 -16px;
+  background: var(--bg); border-bottom: 1px solid var(--rule);
+}
+.strip ul {
+  display: grid; grid-template-columns: repeat(9, 1fr);
+  list-style: none; margin: 0; padding: 0;
+}
+.strip a, .strip span.off {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 52px; color: var(--ink); text-decoration: none; line-height: 1.15;
+}
+.strip .dow { font-size: 0.7rem; color: var(--muted); }
+.strip .dom { font-size: 1.05rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.strip .word { font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+/* A phone has no room for the counts. */
+.strip .n { display: none; }
+.strip .off .dom { color: var(--faint); font-weight: 400; }
+.strip a:hover .dom, .strip a:hover .word { text-decoration: underline; }
+.strip li:nth-child(8) { border-left: 1px solid var(--rule); }
+.strip a:focus-visible { outline-offset: -3px; }
+/* A day of an earlier week opens at the top of its page, so that the dates
+   with their year and the way back to the new papers are in view. */
+.weekpage section.day, .weekpage #all { scroll-margin-top: 1000rem; }
+/* The newest day's cell goes to the top of the main page, where the links to
+   the two other lists are. */
+section.latest { scroll-margin-top: 1000rem; }
+
+/* Links to the lists that are not a day's, and to the years of the list of
+   weeks. */
+.chips {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  margin: 0.6rem 0 0; padding: 0; list-style: none;
+}
+.chips a {
+  display: flex; align-items: center; min-height: 44px; padding: 0 0.8rem;
+  border-radius: 0.5rem; background: var(--chip); color: var(--ink);
+  text-decoration: none; font-size: 0.85rem;
+}
+.chips .count { color: var(--muted); margin-left: 0.4em; }
+/* The earlier and the later day or week, one at each end of a line. */
+.steps { display: flex; justify-content: space-between; gap: 0.5rem; margin: 0.6rem 0; }
+.steps a {
+  display: flex; align-items: center; min-height: 48px; padding: 0 0.9rem;
+  border-radius: 0.5rem; background: var(--chip); color: var(--ink);
+  text-decoration: none; font-size: 0.9rem;
+}
+.steps a:hover { text-decoration: underline; }
+.steps .next { margin-left: auto; text-align: right; }
+/* A week's or a month's title, between links to its neighbors. */
+.head { display: flex; align-items: center; gap: 0.5rem; max-width: 34rem; margin-bottom: 0.4rem; }
+.head h1 { flex: 1; margin: 0; text-align: center; font-size: 1.3rem; }
+.head a, .head .gap {
+  flex: none; display: flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px;
+}
+.head a {
+  border-radius: 0.5rem; background: var(--chip); color: var(--ink);
+  text-decoration: none; font-size: 1.6rem; line-height: 1;
+}
+.crumbs { font-size: 0.9rem; }
+.crumbs a { text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+
+/* The papers. */
 section { counter-reset: pick; }
 /* The program lists each day's picks closest first, so a number lets Jake
    see how far down the ranking a paper sits. */
@@ -53,13 +126,11 @@ article {
 }
 article::before {
   content: counter(pick); position: absolute; left: 0; top: 0.85rem;
-  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-variant-numeric: tabular-nums; color: var(--faint);
+  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-variant-numeric: tabular-nums; color: var(--faint);
 }
 .title {
   display: block; color: var(--ink); text-decoration: none;
-  font-size: 1.1rem; font-weight: 600; line-height: 1.3;
-  overflow-wrap: anywhere;
+  font-size: 1.1rem; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere;
 }
 /* A visited title fades, which shows Jake which papers he has opened. */
 .title:visited { color: var(--visited); }
@@ -67,8 +138,7 @@ article::before {
 .meta { color: var(--muted); font-size: 0.85rem; margin: 0.3rem 0 0; }
 .source { font-style: italic; }
 .reason { margin: 0.45rem 0 0; }
-/* The reasons are empty until a model writes them; an empty paragraph
-   would only add space. */
+/* The reasons are empty; an empty paragraph would only add space. */
 .reason:empty { display: none; }
 /* The first lines of the abstract sit in the summary, the part of a
    details element that shows while it is closed, so Jake can read the
@@ -86,9 +156,7 @@ article::before {
 .abstract[open] summary .text { -webkit-line-clamp: unset; display: block; }
 .abstract summary::after {
   content: "Show all"; display: block; margin: 0.15rem 0 0 0.75rem;
-  color: var(--accent); font-size: 0.75rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  color: var(--accent); font-size: 0.75rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 .abstract[open] summary::after { content: "Show less"; }
 /* The closest line and the vote links share one line, wrapping on a
@@ -110,22 +178,70 @@ article::before {
 }
 .meter span { display: block; height: 100%; background: var(--fill); }
 .vote { display: flex; gap: 0.5rem; font-size: 0.8rem; }
-/* Vote links look quiet but are tall enough to hit with a thumb. */
+/* Vote links look quiet, 28 pixels tall, and take a tap over 44 pixels. */
 .vote a {
-  display: inline-flex; align-items: center; min-height: 1.75rem;
+  display: inline-flex; align-items: center; min-height: 1.75rem; position: relative;
   padding: 0 0.7rem; border-radius: 1rem; background: var(--chip);
   color: var(--muted); text-decoration: none;
 }
+.vote a::after { content: ""; position: absolute; inset: -8px -3px; }
 .vote a:hover, .vote a:focus { color: var(--accent); }
-footer { color: var(--faint); font-size: 0.8rem; margin-top: 2.5rem; }
-footer a { color: var(--muted); }
-.intro a { color: var(--accent); }
-/* The archive's index: one line per week, newest first. */
-.weeks { list-style: none; padding: 0; margin: 1rem 0 0; }
-.weeks li { padding: 0.55rem 0; border-bottom: 1px solid var(--rule); }
-.weeks a { color: var(--ink); font-weight: 600; text-decoration: none; }
+
+/* The month pages: a calendar, the months and years, and the titles. */
+.cal { border-collapse: collapse; width: 100%; max-width: 34rem; table-layout: fixed; margin: 0.4rem 0 0; }
+.cal th { font-size: 0.75rem; font-weight: 600; color: var(--muted); padding: 0.3rem 0; }
+.cal td, .cal tbody th { padding: 0; border: 1px solid var(--rule); text-align: center; }
+.cal a, .cal .none {
+  display: flex; flex-direction: column; justify-content: center; min-height: 48px;
+  color: var(--ink); text-decoration: none; font-size: 1rem; line-height: 1.15;
+  font-weight: 600; font-variant-numeric: tabular-nums;
+}
+.cal .none { color: var(--faint); font-weight: 400; }
+.cal a:hover { background: var(--chip); text-decoration: underline; }
+.cal .k { font-size: 0.7rem; font-weight: 400; color: var(--muted); }
+.cal tbody th a { font-size: 0.75rem; color: var(--accent); background: var(--chip); }
+.yr {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; max-width: 34rem;
+  margin: 0.6rem 0 0; padding: 0; list-style: none;
+}
+.yr a, .yr span {
+  display: flex; align-items: center; justify-content: center; min-height: 44px;
+  border-radius: 0.4rem; font-size: 0.85rem; color: var(--ink);
+  text-decoration: none; background: var(--chip);
+}
+.yr span { color: var(--faint); background: none; }
+.yr a[aria-current] { background: var(--on); color: var(--onink); }
+.tl { list-style: none; counter-reset: t; padding: 0; margin: 0; }
+.tl li {
+  counter-increment: t; position: relative;
+  padding: 0.55rem 0 0.5rem 2rem; border-bottom: 1px solid var(--rule);
+}
+.tl li::before {
+  content: counter(t); position: absolute; left: 0; top: 0.8rem;
+  font: 0.75rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: var(--faint);
+}
+.tl .title { font-size: 1rem; }
+.tl .meta { margin: 0.1rem 0 0; font-size: 0.8rem; }
+.months h2 { position: sticky; top: 0; z-index: 1; }
+.months h2 a { color: inherit; text-decoration: none; }
+.months h2 a:hover { text-decoration: underline; }
+
+/* The list of weeks. */
+.weeks { list-style: none; padding: 0; margin: 0; }
+.weeks li { display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid var(--rule); }
+.weeks a {
+  display: flex; align-items: center; min-height: 44px;
+  color: var(--ink); font-weight: 600; text-decoration: none;
+}
 .weeks a:hover, .weeks a:focus { text-decoration: underline; }
-.weeks .count { color: var(--muted); font-size: 0.85rem; }
+.weeks .count { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+.wk > div:first-child h2 { margin-top: 0; }
+.wk h2 { font-size: 1.05rem; border-bottom-width: 1px; }
+
+.legend { color: var(--muted); font-size: 0.85rem; margin: 2rem 0 0; max-width: 40rem; }
+footer { color: var(--muted); font-size: 0.8rem; margin-top: 1rem; }
+footer a, .crumbs a { display: inline-block; padding: 0.7rem 0.9rem 0.7rem 0; color: var(--accent); }
+
 /* On a desktop a single 40rem column left most of the screen empty, so each
    paper becomes two columns: the paper on the left and its abstract on the
    right. The list stays one column of papers in rank order. The abstract
@@ -133,8 +249,13 @@ footer a { color: var(--muted); }
    the sum of the columns so no strip is left over at the right. Below
    62rem the abstract would fall under about 60 characters a line. */
 @media (min-width: 62rem) {
+  html { scroll-padding-top: 4.5rem; }
   main { max-width: 68.5rem; padding-left: 24px; padding-right: 24px; }
-  .intro, footer { max-width: 40rem; }
+  footer { max-width: 40rem; }
+  .strip { margin: 0; }
+  .strip a, .strip span.off { min-height: 60px; }
+  .strip .n { display: block; font-size: 0.75rem; color: var(--muted); }
+  .strip .dow { font-size: 0.8rem; }
   /* The second row takes any height the abstract adds, so the closest
      line and the votes stay right under the reason. */
   article {
@@ -144,18 +265,60 @@ footer a { color: var(--muted); }
   .lead { grid-column: 1; grid-row: 1; }
   .foot { grid-column: 1; grid-row: 2; align-self: start; }
   .abstract { grid-column: 2; grid-row: 1 / 3; margin: 0; }
+  .tl { columns: 2; column-gap: 2.5rem; }
+  .tl li { break-inside: avoid; }
+  .months-top { display: grid; grid-template-columns: 34rem 1fr; column-gap: 2.5rem; align-items: start; }
+  .wk { columns: 2; column-gap: 2.5rem; }
+  .wk div { break-inside: avoid; }
 }
+@media print { nav { display: none; } }
+
+@media screen {
+@supports selector(:has(a)) {
+main:not(:has(#all:target)):not(:has(section.day:target)) section.day:not(.latest) { display: none; }
+main:has(section.day:target) section.day:not(:target) { display: none; }
+main:has(section.day:target:not(.latest)) :is(#followed, #semantic-scholar) { display: none; }
+main:has(#all:target) section.day .steps { display: none; }
+main:has(#all:target) .strip a[href="#all"] { background: var(--on); }
+main:has(#all:target) .strip a[href="#all"] .dow, main:has(#all:target) .strip a[href="#all"] .dom, main:has(#all:target) .strip a[href="#all"] .word, main:has(#all:target) .strip a[href="#all"] .n { color: var(--onink); }
+main:not(:has(#all:target)):not(:has(section.day:target)) .strip a[href="#d-2026-11-25"] { background: var(--on); }
+main:not(:has(#all:target)):not(:has(section.day:target)) .strip a[href="#d-2026-11-25"] .dow, main:not(:has(#all:target)):not(:has(section.day:target)) .strip a[href="#d-2026-11-25"] .dom, main:not(:has(#all:target)):not(:has(section.day:target)) .strip a[href="#d-2026-11-25"] .word, main:not(:has(#all:target)):not(:has(section.day:target)) .strip a[href="#d-2026-11-25"] .n { color: var(--onink); }
+main:has(#d-2026-11-25:target) .strip a[href="#d-2026-11-25"] { background: var(--on); }
+main:has(#d-2026-11-25:target) .strip a[href="#d-2026-11-25"] .dow, main:has(#d-2026-11-25:target) .strip a[href="#d-2026-11-25"] .dom, main:has(#d-2026-11-25:target) .strip a[href="#d-2026-11-25"] .word, main:has(#d-2026-11-25:target) .strip a[href="#d-2026-11-25"] .n { color: var(--onink); }
+main:has(#d-2026-11-24:target) .strip a[href="#d-2026-11-24"] { background: var(--on); }
+main:has(#d-2026-11-24:target) .strip a[href="#d-2026-11-24"] .dow, main:has(#d-2026-11-24:target) .strip a[href="#d-2026-11-24"] .dom, main:has(#d-2026-11-24:target) .strip a[href="#d-2026-11-24"] .word, main:has(#d-2026-11-24:target) .strip a[href="#d-2026-11-24"] .n { color: var(--onink); }
+main:has(#d-2026-11-23:target) .strip a[href="#d-2026-11-23"] { background: var(--on); }
+main:has(#d-2026-11-23:target) .strip a[href="#d-2026-11-23"] .dow, main:has(#d-2026-11-23:target) .strip a[href="#d-2026-11-23"] .dom, main:has(#d-2026-11-23:target) .strip a[href="#d-2026-11-23"] .word, main:has(#d-2026-11-23:target) .strip a[href="#d-2026-11-23"] .n { color: var(--onink); }
+main:has(#d-2026-11-22:target) .strip a[href="#d-2026-11-22"] { background: var(--on); }
+main:has(#d-2026-11-22:target) .strip a[href="#d-2026-11-22"] .dow, main:has(#d-2026-11-22:target) .strip a[href="#d-2026-11-22"] .dom, main:has(#d-2026-11-22:target) .strip a[href="#d-2026-11-22"] .word, main:has(#d-2026-11-22:target) .strip a[href="#d-2026-11-22"] .n { color: var(--onink); }
+main:has(#d-2026-11-21:target) .strip a[href="#d-2026-11-21"] { background: var(--on); }
+main:has(#d-2026-11-21:target) .strip a[href="#d-2026-11-21"] .dow, main:has(#d-2026-11-21:target) .strip a[href="#d-2026-11-21"] .dom, main:has(#d-2026-11-21:target) .strip a[href="#d-2026-11-21"] .word, main:has(#d-2026-11-21:target) .strip a[href="#d-2026-11-21"] .n { color: var(--onink); }
+main:has(#d-2026-11-20:target) .strip a[href="#d-2026-11-20"] { background: var(--on); }
+main:has(#d-2026-11-20:target) .strip a[href="#d-2026-11-20"] .dow, main:has(#d-2026-11-20:target) .strip a[href="#d-2026-11-20"] .dom, main:has(#d-2026-11-20:target) .strip a[href="#d-2026-11-20"] .word, main:has(#d-2026-11-20:target) .strip a[href="#d-2026-11-20"] .n { color: var(--onink); }
+main:has(#d-2026-11-19:target) .strip a[href="#d-2026-11-19"] { background: var(--on); }
+main:has(#d-2026-11-19:target) .strip a[href="#d-2026-11-19"] .dow, main:has(#d-2026-11-19:target) .strip a[href="#d-2026-11-19"] .dom, main:has(#d-2026-11-19:target) .strip a[href="#d-2026-11-19"] .word, main:has(#d-2026-11-19:target) .strip a[href="#d-2026-11-19"] .n { color: var(--onink); }
+} }
 </style>
 </head>
 <body>
 <main>
 <h1>New papers</h1>
-<p class="intro">Picks from 18 November through 24 November 2026. Under each
-paper, the bar and the angle say how close it is to the named paper or
-interest of Jake's: the smaller the angle, the closer.</p>
-<p class="intro">The program last ran on Tuesday 24 November at 7:35 pm Central. It ranked 302 new papers and added 20 of them.</p>
-<section class="followed">
-<h2>From authors Jake follows<span class="count">1 paper</span></h2>
+<p class="runline">The program last ran on Wednesday 25 November at 7:32 pm Central. It ranked 162 new papers and added 20 of them.</p>
+<nav class="strip" aria-label="Days" data-default="#d-2026-11-25"><ul><li><a href="#d-2026-11-19" aria-label="Thu 19 Nov, 20 papers"><span class="dow">Thu</span><span class="dom">19</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-20" aria-label="Fri 20 Nov, 20 papers"><span class="dow">Fri</span><span class="dom">20</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-21" aria-label="Sat 21 Nov, 20 papers"><span class="dow">Sat</span><span class="dom">21</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-22" aria-label="Sun 22 Nov, 6 papers"><span class="dow">Sun</span><span class="dom">22</span><span class="n">6 papers</span></a></li><li><a href="#d-2026-11-23" aria-label="Mon 23 Nov, 20 papers"><span class="dow">Mon</span><span class="dom">23</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-24" aria-label="Tue 24 Nov, 20 papers"><span class="dow">Tue</span><span class="dom">24</span><span class="n">20 papers</span></a></li><li><a href="#d-2026-11-25" aria-label="Wed 25 Nov, 20 papers"><span class="dow">Wed</span><span class="dom">25</span><span class="n">20 papers</span></a></li><li><a href="#all" aria-label="All days: every day on one page"><span class="dow">All</span><span class="word">days</span></a></li><li><a href="months/2026-11.html" aria-label="Month Nov: calendar and earlier papers"><span class="dow">Month</span><span class="word">Nov</span></a></li></ul></nav>
+<ul class="chips"><li><a href="#followed">Followed authors<span class="count">2</span></a></li><li><a href="#semantic-scholar">Semantic Scholar<span class="count">5</span></a></li></ul>
+<div id="followed"><section class="followed">
+<h2>From authors Jake follows<span class="count">2 papers</span></h2>
+<article data-paper-id="10.1146/annurev-statistics-042925-093008">
+<div class="lead">
+<a class="title" href="https://doi.org/10.1146/annurev-statistics-042925-093008">Combining Dependent p-Values: Methods and Properties from a Practical Perspective</a>
+<p class="meta">Matteo Gasparin, Jelle J. Goeman, Ruth Heller, Aldo Solari &middot; <span class="source">Annual Review of Statistics and Its Application</span> &middot; published 24 November 2026</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Testing the global null hypothesis, that all of a collection of m null hypotheses are true, is a central task in statistical inference. This article reviews recent and established tests that approach this task by combining the m hypotheses’ p -values, focusing on the situation that these p -values are dependent and that the precise form of this dependence is unknown. We provide guidelines for choosing p -value combination functions based on theoretical results and numerical experiments. Bonferroni and Simes represent the classical approaches; the former offers uniform validity against any dependence structure, while the latter is robust to many practical dependencies and uniformly more powerful. We also discuss the merits and promises of novel approaches, such as the Cauchy and harmonic mean p -value combination functions, twice-the-median, and the recent uniform improvement of Hommel&#x27;s combination function. The permutation approach is recommended whenever the null distribution is invariant to permutations of the data. Finally, we emphasize that global testing is often just a single but important step in a bigger inferential framework and illustrate the utility of such tests within modern statistical practice.</span></summary></details>
+<div class="foot">
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1146%2Fannurev-statistics-042925-093008">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1146%2Fannurev-statistics-042925-093008">fewer like this</a></p>
+</div>
+</article>
 <article data-paper-id="10.25740/zm998gx5428">
 <div class="lead">
 <a class="title" href="https://doi.org/10.25740/zm998gx5428">Large-deviation efficient confidence intervals for the sub-Gaussian mean</a>
@@ -167,8 +330,247 @@ interest of Jake's: the smaller the angle, the closer.</p>
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.25740%2Fzm998gx5428">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.25740%2Fzm998gx5428">fewer like this</a></p>
 </div>
 </article>
+</section></div>
+<div id="all"><section class="day latest" id="d-2026-11-25">
+<h2>Wednesday 25 November<span class="count">20 papers</span></h2>
+<article data-paper-id="10.1093/jbmr/zjag159">
+<div class="lead">
+<a class="title" href="https://doi.org/10.1093/jbmr/zjag159">When Randomization Is Not an Option: Lessons in Causal Inference from Long-Term Real-World Evidence in XLH</a>
+<p class="meta">Michael K. Parides &middot; <span class="source">Journal of Bone and Mineral Research</span> &middot; published 24 November 2026</p>
+<p class="reason"></p>
+</div>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:68%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (49 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1093%2Fjbmr%2Fzjag159">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1093%2Fjbmr%2Fzjag159">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2607.18601v4">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2607.18601v4">Robust Signal Maximization in Spillover Experiments</a>
+<p class="meta">Kirill Borusyak, Peter Hull, Evan Munro &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; econ.EM</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">We study the optimal design and analysis of experiments for estimating spillover effects. Assuming a linear exposure model, we characterize the treatment-assignment distribution and regression-based estimator that minimize worst-case approximate variance against a broad class of distributions of unobservables. The design problem yields an intuitive solution in which the planner trades off spillover signal strength against dispersion of spillover variation. The analysis problem yields a simple recentered instrumental variable estimator. We illustrate these new tools in semi-synthetic experiments based on three applications from development economics. Our approach yields large variance reductions, increasing effective sample sizes by 44-266%.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:66%"></span></span><span>Closest to: Models, methods and network topology: Experimental design for the study of interference (50 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2607.18601v4">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2607.18601v4">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.7916/0ztb-dw61">
+<div class="lead">
+<a class="title" href="https://doi.org/10.7916/0ztb-dw61">Causal Effect Identification in Psychology: A Within-Study Comparison Using Data from Gender Bias Training</a>
+<p class="meta">Ngalula Fleurant &middot; <span class="source">Columbia Academic Commons (Columbia University)</span> &middot; published 24 November 2026</p>
+<p class="reason"></p>
+</div>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:64%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (52 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.7916%2F0ztb-dw61">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.7916%2F0ztb-dw61">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.1108/fteco-07-2026-0050">
+<div class="lead">
+<a class="title" href="https://doi.org/10.1108/fteco-07-2026-0050">Machine learning in econometrics</a>
+<p class="meta">Martin Huber &middot; <span class="source">Foundations and Trends® in Econometrics</span> &middot; published 25 November 2026</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">This discussion provides an introduction to and survey of machine learning methods in econometrics, covering both predictive and causal applications. We first consider supervised machine learning for predicting or forecasting an outcome of interest, such as wages, credit default, or product demand, including penalized regression, tree-based methods, support vector machines, and boosting, followed by neural network architectures. Next, we discuss unsupervised learning, which aims to detect patterns in data without a predefined outcome variable, covering clustering methods that group observations by similarity and dimensionality reduction techniques that extract compact representations of high-dimensional data. We then turn to causal machine learning for treatment evaluation, such as assessing the impact of job training programs on employment or of price changes on demand, covering average treatment effect estimation via data-adaptive control of confounders using double machine learning, treatment effect heterogeneity analysis based on causal forests, optimal policy learning to target subpopulations for whom treatment is most beneficial, and reinforcement learning for dynamic treatment allocation. We also discuss the implications of artificial intelligence-generated variables for causal analysis. Finally, we provide an introduction to causal discovery, which aims to learn causal structures among multiple variables from observational data in a data-driven manner.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:61%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (53 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1108%2Ffteco-07-2026-0050">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1108%2Ffteco-07-2026-0050">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.31662v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.31662v1">Correcting for Differential Nonresponse Using Past Election Data</a>
+<p class="meta">David Metrick, Harper Wang &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">In an election survey, the probability of responding can depend on the vote being measured. When supporters of one candidate are less likely to respond, they are underrepresented in the sample and the estimated vote share is biased. Weighting and multilevel regression and poststratification (MRP) adjust for observed covariates but do not eliminate this bias when response rates differ by vote within demographic groups. We ask whether this differential nonresponse can be corrected using the previous election, whose outcome is known. We estimate a two-parameter correction on the log-odds scale against one election&#x27;s results, apply it unchanged to the next, and compare the corrected estimates with its results. The application is the Cooperative Election Study for the 2020 and 2024 U.S. presidential elections, with the 436 congressional districts as units. Among validated voters in 2020, Republicans appear in the sample at about 0.6 times the odds of Democrats, and in both elections district-level MRP understates the Republican two-party share by 16 to 18 percentage points on average. A correction estimated on 2020 and applied to 2024 gives 95% posterior predictive bands containing the actual result in 98.2% of districts, compared with 91.5% for a correction on the share scale. About two-thirds of the curvature in the 2024 error was already present in 2020, and the transferred correction removes about 69% of it; the remaining third, a level shift of 1.7 points, and a few districts (several with very large 2020-to-2024 swings) are specific to 2024. We also fit a model for variation in differential nonresponse across districts (Little and Gelman, 1998) and find that the design weights account for about 62% of the selection on the log-odds scale. Two variants that apply the correction within poststratification cells, specified in advance, did not improve on the simpler correction.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:60%"></span></span><span>Closest to: Designing Multi-Level Studies: Sampling Voters and Electoral Contexts (54 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.31662v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.31662v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.13140/rg.2.2.32570.56008">
+<div class="lead">
+<a class="title" href="https://doi.org/10.13140/rg.2.2.32570.56008">Externally anchored covariate completion for network meta-interpolation without trial individual participant data: a simulation study</a>
+<p class="meta">Lingyao Sun, Dachuang Zhou, Lei Tian &middot; <span class="source">OpenAlex</span> &middot; published 24 November 2026</p>
+<p class="reason"></p>
+</div>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Models, methods and network topology: Experimental design for the study of interference (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.13140%2Frg.2.2.32570.56008">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.13140%2Frg.2.2.32570.56008">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2104.04190v3">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2104.04190v3">Measurement Errors in Semiparametric Generalized Regression Models</a>
+<p class="meta">Mohammad W. Hattab, David Ruppert &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Regression models that ignore measurement error in predictors may produce highly biased estimates leading to erroneous inferences. It is well known that it is extremely difficult to take measurement error into account in Gaussian nonparametric regression. This problem becomes tremendously more difficult when considering other families such as logistic regression, Poisson and negative-binomial. For the first time, we present a method aiming to correct for measurement error when estimating regression functions flexibly covering virtually all distributions and link functions regularly considered in generalized linear models. This approach depends on approximating the first and the second moment of the response after integrating out the true unobserved predictors in a semiparametric generalized linear model. Unlike previous methods, this method is not restricted to truncated splines and can utilize various basis functions. Through extensive simulation studies, we study the performance of our method under many scenarios.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: Regression without Regrets: A Modular Approach to Linear Models in (Quasi-)Experiments (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2104.04190v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2104.04190v3">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2306.11697v3">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2306.11697v3">Treatment Effects in Extreme Regimes</a>
+<p class="meta">Ahmed Aloui, Ali Hasan, Yuting Ng, and 2 others &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; stat.ME, cs.LG, stat.ML</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Understanding treatment effects in extreme regimes is important for characterizing risks associated with different interventions. This is hindered by the unavailability of counterfactual outcomes and the rarity and difficulty of collecting extreme data in practice. To address this issue, we propose a new framework based on extreme value theory for estimating treatment effects in extreme regimes. We quantify these effects using variations in tail decay rates of potential outcomes in the presence and absence of treatments. We establish algorithms for calculating these quantities and develop related theoretical results. We demonstrate the efficacy of our approach on various standard synthetic and semi-synthetic datasets.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: Your interests: I want to read about the distribution of ... (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2306.11697v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2306.11697v3">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.1038/s43856-026-02007-5">
+<div class="lead">
+<a class="title" href="https://doi.org/10.1038/s43856-026-02007-5">Towards causal prediction models to guide personalised clinical decisions</a>
+<p class="meta">Samuel Leighton, Damian Machlanski, Sotirios A. Tsaftaris, and 2 others &middot; <span class="source">Communications Medicine</span> &middot; published 25 November 2026</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Clinical risk prediction models are widely championed as a way to deliver a precision medicine approach by guiding personalised care. However, in this perspective, we argue that current clinical risk prediction models are unable to guide personalised clinical decisions. This is because they are static models of association, rather than correctly specified counterfactual prediction models based on modifiable causes. They do not tell us whether changing a predictor variable will alter the outcome for an individual. Instead, the interventions recommended based on current risk prediction models are unrelated to the model itself and only shown to work on average across the population. To facilitate personalised care, clinical prediction models should be based on causation rather than association, model the conditional average treatment effect and predict counterfactuals, while also accounting for time-varying confounding. Then prediction models will be closer to meeting the precision medicine ideal.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1038%2Fs43856-026-02007-5">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1038%2Fs43856-026-02007-5">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.1111/josh.70295">
+<div class="lead">
+<a class="title" href="https://doi.org/10.1111/josh.70295">Clarifying Temporal Ordering in a Two‐Wave Moderated Mediation Study</a>
+<p class="meta">Muhammad Ivan Dwi Saputra, Ari Khusumadewi, Retno Tri Hariastuti &middot; <span class="source">Journal of School Health</span> &middot; published 23 November 2026</p>
+<p class="reason"></p>
+</div>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: Research Note: A more powerful test statistic for reasoning about interference between units (55 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1111%2Fjosh.70295">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1111%2Fjosh.70295">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.31900v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.31900v1">A General Framework for Identifying the Joint Potential Outcome Distribution through Support Restrictions</a>
+<p class="meta">Benedikt Koch, Kosuke Imai &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; math.ST, stat.ME, stat.TH</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Many causal estimands depend on the joint distribution of potential outcomes, which is generally not identifiable because only one potential outcome can be observed for each unit. To obtain identification, researchers often impose assumptions such as monotonicity and exclusion restriction that constrain the support of this joint distribution. For treatments and outcomes that each take finitely many values, we define a similarity matrix whose entries count, for each pair of potential outcome strata, the number of treatments yielding the same outcome. We then prove that, under unconfoundedness, identification holds if and only if this matrix is invertible, yielding a criterion directly verifiable from the support. In addition, we derive an identification formula for the joint distribution under these support restrictions and show that an average causal estimand is identifiable if and only if its integrand admits an additive representation on the restricted support. Finally, we derive sharp testable implications of the support restriction. Our results unify and generalize a broad range of identification results in the literature.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:57%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (56 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.31900v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.31900v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2607.10246v4">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2607.10246v4">Inference for Fixed Effects Estimators when Panels are Unbalanced</a>
+<p class="meta">Daniel Czarnowske, Amrei Stammann &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; econ.EM</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">We develop the asymptotic theory for two-way fixed effects M-estimators in unbalanced panels, within a framework where both panel dimensions grow large at proportional rates. The selection process may be deterministic, stochastic, or a combination of the two. We require neither a missing-at-random condition nor a selection equation, only a conditional mean restriction on the outcome. The uncorrected estimators are asymptotically normal but not correctly centred due to incidental parameter bias and feedback bias. The latter can arise when regressors or the selection indicator respond to past outcomes. We propose debiased estimators that remove both biases without requiring knowledge of which regressors or selection components are predetermined. Simulations show that the corrections remove most of the bias and restore coverage close to nominal levels. Revisiting a study on capital inflow surges and banking crises, we find that the corrections leave qualitative conclusions unchanged but appreciably shift the estimated magnitudes.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:57%"></span></span><span>Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (56 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2607.10246v4">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2607.10246v4">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.23775v3">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.23775v3">Anytime-valid goodness-of-fit test by $e$-spacings</a>
+<p class="meta">Yunda Hao, Kin Wai Chan &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; stat.ME, math.ST, stat.TH</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">To perform an anytime-valid goodness-of-fit test, we propose spacing-based $e$-processes that control the type-I error rate under arbitrary stopping rules. Based on the maximum spacing of order statistics, we construct spacing-based $e$-processes for nonparametrically testing distribution. The resulting procedures are simple and computationally efficient, and are power-consistent. We call them $e$-spacing tests. This approach is especially powerful in detecting localized discrepancy between the data-generating density and the null density. Under mild conditions, the logarithm of the proposed $e$-process is asymptotically equivalent to that of the oracle-optimal $e$-process. We further generalize the construction from maximal spacing to maximum spacing set in the form of the $1/k$ fraction of the largest $m$th order spacings, as a measure of the lower-level set of density. It boosts power under more global discrepancy from the null. Furthermore, we propose a greedy predictable scheme, via argmax or softmax rules, to combine multiple $e$-spacing testing strategies. We prove that it optimally tunes the $e$-spacing test. The proposed approach is readily generalizable to multivariate testing via a coordinate-wise Rosenblatt-transform. Simulation studies demonstrate that the proposed methods perform favorably relative to the considered anytime-valid competitors as well as various types of multiple test-adjusted Kolmogorov--Smirnov tests.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:57%"></span></span><span>Closest to: Detecting Where Effects Occur by Testing Hypotheses in Order (56 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.23775v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.23775v3">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.32888v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.32888v1">Generalizing Couple-Randomized Trials Under Limited Overlap and Missing Partner Linkage</a>
+<p class="meta">Subir Hait &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; stat.ME, stat.AP</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">We study how to generalize couple-randomized trials when some couple types are absent from the trial and the target survey reports partner characteristics without linking spouses. Under an additive effect model with unrestricted partner-profile terms, the target average effect is identified exactly when the wife and husband margins assign equal mass to each connected component of the trial support graph. A specified interaction is identified when its alternating contrast around at least one cycle is nonzero. Without linkage, we obtain sharp bounds by optimizing over pairings consistent with the survey margins. A spousal odds ratio can narrow the bounds for a binary interaction. We derive joint bounds for an index-patient design, quantify bias from common shortcuts, and estimate effects and bounds using Bayesian dyadic multilevel regression and poststratification. In a worked example based on 3,826 Health and Retirement Study couples and simulated trial outcomes, an index-patient trial and an unlinked survey yielded a 2.93 mmHg wide identified set for the couple-average effect. Linking the survey narrowed it to 2.38 mmHg. Adding 300 couples without diabetes narrowed the unlinked set to 0.28 mmHg and yielded point identification with linkage under the fitted model.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:56%"></span></span><span>Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (56 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.32888v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.32888v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.31539v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.31539v1">Agent Evaluation Without Ground Truth: A Null Proportion Perspective</a>
+<p class="meta">Brian M. Cho, Michael Lindon, Nathan Kallus &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; cs.AI, math.ST, stat.AP, stat.ME, stat.TH</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">The correctness of actions taken by agents is typically evaluated against known, externally verified ground truth labels, such as whether a proof is correct or whether code compiles and passes unit tests. However, as coding and science agents are entrusted with more end-to-end autonomy -- proposing interventions, running experiments, and deciding what to deploy and investigate next -- whether an agent&#x27;s actions genuinely improve an outcome must be inferred from noisy, often inconclusive experiments. To evaluate agents in this setting, we define agent quality as a weighted sum of correct decisions along its trajectory, using sequences of $e$-values as statistical evidence regarding correctness in place of ground-truth labels. Our framework accommodates arbitrarily dependent decisions, data-dependent trajectory termination, dynamically generated hypotheses, and quality measures defined after the trajectory concludes. We construct upper and lower bound estimators and confidence sets for agent quality with statistical guarantees that hold uniformly over agent trajectory distributions and establish instance-wise sharpness of our estimator class. We demonstrate our methods with a case study comparing the success of Claude Opus and Claude Haiku in improving the runtime of an open-source Python package.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:56%"></span></span><span>Closest to: Your interests: I am interested in how much an analyst&#x27;s ... (56 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.31539v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.31539v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.32182v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.32182v1">Asymptotically Efficient Conformal Inference for Individual Treatment Effects under Multivalued Treatments</a>
+<p class="meta">Lequn Ge, Gaorong Li, Hui Zhao &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Most existing conformal inference methods for individual treatment effects are limited to settings with binary treatments. For multiple treatments, propensity score-derived weights often suffer from statistical instability, while contiguous prediction intervals may span low-density regions between modes of potential outcome distributions, leading to inefficient prediction sets. We propose adaptive prediction sets for counterfactual outcomes under multivalued treatments by combining KuLSIF-based density ratio estimation with highest predictive density (HPD) conformal scores derived from conditional density estimates. Both estimators share a reproducing kernel Hilbert space least-squares formulation, which simplifies theoretical derivation and analysis. The resulting prediction sets are robust to heteroscedasticity and multimodal outcome distributions and effectively eliminate low-density regions between distribution modes. Under unconfoundedness assumption and regularity conditions, we prove that the proposed method converges to optimal HPD sets under covariate shift and establish its asymptotic conditional validity and statistical efficiency. Simulation studies and ACIC benchmarks demonstrate that the proposed method achieves empirical coverage probabilities close to the nominal level, while yielding shorter average interval lengths than conventional quantile-based conformal methods for multimodal outcome data.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:56%"></span></span><span>Closest to: Your interests: I want to read new work on randomization-based ... (56 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.32182v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.32182v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.32930v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.32930v1">Efficient inferential models and their fiducial connections</a>
+<p class="meta">Max Raner &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; math.ST, stat.ME, stat.TH</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Valid inferential models (IMs) provide frequentist calibration guarantees, but validity alone does not determine which construction is most informative. We study finite-sample efficiency through concentration risk, the expected volume under a possibility contour. For a smooth, fully identified association and a specified parameter-volume measure, a weighted Neyman--Pearson argument identifies the generalized fiducial density as the optimal score for minimizing cut volume subject to fixed-data auxiliary compatibility. The resulting maximum-specificity transform gives an explicit volume interpretation of the fiducial efficiency ceiling, which need not itself be sampling valid. We develop two approaches to valid construction. The first minimizes design-averaged concentration risk among single, data-independent auxiliary-compatible contours. The design measure prioritizes efficiency without requiring prior beliefs or restricting validity. The second localizes the parameter-volume score to candidate-specific contours, yielding a normalized, valid IM equivalent to sampling validification of the relative fiducial likelihood. A parallel sample-space construction recovers the ordinary likelihood-ratio IM; direct validification of the ceiling provides another repair. For the same association, exact, data-independent predictive contours share a common fiducial distribution as a saturating inner probability, while generating different calibrated confidence-region geometries. Design averaging thus selects an efficient member without changing the underlying fiducial law. Examples in a two-component measurement model and an exponential scale model illustrate the efficiency gains and show that sampling-valid repair can improve on the raw ceiling by leaving the fixed-data auxiliary-compatible class over which it is optimal.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:55%"></span></span><span>Closest to: Your interests: I want to read new work on randomization-based ... (57 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.32930v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.32930v1">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2601.11242v4">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2601.11242v4">Deriving Complete Constraints in Hidden Variable Models</a>
+<p class="meta">Michael C. Sachs, Erin E. Gabriel, Robin J. Evans, Arvid Sj\&quot;olander &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Hidden variable graphical models can sometimes imply constraints on the observable distribution that are more complex than simple conditional independence relations. These observable constraints can falsify assumptions of the model and can be used to constrain estimation procedures to improve statistical efficiency. Knowing the complete set of observable constraints is thus ideal, but this can be difficult to determine in many settings. In models with categorical observed variables and a joint distribution that is completely characterized by linear relations to the probabilities of unobservable response function variables, we develop a systematic method for deriving the complete set of observable constraints. We illustrate the method in several settings, including ones that imply both inequality and equality constraints.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:55%"></span></span><span>Closest to: EDA for HLM: Visualization when probabilistic inference fails (57 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2601.11242v4">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2601.11242v4">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="10.1111/jgh.70905">
+<div class="lead">
+<a class="title" href="https://doi.org/10.1111/jgh.70905">Response to “Within‐Group Improvement Is Not a Treatment Effect in the Mikoto Simulator Trial”</a>
+<p class="meta">Daisuke Yamaguchi, Motohiro Esaki &middot; <span class="source">Journal of Gastroenterology and Hepatology</span> &middot; published 24 November 2026</p>
+<p class="reason"></p>
+</div>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:55%"></span></span><span>Closest to: Your interests: I want to read new work on interference, ... (57 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1111%2Fjgh.70905">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1111%2Fjgh.70905">fewer like this</a></p>
+</div>
+</article>
+<article data-paper-id="arXiv:2611.33069v1">
+<div class="lead">
+<a class="title" href="https://arxiv.org/abs/2611.33069v1">Pragmatic Deeply Debiased ML</a>
+<p class="meta">Victor Chernozhukov, Chengchun Shi &middot; <span class="source">arxiv</span> &middot; posted 25 November 2026 &middot; econ.EM, stat.ME</p>
+<p class="reason"></p>
+</div>
+<details class="abstract"><summary><span class="text">Debiased machine learning (DML) combines a fitted outcome regression with weighted residuals to remove first-order regularization bias when estimating parameters such as average treatment effects, yet a second-order bias remains whenever regression and weighting errors align. For linear regression functionals, we target this second-order bias by training a strong learner to predict first-stage residuals from many covariates, yielding a one-dimensional (or low-dimensional) working model whose bias contribution is estimated on an independent sample. To complement this targeted search, we also analyze general kernel-based corrections, including covariate partitions and smoothers. We prove that deeply debiased ML is algebraically identical to ordinary DML evaluated with a post-hoc regression update that adjusts each scored observation using kernel-weighted residuals from the remaining evaluation observations. In our empirical and simulation studies, strong initial DML learners often leave the second-order correction small relative to sampling uncertainty, in which case the correction serves as a diagnostic check alongside sensitivity bounds for any remaining misspecification bias.</span></summary></details>
+<div class="foot">
+<p class="closest"><span class="meter" aria-hidden="true"><span style="width:55%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (57 degrees)</span></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.33069v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.33069v1">fewer like this</a></p>
+</div>
+</article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-24">&lsaquo;&nbsp;Tue 24 Nov</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-24">
 <h2>Tuesday 24 November<span class="count">20 papers</span></h2>
 <article data-paper-id="arXiv:2607.18601v3">
 <div class="lead">
@@ -409,8 +811,9 @@ interest of Jake's: the smaller the angle, the closer.</p>
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.29632v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.29632v1">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-23">&lsaquo;&nbsp;Mon 23 Nov</a><a class="next" href="#d-2026-11-25">Wed 25 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-23">
 <h2>Monday 23 November<span class="count">20 papers</span></h2>
 <article data-paper-id="arXiv:2607.04257v2">
 <div class="lead">
@@ -650,8 +1053,9 @@ interest of Jake's: the smaller the angle, the closer.</p>
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.27867v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.27867v1">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-22">&lsaquo;&nbsp;Sun 22 Nov</a><a class="next" href="#d-2026-11-24">Tue 24 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-22">
 <h2>Sunday 22 November<span class="count">6 papers</span></h2>
 <article data-paper-id="10.5281/zenodo.24426809">
 <div class="lead">
@@ -724,8 +1128,9 @@ interest of Jake's: the smaller the angle, the closer.</p>
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fd9ap3_v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fd9ap3_v2">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-21">&lsaquo;&nbsp;Sat 21 Nov</a><a class="next" href="#d-2026-11-23">Mon 23 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-21">
 <h2>Saturday 21 November<span class="count">20 papers</span></h2>
 <article data-paper-id="10.1086/743440">
 <div class="lead">
@@ -966,8 +1371,9 @@ interest of Jake's: the smaller the angle, the closer.</p>
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fvrkyh_v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fvrkyh_v1">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-20">&lsaquo;&nbsp;Fri 20 Nov</a><a class="next" href="#d-2026-11-22">Sun 22 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-20">
 <h2>Friday 20 November<span class="count">20 papers</span></h2>
 <article data-paper-id="10.1080/01621459.2026.2760596">
 <div class="lead">
@@ -1207,8 +1613,9 @@ interest of Jake's: the smaller the angle, the closer.</p>
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1161%2Fstrokeaha.126.053678">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1161%2Fstrokeaha.126.053678">fewer like this</a></p>
 </div>
 </article>
+<nav class="steps" aria-label="Days"><a class="prev" href="#d-2026-11-19">&lsaquo;&nbsp;Thu 19 Nov</a><a class="next" href="#d-2026-11-21">Sat 21 Nov&nbsp;&rsaquo;</a></nav>
 </section>
-<section>
+<section class="day" id="d-2026-11-19">
 <h2>Thursday 19 November<span class="count">20 papers</span></h2>
 <article data-paper-id="arXiv:2611.21425v2">
 <div class="lead">
@@ -1450,249 +1857,83 @@ interest of Jake's: the smaller the angle, the closer.</p>
 <p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.3982%2Fecta24250">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.3982%2Fecta24250">fewer like this</a></p>
 </div>
 </article>
-</section>
-<section>
-<h2>Wednesday 18 November<span class="count">20 papers</span></h2>
-<article data-paper-id="arXiv:2611.22542v1">
+<nav class="steps" aria-label="Days"><a class="prev" href="weeks/2026-11-16.html#d-2026-11-18">&lsaquo;&nbsp;Wed 18 Nov</a><a class="next" href="#d-2026-11-20">Fri 20 Nov&nbsp;&rsaquo;</a></nav>
+</section></div>
+<div id="semantic-scholar"><section class="recommended">
+<h2>Semantic Scholar recommends<span class="count">5 papers</span></h2>
+<article data-paper-id="arXiv:2610.04102">
 <div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.22542v1">Randomization-Based Nonparanormal Adjusted Marginal Inference</a>
-<p class="meta">Leticia W\&quot;uthrich, Mark Baillie, Susanne Dandl &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.ME</p>
+<a class="title" href="https://arxiv.org/abs/2610.04102">Network-Constrained Matching and Randomization-Based Inference for Causal Effects</a>
+<p class="meta">Zhe Dong, You-Jin Lee &middot; <span class="source">Semantic Scholar</span> &middot; posted 2 October 2026</p>
 <p class="reason"></p>
 </div>
-<details class="abstract"><summary><span class="text">Adjusting for prognostic baseline covariates in the analysis of randomized controlled trials is recommended to increase the precision of treatment effect estimates. Such adjustment, however, introduces a complication known as noncollapsibility: for effect measures such as the log-odds or log-hazard ratio, the estimated treatment effect becomes conditional instead of marginal. Methods that target a marginal estimand even after covariate adjustment have been developed, but typically rely on population-based inference, which assumes patients are randomly sampled from some larger population, rarely true in practice. Such methods have been shown to inflate type I error, particularly in small samples or when many covariates are adjusted for. Inference based on randomization requires no such assumption, as it relies on the randomization scheme, which is known exactly, yielding a test that is exact even in finite samples. We present a randomization-based test for covariate-adjusted marginal treatment effects, built on nonparanormal adjusted marginal inference, applicable to continuous, binary, ordinal, and time-to-event outcomes. In simulation studies, this test controls type I error where the standard Wald test does not. Applied to 20 historical phase III time-to-event randomized trials, the covariate-adjusted estimator achieves precision gains comparable to an existing competitor method.</span></summary></details>
+<details class="abstract"><summary><span class="text">Matching is widely used to mimic randomized experiments by forming matched sets in which treated and control units differ only randomly with respect to observed covariates. However, when the study population consists of interconnected units from a single network or a small number of networks, matching solely on observed covariates may produce matched units that are more closely connected in the network than would occur by chance. This increased network proximity within matched sets can induce spurious associations between treatment and outcome when both variables exhibit similar autocorrelation patterns on the network. To reduce spurious associations while preserving the validity of causal comparisons, we propose a new matching method that matches units with similar covariates subject to additional network-proximity constraints. For post-matching inference, we propose a randomization-based procedure for testing the sharp null hypothesis of no causal effect. The inference uses the asymptotic normal approximation and accommodates statistical dependence among test statistics obtained from each matched set without requiring explicit specifications of their correlation structures. We demonstrate the validity and utility of the proposed methods through simulation studies and apply them to the Framingham Heart Study. The matching method and subsequent inference procedure are implemented in the R package netmatchRI.</span></summary></details>
 <div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:71%"></span></span><span>Closest to: Making Effects Manifest in Randomized Experiments (48 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.22542v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.22542v1">fewer like this</a></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.04102">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.04102">fewer like this</a></p>
 </div>
 </article>
-<article data-paper-id="arXiv:2606.17516v2">
+<article data-paper-id="arXiv:2611.04366">
 <div class="lead">
-<a class="title" href="https://arxiv.org/abs/2606.17516v2">FoundCause: A Foundation Model for Causal Discovery with Latent Confounders from Observational Data</a>
-<p class="meta">Patrick Bl\&quot;obaum, Krishnakumar Balasubramanian, Shiva Prasad Kasiviswanathan &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; cs.LG, cs.AI, stat.ME, stat.ML</p>
+<a class="title" href="https://arxiv.org/abs/2611.04366">When Listwise Deletion Works: Causal Diagrams and Complete-Case Regression</a>
+<p class="meta">Wen-Xin Lin, Shi-Ya Liu &middot; <span class="source">Semantic Scholar</span> &middot; posted 3 November 2026</p>
 <p class="reason"></p>
 </div>
-<details class="abstract"><summary><span class="text">Causal discovery from observational data requires recovering directed relations and latent confounding without interventions. We propose FoundCause, an {\em amortized causal discovery foundation model} trained only on synthetic structural causal models that maps datasets to causal graphs in a single forward pass. A permutation-equivariant transformer alternates attention over samples and variables to model cross-variable dependence and per-variable distributions. Pairwise dependence and asymmetry statistics guide its attention, edge decoder and confounder module. The decoder separates edge existence from direction, while triangular refinement incorporates evidence from chains and colliders. Learnable latent tokens predict which variable pairs share a hidden common cause, and a masked input representation handles missing data. To our knowledge, FoundCause is the first amortized causal discovery approach for i.i.d. observational data to predict latent confounding as a separate, explicit output. On 14 real-world and semi-synthetic datasets, FoundCause leads 11 classical and 7 amortized baselines in average AUROC, $F_1$, skeleton $F_1$, and normalized structural Hamming distance ($\mathrm{SHD}/d$): clearly in $\mathrm{SHD}/d$ ($0.875$ vs.\ $0.956$), narrowly in $F_1$ ($0.531$ vs.\ $0.516$). It also has the highest accuracy among amortized methods on bivariate cause--effect pairs.</span></summary></details>
+<details class="abstract"><summary><span class="text">Listwise deletion (LWD) appears more common than imputation: at least 50% of the observational causal studies we review in leading journals state or imply it, while 7% describe an imputation model. We develop a framework for when complete-case regression consistently estimates the population average treatment effect (ATE). With a constant unit-level treatment effect, two checks suffice: whether covariates and the missingness indicator satisfy the adjustment criterion in an augmented causal diagram (DAG), and whether the estimator pools within-covariate comparisons appropriately, possibly using inverse propensity weighting. A collider--mediator illustration highlights the first check: the same missing-at-random (MAR) mechanism can require different adjustment choices. With heterogeneous effects, conditional effects must be transportable to the population and be reweighted to its population distribution. These formal results provide practical checks for applied researchers to run complete case regressions, recover existing guidance as special cases, and are illustrated with applications across fields.</span></summary></details>
 <div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:66%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (51 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2606.17516v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2606.17516v2">fewer like this</a></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.04366">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.04366">fewer like this</a></p>
 </div>
 </article>
-<article data-paper-id="arXiv:2611.22339v1">
+<article data-paper-id="arXiv:2610.07363">
 <div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.22339v1">Small Area Causal Inference</a>
-<p class="meta">Yilin Li, Jiangshan Zhang, Jiming Jiang &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.ME</p>
+<a class="title" href="https://arxiv.org/abs/2610.07363">Network Experiments with Edge Treatments and Node Outcomes</a>
+<p class="meta">A. Kuriksha, Kenneth Hung &middot; <span class="source">Semantic Scholar</span> &middot; posted 5 October 2026</p>
 <p class="reason"></p>
 </div>
-<details class="abstract"><summary><span class="text">We develop a framework for small area causal inference (SACI). Unlike the traditional doubly robust (DR) estimation approach, the new framework is based on the empirical best prediction (EBP) method. EBP takes into consideration not only the bias but also the variance factor, which is often a more dominant component in the mean squared prediction error (MSPE). Under a linear mixed model for SACI, we establish consistency and asymptotic normality of the maximum likelihood estimator of the model parameters. More relevant to our main objective, we establish asymptotic optimality of the EBP in terms of minimizing the MSPE of the area-specific causal-effect (ASCE) predictor. Moreover, in view of the traditional interest in causal inference, we establish asymptotic normality of the EBP of the ASCE , which is used to construct prediction intervals for the ASCEs. We carry out extensive simulation studies to investigate finite-sample performance of the proposed EBP and its comparison with the traditional DR and other existing methods. Our simulation results show that the proposed EBP method has significant advantage over the comparing methods in terms of MSPE and coverage probability and length of the resulting prediction interval. A real-data example from agricultural-animal genetics is discussed.</span></summary></details>
+<details class="abstract"><summary><span class="text">We present a methodology for analyzing node-level outcomes while experimenting with edge-level treatments in a population connected by an undirected graph. Under our design, nodes are randomly assigned to test or control, and each edge inherits the treatment of its endpoints, with conflicts resolved by randomization. We use each node&#x27;s assigned status as an instrument for its treatment exposure. We show that the Wald estimator is consistent for the global average treatment effect (GATE), even when the edge weights used to construct the exposure are misspecified. We formalize the assumptions needed both in terms of the linearity of potential outcomes and the sparsity of the graph, and prove the asymptotic normality of the Wald estimator. The estimator is straightforward to implement, requiring no assignment simulations over the graph. Our Monte Carlo study demonstrates the strong performance of our approach in the context of a social platform.</span></summary></details>
 <div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:62%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (53 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.22339v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.22339v1">fewer like this</a></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.07363">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.07363">fewer like this</a></p>
 </div>
 </article>
-<article data-paper-id="arXiv:2611.22948v1">
+<article data-paper-id="arXiv:2611.10515">
 <div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.22948v1">Symmetries of Counterfactuals: Identification and Testability of Counterfactual Maps from Covariate Heterogeneity</a>
-<p class="meta">Marc Braun, Adel Daoud, Jose M. Pe\~na &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.ML, cs.LG</p>
+<a class="title" href="https://arxiv.org/abs/2611.10515">A General Statistical Framework for Attention and Manipulation Checks</a>
+<p class="meta">Kentaro Nakamura, K. Imai &middot; <span class="source">Semantic Scholar</span> &middot; posted 7 November 2026</p>
 <p class="reason"></p>
 </div>
-<details class="abstract"><summary><span class="text">In general, counterfactuals are not identified from data alone, because many causal models produce the same observed distributions but different counterfactuals. A common approach to circumvent this problem is to restrict the mechanism to a class in which it becomes unique, such as triangular monotone maps or optimal transport maps. However, whether the assumed class is correct is usually not examined. In this work, we study what the data can tell us when covariates are available that influence the outcome only through its latent cause. First, we characterise all counterfactual maps that are consistent with the data. They differ from the true map by a group of symmetries that preserve the conditional outcome distributions given the covariates. The more these distributions vary across covariate values, the smaller the group. Second, we show that for the classes above, consistency with the data is equivalent to a single conditional independence, which yields a test of the assumed class. We illustrate both results on synthetic data and on the ACTG 175 HIV trial.</span></summary></details>
+<details class="abstract"><summary><span class="text">Attention and manipulation checks are widely used in survey experiments to assess respondents&#x27;attentiveness and engagement with treatment, respectively. Yet these checks are subject to measurement error, which may itself depend on treatment when checks are administered after treatment exposure. Restricting analyses to respondents who pass these checks can therefore introduce substantial bias. We propose a general statistical framework for analyzing survey experiments with pre- or post-treatment attention and manipulation checks while accounting for measurement error. We show that three separate checks suffice to identify the proportion of respondents who would be attentive or successfully manipulated under treatment, provided that the checks are conditionally independent among treated respondents given their true, unobserved attentiveness or manipulation status and pre-treatment covariates. Under additional mild assumptions, this result also identifies the average treatment effect among respondents who would be attentive or successfully manipulated under treatment. Building on these identification results, we propose an estimator that allows flexible covariate modeling and establish its asymptotic normality. Applications to framing and digital media literacy experiments demonstrate how accounting for measurement error yields treatment effect estimates that are substantively different from those obtained using conventional approaches.</span></summary></details>
 <div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Causality \&amp; Design-Based Inference (55 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.22948v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.22948v1">fewer like this</a></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.10515">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.10515">fewer like this</a></p>
 </div>
 </article>
-<article data-paper-id="arXiv:2611.16406v2">
+<article data-paper-id="arXiv:2610.02556">
 <div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.16406v2">One-Sided Randomization in Two-Sided Platform Experiments: Which Side Should be Randomized?</a>
-<p class="meta">Ramesh Johari, Anushka Murthy &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.ME, econ.EM, econ.TH</p>
+<a class="title" href="https://arxiv.org/abs/2610.02556">Randomization inference on cell effects under absorbing treatment onset</a>
+<p class="meta">Xin-Yuan Chen &middot; <span class="source">Semantic Scholar</span> &middot; posted 1 October 2026</p>
 <p class="reason"></p>
 </div>
-<details class="abstract"><summary><span class="text">Two-sided marketplace platforms often use randomized experiments to evaluate new features, raising the question of whether to randomize customers or listings. Randomizing the smaller (\emph{short}) side can reduce interference bias due to weaker competition, while randomizing the larger (\emph{long}) side provides a larger nominal sample, potentially reducing variance. On the surface, these competing considerations suggest a bias-variance trade-off in choosing which side to randomize. We investigate this trade-off in a two-sided marketplace with first-come, first-served (FCFS) booking and heterogeneous customer preferences, studying the bias and variance of difference-in-means estimators of the global average treatment effect. Our findings suggest that rather than a bias-variance tradeoff, in fact short-side randomization is generally preferable on {\em both} dimensions. We prove these results in an asymptotic regime where market imbalance increases. We establish conditions under which (1) short-side randomization eliminates first-order interference bias, while long-side randomization retains it; and (2) short-side randomization also achieves a variance rate of no larger asymptotic order than long-side randomization. The key insight is that although the long side contains more participants, the number of matches is constrained by the population on the short side, limiting the apparent variance advantage of randomizing a larger sample. Our conditions accommodate heterogeneous preferences and treatment effects and are satisfied by familiar logit models of customer choice. Together, these findings support randomizing on the short side, despite the larger sample size available on the long side.</span></summary></details>
+<details class="abstract"><summary><span class="text">In multiple-baseline experiments, staggered adoption designs, and stepped-wedge trials, every unit switches once from baseline to treatment at a randomized onset time and remains treated afterward. The treatment onsets in these designs are absorbing. Since such experiments often involve few heterogeneous units, randomization tests of the sharp null of no effect on any unit-period cell are common. Rejecting this null, however, implies that some effect exists somewhere, not that it is large, positive for most unit-periods, or persistent. To improve on this limitation, we study what can be established via randomization tests for bounded and quantile nulls on cell effects in absorbing onset designs. Under the assumption that a cell&#x27;s potential outcome depends on its current treatment status and not on when treatment began, we establish finite-sample validity for both tests. We then develop the power theory for the bounded-null tests with a fixed number of units $N$ and a growing series length $T$ admitting $K_T$ onsets. The $p$-value against a fixed alternative decays as $K_T^{-N}$ up to a factor polylogarithmic in $T$, with lower bounds of the same order, so the onset window, not the series length, determines the power. Theory-implied guidelines for experiment planning are also provided.</span></summary></details>
 <div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Covariate Balance in Simple, Stratified and Clustered Comparative Studies (55 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.16406v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.16406v2">fewer like this</a></p>
+<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2610.02556">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2610.02556">fewer like this</a></p>
 </div>
 </article>
-<article data-paper-id="arXiv:2611.22096v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.22096v1">COSI: A Framework for Robustly Valid Inference</a>
-<p class="meta">Arun K. Kuchibhotla, Sivaraman Balakrishnan, Larry Wasserman &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.ME, math.ST, stat.ML, stat.TH</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">We introduce COSI (COnfidence from Scale Invariance), a framework for constructing confidence sets for statistical functionals. COSI builds on the HulC (Hull-based Confidence), which uses median unbiasedness to construct confidence sets from batch estimates. COSI uses scale-invariance properties shared by many common estimators. We divide the data into batches, compute an estimate in each batch, and retain each candidate parameter value for which the batch estimates pass a test of scale invariance. The resulting confidence sets are asymptotically valid under weaker assumptions than classical Wald and bootstrap procedures require, and their coverage can be closer to the nominal level in small samples. Applications include robust inference for the mean, regression coefficients in misspecified linear models, tensor norms, and Fr\&#x27;echet means.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:59%"></span></span><span>Closest to: Your interests: I want to read new work on randomization-based ... (55 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.22096v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.22096v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.22022v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.22022v1">A mechanistic characterization of missingness at random</a>
-<p class="meta">Maya B. Mathur, Willi Zhang, Shaun Seaman, and 2 others &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.ME, math.ST, stat.TH</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">The missingness-at-random (MAR) assumption underlying many missing-data methods describes abstract statistical independences, whereas practitioners reason more naturally about the causal mechanisms that generate missingness. To bridge this gap, we provide a mechanistic characterization of MAR in terms of paths in a directed acyclic graph (DAG) modified to allow certain edges to cease to operate when an incomplete variable is missing, a property termed &quot;context-specific causal irrelevance (CSCI)&quot;. Under a faithfulness condition, MAR holds if and only if the modified DAG contains no MAR-violating paths. Without CSCI, this condition reduces to a previously established d-separation condition, VMAR; thus, MAR without VMAR requires specific kinds of CSCI, as can occur with monotone dropout. These results shift the burden on investigators from passively invoking MAR to justifying, on substantive grounds, the specific mechanisms it requires. We then consider identification of a target law p(v) of variables V by a MAR-assuming analysis, e.g., multiple imputation, that includes complete auxiliary variables Z (variables not in V). Barring a perfect cancellation, such an analysis recovers p(v) if and only if MAR holds with respect to V and Z jointly. We show that if there exists any set of auxiliaries such that (V, Z) obeys MAR, then the complete candidate auxiliaries that are ancestors of the target variables or their missingness indicators form a sufficient set. Contrary to standard recommendations, not all candidate auxiliaries should be used: even complete auxiliaries can introduce MAR violations that would not otherwise occur. We illustrate these results with simulations and an analysis of sexual identity change in the Stockholm Public Health Cohort, where our results indicate that a candidate auxiliary, income, should be excluded; including it attenuated estimates toward the null.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (55 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.22022v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.22022v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="osf.io/2b7cn_v1">
-<div class="lead">
-<a class="title" href="https://doi.org/10.31235/osf.io/2b7cn_v1">Navigating the Bias-Variance Trade-off in Sequential Causal Inference: An Empirical Study of Functional Features and Representation Balancing</a>
-<p class="meta">Shunxin Yao &middot; <span class="source">socarxiv</span> &middot; posted 16 November 2026</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Sequential causal inference faces the dual challenge of time-varying confounding and complex longitudinal dynamics. While deep learning models, particularly those integrating Functional Principal Component Analysis (FPCA) and domain adversarial balancing (DANN), have been proposed to estimate heterogeneous treatment effects, their true empirical advantage over classical machine learning baselines remains underexplored. In this paper, we conduct a rigorous empirical study across four synthetic scenarios (varying confounding strength, non-linearity, and temporal dependencies) with 10 independent random seeds. Our findings reveal three crucial insights: (1) Classical tree-based meta-learners (e.g., Causal Forests and X-Learners) consistently outperform complex sequential deep learning models in Precision in Estimation of Heterogeneous Effect (PEHE) under standard tabular settings. (2) Integrating FPCA into a GRU backbone yields a substantial improvement in deep models within highly non-linear regimes (reducing PEHE from 0.157 to 0.121). (3) Aggressive adversarial representation balancing (DANN) achieves perfect covariate overlap (as demonstrated via t-SNE) but induces a severe loss of prognostic information, exacerbating the Bias-Variance trade-off. We provide an informal theoretical interpretation of this phenomenon and suggest that deep sequential models are not a silver bullet for causal inference.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:58%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (55 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2F2b7cn_v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2F2b7cn_v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="10.1016/j.jns.2026.126245">
-<div class="lead">
-<a class="title" href="https://doi.org/10.1016/j.jns.2026.126245">Evaluating metformin efficacy in ALS using real-world data: A causal inference approach</a>
-<p class="meta">Julia A. Geller, Alex Berger, Matteo Locatelli, and 17 others &middot; <span class="source">Journal of the Neurological Sciences</span> &middot; published 12 November 2026</p>
-<p class="reason"></p>
-</div>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:56%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (56 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1016%2Fj.jns.2026.126245">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1016%2Fj.jns.2026.126245">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="10.1016/j.annonc.2026.08.4629">
-<div class="lead">
-<a class="title" href="https://doi.org/10.1016/j.annonc.2026.08.4629">4378P Weighted 1:1 case:control matching with iterative resampling for pseudorandomised survival analysis</a>
-<p class="meta">D. Thomas, M. Yap, R. Chan, D. Kee &middot; <span class="source">Annals of Oncology</span> &middot; published 17 November 2026</p>
-<p class="reason"></p>
-</div>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:56%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (56 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1016%2Fj.annonc.2026.08.4629">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1016%2Fj.annonc.2026.08.4629">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.23174v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.23174v1">Inference after coding agents</a>
-<p class="meta">Florian Gunsilius, David Van Dijcke, Kaspar W\&quot;uthrich &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.ME, cs.AI, econ.EM</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Empirical research is changing rapidly as AI coding agents are becoming increasingly proficient in every step of it, from writing code to manipulating data. We argue that while the potential of coding agents for science is vast, their use in hypothesis testing poses a substantial threat to classical inference, as these agents enable a supercharged form of selective inference. In particular, we argue that coding agents carrying out empirical research introduce a new type of post-selection inference that combines human-like, open-ended search over an implicit space of estimators with programmatic replayability of both the selection and the estimation process. Indeed, we find that on simulated data with zero effects, four frontier agents report significant p-values between 54% and 98% of the time when asked to produce a compelling finding. We propose a simple procedure for detecting and correcting these distortions. After an agent has completed its analysis, we reset and replay it on subsamples of the data to estimate the agent&#x27;s relative probability of selecting that analysis when it looks statistically favorable. For agents with stable selection behavior, the resulting corrected test is asymptotically valid and consistent conditional on selection. Importantly, the correction is learned from the black-box agent&#x27;s actual choices rather than a model of how it searches, so it remains valid even as AI technology continues to evolve rapidly. In simulations, the correction robustly lowers the high false rejection rates to near the nominal 5%. We illustrate the method on applications from two published papers.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:56%"></span></span><span>Closest to: Your interests: I want to read new work that joins ... (56 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.23174v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.23174v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2509.15280v3">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2509.15280v3">A Bayesian Framework for Latent Compliance Modeling in Cluster Randomized Trials with One-Sided Noncompliance</a>
-<p class="meta">Anthony Sisti, Ellen McCreedy, Roee Gutman &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.AP, stat.ME</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">In pragmatic cluster randomized controlled trials (PCRCTs), healthcare providers are randomized, but intervention delivery and patient receipt may vary after assignment. In many PCRCTs, cluster-level implementation is measured using continuous implementation metrics, while individual compliance is recorded as a binary indicator. Standard complier average causal effect (CACE) estimands focus on individual-level compliance and do not account for heterogeneity in implementation across clusters. When intervention uptake is shaped by both cluster- and individual-level processes, it is of scientific interest to characterize how effects vary across these sources of compliance. We propose a Bayesian framework for PCRCTs with one-sided binary noncompliance at the individual level and one-sided partial compliance at the cluster level. The method uses a latent mixture model to summarize heterogeneity in cluster-level implementation based on baseline characteristics and treatment-arm implementation measures, and links these latent implementation strata to individual compliance and outcomes through a joint model. Because individual compliance and treatment-defined implementation measures are observed only under treatment assignment, the model imputes these quantities for control clusters and individuals assigned to control. The framework enables estimation of finite- and super-population intent-to-treat (ITT) and CACE estimands, both marginally and within latent implementation strata. We apply the method to the METRIcAL trial, a pragmatic cluster randomized study evaluating a personalized music intervention for nursing home residents with dementia. The analysis illustrates how accounting for implementation heterogeneity and individual compliance can provide insights beyond standard ITT analyses.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:56%"></span></span><span>Closest to: Attributing Effects to A Cluster Randomized Get-Out-The-Vote Campaign. (57 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2509.15280v3">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2509.15280v3">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2604.18863v4">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2604.18863v4">Overstuffed sandwiches and separation anxiety: finite-sample variance estimation for penalized GEE with near-separated binary data</a>
-<p class="meta">Awan Afiaz, M. Shafiqur Rahman &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.ME</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Penalized generalized estimating equations (PGEE) stabilize point estimation for longitudinal binary data under near-separation, but inference still depends on how the sandwich variance is corrected. Applications to toenail trial and contagious bovine pleuropneumonia data show that the existing estimators can disagree on significance in small samples, and that several cannot be computed when subjects have unequal numbers of observations. We study which variance estimator to use for PGEE in small longitudinal studies with rare events. We establish first-order asymptotics for PGEE along convergent interior-root sequences and derive a matrix characterization of the parameter-specific overcorrection induced by full leverage adjustment. We compare thirteen existing estimators with a proposed estimator that combines full inverse leverage correction, score centering and finite-sample scaling. With ten subjects, only the proposed estimator and Morel&#x27;s control the type I error rate without assuming that all subjects share a correlation structure, and the proposed estimator is closer to the nominal level. In small samples, its scaling removes the excess rejections left by leverage correction and its centering offsets part of the resulting conservatism. In larger samples the leverage-corrected estimators behave alike. Estimators that average residual covariance across subjects also control the type I error rate, in small and larger samples, but they require a shared correlation structure and equal numbers of observations per subject, which may not always be feasible.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:56%"></span></span><span>Closest to: A Reasoned Basis for Inference: Randomization and Design Justifying Estimation and Testing (57 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2604.18863v4">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2604.18863v4">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="10.1021/ehp.6c01507">
-<div class="lead">
-<a class="title" href="https://doi.org/10.1021/ehp.6c01507">Nondifferential Exposure Measurement Error in Air Pollution Epidemiology: Insights from Causal Diagrams and Simulations</a>
-<p class="meta">Hong Chen, Matthew Quick, Jeffrey C. Kwong, and 4 others &middot; <span class="source">Environmental Health Perspectives</span> &middot; published 17 November 2026</p>
-<p class="reason"></p>
-</div>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:55%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (57 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+10.1021%2Fehp.6c01507">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+10.1021%2Fehp.6c01507">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2603.16833v5">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2603.16833v5">Refined Inference for Asymptotically Linear Estimators with Non-Negligible Second-Order Remainders</a>
-<p class="meta">Lin Li, Pengcheng Wu &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.ME, math.ST, stat.TH</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">First-order semiparametric inference typically uses the same influence-function linearization to justify both centering and sandwich variance estimation. We show that these are distinct questions. In a near-boundary regime, the second-order remainder can be nearly mean zero yet large enough to contribute O(n-1) sampling variation. When plug-in influence-function error and the cross term are negligible, the usual sandwich estimator captures only the influence-function component, and Wald intervals can undercover even when the point estimator is nearly unbiased. We derive a finite-sample variance decomposition and show that, when the cross term is asymptotically negligible, sandwich consistency is characterized by the condition nVar(Rrem) --&gt; 0: the sandwich consistently estimates total variance in the strong-decay regime where this holds, and materially underestimates it in the near-boundary regime where nVar(Rrem) --&gt;cR &gt; 0. We then study two corrections. Under a leave-one-out remainder linearization condition, the jackknife consistently estimates the total variance; under a conditional Mallows-2 bootstrap condition, the pairs bootstrap does likewise. For clustered data we distinguish within-cluster dependence from first-order influence-function mismatch. Simulations for a surrogate-assisted targeted learning estimator in stepped-wedge cluster-randomized trials illustrate variance discrepancies and the limits of jackknife correction.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:55%"></span></span><span>Closest to: Your interests: I want to read new work on randomization-based ... (57 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2603.16833v5">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2603.16833v5">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="osf.io/cnjm8_v1">
-<div class="lead">
-<a class="title" href="https://doi.org/10.31235/osf.io/cnjm8_v1">The Structural Number of Parties: An Electoral-Outcome-Independent Baseline for Comparing Party-System Scale</a>
-<p class="meta">Adama Nouboukpo, Kodzo Michel Aladji, Bappa Muktar &middot; <span class="source">socarxiv</span> &middot; posted 18 November 2026</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">How many parties can a country structurally sustain? Standard measures such as the effective number of parties (ENP) cannot answer this question. They are descriptive and post hoc: they summarize competition only after an election, and they depend on electoral returns that are often missing, interrupted, or unreliable in many developing democracies, particularly in Africa. They also offer no common scale for comparing the size of party registers with realized electoral fragmentation. We introduce the Structural Number of Parties (SNP), an outcome-independent baseline derived from two universally available quantities: population size and territorial area. Building on the logic of the seat product model and the cube-root law of assembly size, the SNP gives an ex ante benchmark that can be computed for any country and year, including where electoral data are absent. Applied to African states, the SNP enables a structural gap diagnosis that distinguishes under-fragmented systems, marked by hegemonic-party dominance, from over-fragmented ones, marked by excessive atomization. The framework thus provides a transparent and reproducible tool to inform institutional reform and the rationalization of party systems across the continent.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:54%"></span></span><span>Closest to: Ethnicity and Electoral Fraud in New Democracies: Modelling Political Party Agents in Ghana (58 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fcnjm8_v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fcnjm8_v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="osf.io/zk26u_v1">
-<div class="lead">
-<a class="title" href="https://doi.org/10.31235/osf.io/zk26u_v1">Peer Review and the Technical Soundness of Research: Evidence from Automated Audits of Political Science Working Papers</a>
-<p class="meta">Tak-Huen Chau, Andrew T. Little &middot; <span class="source">socarxiv</span> &middot; posted 17 November 2026</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Peer review is meant to select high quality work and make it better. To measure one dimension of quality (“technical soundness”), we develop method-specific checklists and a “universal checklist” derived from the published literature by a transparent, rule-based procedure. We then have a language-model coder apply these checklists to 798 working papers posted from 2020 to 2022 on three preprint servers and to 406 corresponding published versions. A one standard deviation increase in preprint soundness is associated with a 10.3 percentage point increase in publication probability and higher journal placement. For the published/unpublished margin, both the universal and the method-specific checklists predict publication outcomes to a similar degree. A “naive” review by the same model, with no checklist, predicts publication about as well overall and less well for top-three journals, but the checklists catch issues this misses and add further predictive power. Published versions score modestly higher than preprints: 67% score higher at publication, and the mean overall score rises by +0.19 standard deviations. We release the checklists and the auditing system as a tool for authors.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:53%"></span></span><span>Closest to: Your interests: I look for papers on the credibility of ... (58 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2Fzk26u_v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2Fzk26u_v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="osf.io/5f94x_v1">
-<div class="lead">
-<a class="title" href="https://doi.org/10.31235/osf.io/5f94x_v1">Trinity or Trilemma? How researchers assess publications, data and software</a>
-<p class="meta">Judith Hartstein, Nathalie Schwichtenberg, Alexander Schniedermann &middot; <span class="source">socarxiv</span> &middot; posted 18 November 2026</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Understanding what encourages researchers to (re)use publications, data and software and thereby trusting the output of distant and unknown peers, is essential for envisioning future forms of scholarly communication and developing organizational and technical infrastructures. With a survey among more than 1,700 researchers across disciplines we investigate a) how often researchers across the spectrum of disciplines use the three types of resources, and b) how they make the respective use decisions along ten assessment vectors. We find that resource use and assessment practices stabilize across disciplines in line with the integration of a resource into scientific practice, and that assessment practices fall into the three categories of resource specificity, field specificity and user specificity. We contextualize our findings within the broader discourse on epistemic trust, and we conclude that publications, data and software are always to be considered in reference to their similarities, synergies and diversities when it comes to scientific best practices and infrastructure development.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:53%"></span></span><span>Closest to: Six Steps to a Better Relationship with Your Future Self, V 2.0 (58 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+osf.io%2F5f94x_v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+osf.io%2F5f94x_v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.22384v1">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.22384v1">Finite-Smoothing Efficiency and Inference in Single-Index Models</a>
-<p class="meta">Jiayang Xu, Yusen Jia, Yangzhou Chen, Xin Chen &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.ME</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">When the error is independent of the predictors, its distribution can carry information about a single-index direction beyond the conditional mean. We develop Single-Index Kernel Density Regression (SI-KDR): at each candidate direction, it refits the link and evaluates a leave-one-out kernel log-likelihood of the residuals. Under Gaussian design, the population score vanishes at the true line at every positive smoothing tuple. At a fixed positive-curvature tuple, the leading covariance in the sample expansion is the conditional-mean efficiency bound times $\Lambda/G$, where $G$ is the information gain from independence and $\Lambda$ is the variance inflation from smoothing. We derive $\Lambda$ by following each observation through link refitting, the dual role of its residual as evaluation point and kernel center, and training standardization. Case-weight covariance estimates guide tuning for point estimation. Tuning separately at each candidate gives an exact conditional $F$ test. When predictors outnumber observations, independent screening that retains the support preserves the covariance comparison and the exact test, and $G/\Lambda$ becomes the squared-noncentrality ratio of a retained-coordinate test relative to the conditional-mean oracle. In four non-Gaussian error distribution designs at $n=600$, covariance-trace tuning reduced direction risk by 56% to 74% relative to reference bandwidths, and score-inversion coverage was 93.8% to 96.6%.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:53%"></span></span><span>Closest to: How to Increase the Precision of Causal Inferences in Experiments Using Machine Learning (but without Data Snooping) (58 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.22384v1">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.22384v1">fewer like this</a></p>
-</div>
-</article>
-<article data-paper-id="arXiv:2611.16102v2">
-<div class="lead">
-<a class="title" href="https://arxiv.org/abs/2611.16102v2">Is generative AI really changing public sector work? Evidence from a multi-country survey</a>
-<p class="meta">Saba Esnaashari, Tvesha Sippy, Youmna Hashem, and 2 others &middot; <span class="source">arxiv</span> &middot; posted 18 November 2026 &middot; stat.AP</p>
-<p class="reason"></p>
-</div>
-<details class="abstract"><summary><span class="text">Artificial intelligence has the potential to transform how public services are delivered, with important implications for public service productivity. But how widely is the technology actually being used - and is it making any difference? Our survey of 3,362 public sector workers across the UK, the USA, South Africa and the EU finds widespread use of AI in every region. Our findings suggest that this spread is being driven by bottom-up individual adoption rather than top-down institutional adoption. In the EU, for example, 65% of respondents use AI, while only 19% say their organisation has formally adopted it. Most users are positive about its effects, with 79% saying AI has improved their productivity. However, only 29% say it has increased what is expected of them at work, raising questions about how truly transformative the technology is so far. Across regions, South Africa is a clear outlier, with the highest levels of use, organisational adoption, optimism and awareness of guidelines.</span></summary></details>
-<div class="foot">
-<p class="closest"><span class="meter" aria-hidden="true"><span style="width:52%"></span></span><span>Closest to: Your interests: I want to read about AI tools that ... (59 degrees)</span></p>
-<p class="vote"><a href="https://github.com/jwbowers/papers-page/issues/new?title=up+arXiv%3A2611.16102v2">more like this</a> <a href="https://github.com/jwbowers/papers-page/issues/new?title=down+arXiv%3A2611.16102v2">fewer like this</a></p>
-</div>
-</article>
-</section>
-<footer><a href="how-it-works.html">How this page works</a>.
-<a href="weeks/">Earlier weeks</a>.</footer>
+</section></div>
+<p class="legend">Under each paper, the bar and the angle say how close it is to the named paper or interest of Jake's: the smaller the angle, the closer.</p>
+<footer><a href="how-it-works.html">How this page works</a> <a href="weeks/">Earlier weeks</a> <a href="months/">All months</a></footer>
 </main>
+<script>
+(function () {
+  var links = document.querySelectorAll('.strip a[href^="#"]');
+  var start = document.querySelector('.strip').dataset.default;
+  function mark() {
+    var h = location.hash, hit = false;
+    links.forEach(function (a) { if (a.getAttribute('href') === h) { hit = true; } });
+    links.forEach(function (a) {
+      if (a.getAttribute('href') === (hit ? h : start)) { a.setAttribute('aria-current', 'true'); }
+      else { a.removeAttribute('aria-current'); }
+    });
+  }
+  addEventListener('hashchange', mark); mark();
+})();
+</script>
 </body>
 </html>
